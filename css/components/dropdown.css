@@ -1,0 +1,99 @@
+.dropdown {
+  position: relative;
+}
+
+.dropdown__toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-02);
+  background: transparent;
+  border: none;
+  font-weight: var(--fw-semibold);
+  padding: var(--space-03) var(--space-05);
+  border-radius: var(--radius-ui);
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dropdown__toggle:hover {
+    background: var(--color-soft-fill);
+    color: var(--color-forest-dark);
+    box-shadow: inset 0 0 0 1px var(--color-interactive-border);
+  }
+
+  .dropdown__toggle:hover::after {
+    transform: scaleX(1);
+    opacity: 0.88;
+  }
+}
+
+.dropdown__toggle[aria-expanded="true"] {
+  background: var(--color-soft-fill-strong);
+  color: var(--color-forest-dark);
+  box-shadow: inset 0 0 0 1px var(--color-interactive-border);
+}
+
+.dropdown__toggle[aria-expanded="true"]::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.dropdown__toggle:focus-visible {
+  background: var(--color-soft-fill-focus);
+  color: var(--color-forest-dark);
+  box-shadow:
+    inset 0 0 0 1px var(--color-interactive-border),
+    0 0 0 2px var(--color-focus-outline-contrast),
+    0 0 0 4px rgba(31, 76, 58, 0.18);
+}
+
+.dropdown__toggle:focus-visible::after {
+  transform: scaleX(1);
+  opacity: 0.95;
+}
+
+.dropdown__menu {
+  position: absolute;
+  top: calc(100% + var(--space-02));
+  left: 0;
+  min-width: 240px;
+  background: var(--color-surface-base);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-ui);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-03);
+  display: none;
+  z-index: 20;
+}
+
+.dropdown__menu[aria-hidden="false"] {
+  display: grid;
+  gap: var(--space-02);
+}
+
+.dropdown__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-07);
+  padding: var(--space-02);
+  border-radius: var(--radius-ui);
+  color: var(--color-ink);
+}
+
+.dropdown__link:hover,
+.dropdown__link:focus-visible {
+  background: var(--color-surface-alt);
+  color: var(--color-forest-dark);
+}
+
+.dropdown__link:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px var(--color-interactive-border),
+    0 0 0 2px var(--color-focus-outline-contrast),
+    0 0 0 4px rgba(31, 76, 58, 0.16);
+}

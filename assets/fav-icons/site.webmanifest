@@ -1,0 +1,81 @@
+{
+  "name": "Outland Gear",
+  "short_name": "Outland",
+  "description": "Nowoczesny sklep outdoor i travel gear z plecakami, termiką, wyposażeniem kempingowym i akcesoriami na każdą wyprawę.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#0f172a",
+  "background_color": "#f5f3ee",
+  "lang": "pl-PL",
+  "icons": [
+    {
+      "src": "/assets/fav-icons/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/fav-icons/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Strona główna",
+      "short_name": "Home",
+      "description": "Przejdź do strony głównej Outland Gear.",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/assets/shortcuts/home.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Sklep",
+      "short_name": "Shop",
+      "description": "Otwórz katalog produktów Outland Gear.",
+      "url": "/kategoria.html",
+      "icons": [
+        {
+          "src": "/assets/shortcuts/shop.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Kontakt",
+      "short_name": "Kontakt",
+      "description": "Skontaktuj się z zespołem Outland Gear.",
+      "url": "/kontakt.html",
+      "icons": [
+        {
+          "src": "/assets/shortcuts/contact.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/screenshots/desktop.jpg",
+      "sizes": "1440x1024",
+      "type": "image/jpeg",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/assets/screenshots/mobile.jpg",
+      "sizes": "402x874",
+      "type": "image/jpeg",
+      "form_factor": "narrow"
+    }
+  ]
+}

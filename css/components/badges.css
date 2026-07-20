@@ -1,0 +1,43 @@
+/* Badges */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-07);
+  font-size: var(--fs-02);
+  font-weight: var(--fw-semibold);
+  padding: var(--space-02) var(--space-04);
+  border-radius: var(--radius-pill);
+  background: var(--color-sky);
+  color: var(--color-forest-dark);
+}
+
+.badge--bestseller {
+  background: rgba(217, 164, 65, 0.2);
+  color: #6b4500;
+}
+
+.badge--eco {
+  background: rgba(42, 122, 92, 0.15);
+  color: var(--color-success);
+}
+
+.badge--new {
+  background: rgba(93, 131, 166, 0.18);
+  color: #285b7d;
+}
+
+.badge--limited {
+  background: rgba(200, 67, 58, 0.15);
+  color: var(--color-alert);
+}
+
+[data-theme="dark"] .category-card .badge--bestseller,
+[data-theme="dark"] .travel-kit-card .badge--bestseller {
+  color: #eecc8c;
+}
+
+[data-theme="dark"] .category-card .badge--new,
+[data-theme="dark"] .travel-kit-card .badge--new {
+  color: #7dafcf;
+}

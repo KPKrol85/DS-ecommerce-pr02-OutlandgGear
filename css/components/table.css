@@ -1,0 +1,17 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-03);
+}
+
+th,
+td {
+  text-align: left;
+  padding: var(--space-02);
+  border-bottom: 1px solid var(--color-border);
+}
+
+th {
+  background: var(--color-sky);
+  font-weight: var(--fw-semibold);
+}

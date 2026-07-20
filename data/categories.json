@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Plecaki i torby",
+    "slug": "plecaki-i-torby",
+    "subcategories": ["Plecaki trekkingowe", "Plecaki miejskie", "Torby podróżne", "Saszetki i organizery"]
+  },
+  {
+    "id": 2,
+    "name": "Termika i napoje",
+    "slug": "termika-i-napoje",
+    "subcategories": ["Termosy", "Kubki termiczne", "Butelki filtrujące"]
+  },
+  {
+    "id": 3,
+    "name": "Kemping",
+    "slug": "kemping",
+    "subcategories": ["Kuchenki", "Maty i hamaki", "Namioty i tarp"]
+  },
+  {
+    "id": 4,
+    "name": "Elektronika outdoor",
+    "slug": "elektronika-outdoor",
+    "subcategories": ["Latarki", "Powerbanki", "Nawigacja"]
+  },
+  {
+    "id": 5,
+    "name": "Akcesoria",
+    "slug": "akcesoria",
+    "subcategories": ["Karabińczyki", "Apteczki", "Zestawy naprawcze"]
+  }
+]

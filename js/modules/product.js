@@ -396,7 +396,7 @@ export const initProduct = async () => {
   const root = qs(CONFIG.selectors.productRoot);
   if (!root) return;
   const stateRegion = qs("[data-product-state]", root);
-  let products = [];
+  let products;
   try {
     products = ensureProductsCollection(await fetchJson(PRODUCTS_DATA_PATH));
   } catch (error) {

@@ -136,24 +136,42 @@ const formatViolations = (pageName, violations) => {
   ].join("\n");
 };
 
+const THEMES = ["light", "dark"];
+
 test.describe("rendered accessibility audit", () => {
-  for (const route of ROUTES) {
-    test(`${route.name} has no axe violations`, async ({ page }) => {
-      if (route.beforeVisit) {
-        await route.beforeVisit(page);
-      }
+  for (const theme of THEMES) {
+    for (const route of ROUTES) {
+      test(`${route.name} has no axe violations (${theme} theme)`, async ({
+        page,
+      }) => {
+        await page.addInitScript((themeName) => {
+          window.localStorage.setItem("outlandgear-theme", themeName);
+        }, theme);
 
-      await page.goto(route.path, { waitUntil: "domcontentloaded" });
-      await page.waitForLoadState("networkidle");
-      await route.waitFor(page);
+        if (route.beforeVisit) {
+          await route.beforeVisit(page);
+        }
 
-      const accessibilityScanResults = await new AxeBuilder({ page })
-        .analyze();
+        await page.goto(route.path, { waitUntil: "domcontentloaded" });
+        await page.waitForLoadState("networkidle");
+        await route.waitFor(page);
 
-      expect(
-        accessibilityScanResults.violations,
-        formatViolations(route.name, accessibilityScanResults.violations),
-      ).toEqual([]);
-    });
+        await expect(page.locator("html")).toHaveAttribute(
+          "data-theme",
+          theme,
+        );
+
+        const accessibilityScanResults = await new AxeBuilder({ page })
+          .analyze();
+
+        expect(
+          accessibilityScanResults.violations,
+          formatViolations(
+            `${route.name} (${theme} theme)`,
+            accessibilityScanResults.violations,
+          ),
+        ).toEqual([]);
+      });
+    }
   }
 });

@@ -73,9 +73,9 @@ const normalizeProduct = (product, categoryMap, seenIds, seenSlugs) => {
   if (categoryMap.size) {
     const categorySubcategories = categoryMap.get(category);
     if (!categorySubcategories) {
-      errors.push(`category \"${category}\" not found in categories.json`);
+      errors.push(`category "${category}" not found in categories.json`);
     } else if (subcategory && !categorySubcategories.has(subcategory)) {
-      errors.push(`subcategory \"${subcategory}\" not found for category \"${category}\"`);
+      errors.push(`subcategory "${subcategory}" not found for category "${category}"`);
     }
   }
 

@@ -24,7 +24,7 @@
 .legal-intro,
 .legal-toc,
 .legal-content {
-  background: var(--color-white);
+  background: var(--color-surface-base);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-ui);
   box-shadow: var(--shadow-sm);
@@ -112,7 +112,7 @@
   padding: var(--space-06);
   border: 1px solid color-mix(in srgb, var(--color-border) 76%, var(--color-white));
   border-radius: var(--radius-ui);
-  background: color-mix(in srgb, var(--color-white) 92%, var(--color-sand));
+  background: color-mix(in srgb, var(--color-surface-base) 92%, var(--color-sand));
   box-shadow: 0 1px 2px rgba(17, 24, 20, 0.04);
 }
 
@@ -144,14 +144,14 @@
   font-size: var(--fs-03);
   line-height: 1;
   color: color-mix(in srgb, var(--color-muted) 78%, var(--color-white));
-  background: color-mix(in srgb, var(--color-sky) 26%, var(--color-white));
+  background: color-mix(in srgb, var(--color-sky) 26%, var(--color-surface-base));
   opacity: 0.82;
 }
 
 .legal-page .legal-back-link:hover,
 .legal-page .legal-back-link:focus-visible {
   color: var(--color-forest);
-  background: color-mix(in srgb, var(--color-sky) 52%, var(--color-white));
+  background: color-mix(in srgb, var(--color-sky) 52%, var(--color-surface-base));
   border-color: color-mix(in srgb, var(--color-border) 78%, var(--color-white));
   opacity: 1;
 }

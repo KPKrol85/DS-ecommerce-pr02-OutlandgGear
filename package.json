@@ -33,16 +33,27 @@
     "qa:a11y": "playwright test --config=playwright.config.js tests/a11y/a11y.spec.js",
     "watch:css": "npm run build:prepare && postcss css/main.css -o dist/css/main.min.css --watch",
     "watch:js": "npm run build:prepare && esbuild js/app.js --bundle --minify --outfile=dist/js/app.min.js --watch",
-    "images:optimize": "node scripts/optimize-images.mjs --clean"
+    "images:optimize": "node scripts/optimize-images.mjs --clean",
+    "lint:js": "eslint js scripts tests",
+    "lint:css": "stylelint \"css/**/*.css\"",
+    "lint": "npm run lint:js && npm run lint:css",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.1",
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.59.1",
     "cssnano": "^7.0.7",
     "esbuild": "^0.25.11",
+    "eslint": "^10.8.0",
+    "globals": "^17.7.0",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
     "postcss-import": "^16.1.1",
-    "sharp": "^0.34.3"
+    "prettier": "^3.9.6",
+    "sharp": "^0.35.3",
+    "stylelint": "^17.14.1",
+    "stylelint-config-standard": "^40.0.0"
   }
 }

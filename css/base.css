@@ -109,7 +109,7 @@ main li a:hover {
   position: absolute;
   left: -999px;
   top: 0;
-  background: var(--color-forest);
+  background: var(--color-brand-solid);
   color: var(--color-white);
   padding: var(--space-03) var(--space-04);
   z-index: 999;
@@ -128,7 +128,7 @@ main li a:hover {
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   border: 0;
 }
 

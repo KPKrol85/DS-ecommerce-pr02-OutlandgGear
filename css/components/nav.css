@@ -108,7 +108,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-forest);
+  background: var(--color-brand-solid);
   color: var(--color-white);
   border: none;
   border-radius: var(--radius-pill);
@@ -124,7 +124,7 @@
 }
 
 .search button:hover:not(:disabled) {
-  background: var(--color-forest-dark);
+  background: var(--color-brand-solid-strong);
 }
 
 .search-toggle {

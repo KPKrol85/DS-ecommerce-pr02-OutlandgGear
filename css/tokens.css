@@ -4,6 +4,12 @@
   --color-ink: #1d2a26;
   --color-forest: #1f4c3a;
   --color-forest-dark: #153227;
+  /* Fixed (theme-invariant) fills for solid CTAs that carry white text.
+     --color-forest/-dark brighten in dark mode for text/link legibility,
+     which is too light for a solid button fill under white text, so solid
+     buttons use these instead and keep the same deep green in both themes. */
+  --color-brand-solid: #1f4c3a;
+  --color-brand-solid-strong: #153227;
   --color-sand: #f4f1ea;
   --color-stone: #e5e1d8;
   --color-moss: #526c5a;

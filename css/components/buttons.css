@@ -6,11 +6,11 @@
   padding: var(--space-02) var(--space-04);
   border-radius: var(--radius-ui);
   border: 1px solid transparent;
-  background: var(--color-forest);
+  background: var(--color-brand-solid);
   color: var(--color-white);
   font-size: var(--fs-03);
   font-weight: var(--fw-semibold);
-  line-height: var(---ls-normal);
+  line-height: var(--lh-normal);
   text-decoration: none;
   transition:
     background-color var(--transition-fast),
@@ -23,7 +23,7 @@
 }
 
 .btn:hover:not(:disabled):not([aria-disabled="true"]) {
-  background: var(--color-forest-dark);
+  background: var(--color-brand-solid-strong);
 }
 
 .btn:focus-visible {
@@ -51,7 +51,7 @@
 }
 
 .btn--outline:hover:not(:disabled):not([aria-disabled="true"]) {
-  background: var(--color-forest);
+  background: var(--color-brand-solid);
   color: var(--color-white);
 }
 

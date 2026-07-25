@@ -2,7 +2,6 @@ import { qs, qsa, delegate } from "./dom.js";
 
 const ROOT_SELECTOR = "[data-faq-root]";
 const TRIGGER_SELECTOR = "[data-faq-trigger]";
-const PANEL_SELECTOR = "[data-faq-panel]";
 
 const syncItem = (trigger, panel, isOpen) => {
   trigger.setAttribute("aria-expanded", String(isOpen));

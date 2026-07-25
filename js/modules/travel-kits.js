@@ -422,8 +422,8 @@ export const initTravelKits = async () => {
     message: "Pobieramy opis zestawu i przypisane produkty.",
   });
 
-  let kits = [];
-  let products = [];
+  let kits;
+  let products;
   try {
     [kits, products] = await Promise.all([
       fetchJson(TRAVEL_KITS_DATA_PATH),

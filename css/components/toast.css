@@ -2,7 +2,7 @@
   position: fixed;
   bottom: var(--space-05);
   right: var(--space-05);
-  background: var(--color-ink);
+  background: var(--color-toast-bg);
   color: var(--color-white);
   padding: var(--space-03) var(--space-04);
   border-radius: var(--radius-ui);

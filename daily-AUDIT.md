@@ -45,8 +45,9 @@ No outstanding findings — 1 resolved (see below).
 - **Impact:** A user can type a value above 10 and have the full (up to 99) quantity added in a single click, silently exceeding the limit implied by the markup.
 - **Recommended direction:** Validate the quantity field against its own `max` (or call `checkValidity()`) before calling `addToCart`, or raise the field's `max` to match the enforced ceiling.
 
-### [P2-02] No repository-level line-ending enforcement
+### [P2-02] No repository-level line-ending enforcement — RESOLVED
 
+- **Status:** Resolved 2026-07-26 — added `.gitattributes` at the project root with `* text=auto eol=lf` as the baseline, explicit `text eol=lf` overrides for `.svg`/`.webmanifest`, and `binary` rules for the project's binary asset extensions. Renormalizing the 21 already-tracked files still carrying CRLF, and committing `.gitattributes`, are deliberately left as a separate follow-up step, not done here.
 - **Classification:** Maintenance risk
 - **Evidence:** `.editorconfig:5` (`end_of_line = lf`); no `.gitattributes` file present in the repository; current `git diff --stat` shows 21 tracked files (including `package.json`, `package-lock.json`, several `css/js` and config/test files) with matching insertion/deletion counts per file, consistent with a full CRLF/LF flip rather than content changes.
 - **Current behavior:** Line-ending consistency relies solely on `.editorconfig`, which most editors honor but Git itself does not enforce. The working tree currently shows exactly the drift this gap allows.

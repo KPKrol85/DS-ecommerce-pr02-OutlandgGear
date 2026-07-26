@@ -1,9 +1,9 @@
-import { qs } from "./dom.js?v=20260405-3";
-import { fetchJson } from "./data.js?v=20260405-3";
-import { setUiState, clearUiState } from "./ui-state.js?v=20260405-3";
-import { createFallbackNotice } from "./fallback.js?v=20260405-3";
-import { formatCurrency } from "../utils.js?v=20260405-3";
-import { buildProductUrl, buildTravelKitUrl, resolveTravelKitSlug } from "./routes.js?v=20260405-3";
+import { qs } from "./dom.js";
+import { fetchJson } from "./data.js";
+import { setUiState, clearUiState } from "./ui-state.js";
+import { createFallbackNotice } from "./fallback.js";
+import { formatCurrency } from "../utils.js";
+import { buildProductUrl, buildTravelKitUrl, resolveTravelKitSlug } from "./routes.js";
 import { loadNormalizedProducts } from "./product-data.js";
 
 const SITE_NAME = "Outland Gear";

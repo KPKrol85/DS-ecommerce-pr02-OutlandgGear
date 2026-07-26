@@ -36,8 +36,9 @@ No outstanding findings — 1 resolved (see below).
 
 ## P2 — Minor refinements
 
-### [P2-01] Product-page quantity limit is not enforced beyond the input's `max` attribute
+### [P2-01] Product-page quantity limit is not enforced beyond the input's `max` attribute — RESOLVED
 
+- **Status:** Resolved 2026-07-26 — the add-to-cart handler in `js/modules/product.js` now reads `qtyInput.max`, clamps the requested quantity to it before calling `addToCart`, and surfaces the clamp to the user via the existing `showToast` "warning" type; `cart.js`'s `clamp(qty, 1, 99)` was left unchanged.
 - **Classification:** Defect
 - **Evidence:** `produkt.html:188` (`<input ... max="10" data-qty-input />`); `js/modules/product.js:302-311` (`addBtn` handler reads `qtyInput.value` directly); `js/modules/cart.js:56-58` (`clamp(qty, 1, 99)`)
 - **Current behavior:** The add-to-cart handler reads the quantity field's raw value without calling `checkValidity()`, and `cart.js` clamps it to 1–99 rather than to the field's own declared maximum of 10.

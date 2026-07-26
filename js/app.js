@@ -1,20 +1,20 @@
-import { CONFIG } from "./config.js?v=20260405-3";
-import { qs, on } from "./modules/dom.js?v=20260405-3";
-import { initNav } from "./modules/nav.js?v=20260405-3";
+import { CONFIG } from "./config.js";
+import { qs, on } from "./modules/dom.js";
+import { initNav } from "./modules/nav.js";
 import {
   initPartials,
   PARTIALS_READY_EVENT,
-} from "./modules/partials.js?v=20260405-3";
-import { initCatalog } from "./modules/catalog.js?v=20260405-3";
-import { initProduct } from "./modules/product.js?v=20260405-3";
-import { initCart, updateCartCount } from "./modules/cart.js?v=20260405-3";
-import { initCheckout } from "./modules/checkout.js?v=20260405-3";
-import { initContactForm } from "./modules/contact.js?v=20260405-3";
-import { initLegalModal } from "./modules/legal-modal.js?v=20260405-3";
-import { initFaq } from "./modules/faq.js?v=20260405-3";
-import { initNewsletterForm } from "./modules/newsletter.js?v=20260405-3";
-import { initTheme } from "./modules/theme.js?v=20260409-darkmode";
-import { initTravelKits } from "./modules/travel-kits.js?v=20260406-3";
+} from "./modules/partials.js";
+import { initCatalog } from "./modules/catalog.js";
+import { initProduct } from "./modules/product.js";
+import { initCart, updateCartCount } from "./modules/cart.js";
+import { initCheckout } from "./modules/checkout.js";
+import { initContactForm } from "./modules/contact.js";
+import { initLegalModal } from "./modules/legal-modal.js";
+import { initFaq } from "./modules/faq.js";
+import { initNewsletterForm } from "./modules/newsletter.js";
+import { initTheme } from "./modules/theme.js";
+import { initTravelKits } from "./modules/travel-kits.js";
 
 const initSearch = () => {
   const form = qs(CONFIG.selectors.searchForm);

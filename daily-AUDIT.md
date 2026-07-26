@@ -23,8 +23,11 @@ None detected.
 
 ## P1 — Important issues worth fixing next
 
-### [P1-01] Validated product-data pipeline is unused; four modules duplicate raw data loading
+No outstanding findings — 1 resolved (see below).
 
+### [P1-01] Validated product-data pipeline is unused; four modules duplicate raw data loading — RESOLVED
+
+- **Status:** Resolved 2026-07-26 — `cart.js`, `catalog.js`, `product.js`, and `travel-kits.js` were migrated to `loadNormalizedProducts` through a single shared `product-data.js` module instance, `imageAlt` was added to `normalizeProduct` as a pass-through field, and the duplicated `ensureProductsCollection` helpers were removed.
 - **Classification:** Maintenance risk
 - **Evidence:** `js/modules/product-data.js:116-162` (exported `loadNormalizedProducts`, never imported); `js/modules/cart.js:227-248`; `js/modules/catalog.js:256,295`; `js/modules/product.js:14,387,401`; `js/modules/travel-kits.js:19,429-430`
 - **Current behavior:** `product-data.js` defines `loadNormalizedProducts`, which validates records, applies field defaults, detects duplicate ids/slugs, and cross-checks category/subcategory against `categories.json`. No other module calls it. Instead, `cart.js`, `catalog.js`, and `product.js` each define their own near-identical `ensureProductsCollection` helper and fetch `data/products.json` directly, and `travel-kits.js` does the same inline. The four call sites also use three different literal paths (`"data/products.json"`, `"/data/products.json"`, `"/data/products.json?v=20260406-2"`).

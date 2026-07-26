@@ -300,11 +300,24 @@ const renderProduct = (product) => {
   const addBtn = qs("[data-add-product]", root);
   const qtyInput = qs("[data-qty-input]", root);
   on(addBtn, "click", () => {
-    const qty = qtyInput ? Number(qtyInput.value) : 1;
+    const requestedQty = qtyInput ? Number(qtyInput.value) : 1;
+    const maxQty = qtyInput ? Number(qtyInput.max) : NaN;
+    const hasMaxLimit = Number.isFinite(maxQty) && maxQty > 0;
+    const qty = hasMaxLimit ? Math.min(requestedQty, maxQty) : requestedQty;
+
     const saved = addToCart(product, qty);
     if (!saved) return;
 
     updateCartCount();
+
+    if (hasMaxLimit && requestedQty > maxQty) {
+      showToast(
+        `Maksymalnie ${maxQty} szt. naraz. Dodano ${maxQty} szt. produktu „${product.name}”.`,
+        { type: "warning" },
+      );
+      return;
+    }
+
     showToast(`Dodano „${product.name}” do koszyka.`, { type: "success" });
   });
 };

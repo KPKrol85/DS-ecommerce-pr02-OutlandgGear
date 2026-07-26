@@ -1,12 +1,11 @@
 import { CONFIG } from "../config.js";
-import { fetchJson } from "./data.js";
 import { qs, qsa, delegate } from "./dom.js";
 import { loadCart, saveCart, getStorageStatus } from "./storage.js";
 import { clamp, formatCurrency } from "../utils.js";
 import { showToast } from "./toast.js";
 import { createFallbackNotice } from "./fallback.js";
 import { clearUiState, setUiState } from "./ui-state.js";
-import { findProductById } from "./product-data.js";
+import { findProductById, loadNormalizedProducts } from "./product-data.js";
 
 let productsCache = [];
 let cartHandlersBound = false;
@@ -224,14 +223,6 @@ const renderCartLoadError = (container, summary) => {
   }
 };
 
-const ensureProductsCollection = (value) => {
-  if (!Array.isArray(value)) {
-    throw new Error("Cart products payload must be an array.");
-  }
-
-  return value;
-};
-
 export const initCart = async () => {
   const container = qs(CONFIG.selectors.cartContainer);
   if (!container) {
@@ -243,9 +234,7 @@ export const initCart = async () => {
   const stateRegion = qs("[data-cart-state]");
 
   try {
-    productsCache = ensureProductsCollection(
-      await fetchJson("data/products.json"),
-    );
+    productsCache = await loadNormalizedProducts();
   } catch (error) {
     console.error("Cart data error", error);
     renderCartLoadError(container, summary);

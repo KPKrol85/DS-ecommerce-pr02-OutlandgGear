@@ -4,8 +4,7 @@ import { debounce, formatCurrency } from "../utils.js";
 import { addToCart, updateCartCount } from "./cart.js";
 import { showToast } from "./toast.js";
 import { createFallbackNotice } from "./fallback.js";
-import { fetchJson } from "./data.js";
-import { findProductById } from "./product-data.js";
+import { findProductById, loadNormalizedProducts } from "./product-data.js";
 import { buildProductUrl } from "./routes.js";
 import { clearUiState, setUiState } from "./ui-state.js";
 
@@ -253,14 +252,6 @@ const renderCatalogLoadError = (grid, countEl, loadMoreBtn) => {
   }
 };
 
-const ensureProductsCollection = (value) => {
-  if (!Array.isArray(value)) {
-    throw new Error("Catalog products payload must be an array.");
-  }
-
-  return value;
-};
-
 const bindAddToCartTriggers = (products) => {
   if (addToCartHandlersBound) return;
 
@@ -292,7 +283,7 @@ export const initCatalog = async () => {
 
   let products = [];
   try {
-    products = ensureProductsCollection(await fetchJson("data/products.json"));
+    products = await loadNormalizedProducts();
   } catch (error) {
     console.error("Catalog data error", error);
     if (grid) {

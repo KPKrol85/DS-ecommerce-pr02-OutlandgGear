@@ -1,6 +1,8 @@
 import { CONFIG } from "../config.js";
 import { fetchJson } from "./data.js";
 
+export const PRODUCTS_DATA_PATH = "/data/products.json";
+
 const DEFAULT_IMAGE = "assets/svg/product-placeholder-01.svg";
 const DEFAULT_STOCK_STATUS = "Brak informacji";
 
@@ -69,6 +71,7 @@ const normalizeProduct = (product, categoryMap, seenIds, seenSlugs) => {
 
   const category = toSafeString(product.category, "Bez kategorii");
   const subcategory = toSafeString(product.subcategory, "Pozostałe");
+  const imageAlt = toSafeString(product.imageAlt);
 
   if (categoryMap.size) {
     const categorySubcategories = categoryMap.get(category);
@@ -96,6 +99,7 @@ const normalizeProduct = (product, categoryMap, seenIds, seenSlugs) => {
     specs: normalizeSpecs(product.specs),
     stockStatus: toSafeString(product.stockStatus, DEFAULT_STOCK_STATUS),
     images: safeImages,
+    ...(imageAlt ? { imageAlt } : {}),
   };
 
   seenIds.add(id);
@@ -127,7 +131,7 @@ export const loadNormalizedProducts = async () => {
     };
 
     const [rawProducts, rawCategories] = await Promise.all([
-      fetchJson("/data/products.json"),
+      fetchJson(PRODUCTS_DATA_PATH),
       loadCategories(),
     ]);
 

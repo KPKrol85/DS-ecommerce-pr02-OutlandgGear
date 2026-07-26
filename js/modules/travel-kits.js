@@ -4,6 +4,7 @@ import { setUiState, clearUiState } from "./ui-state.js?v=20260405-3";
 import { createFallbackNotice } from "./fallback.js?v=20260405-3";
 import { formatCurrency } from "../utils.js?v=20260405-3";
 import { buildProductUrl, buildTravelKitUrl, resolveTravelKitSlug } from "./routes.js?v=20260405-3";
+import { loadNormalizedProducts } from "./product-data.js";
 
 const SITE_NAME = "Outland Gear";
 const SITE_URL = "https://e-commerce-pr02-outlandgear.netlify.app/";
@@ -16,7 +17,6 @@ const FALLBACK_SOCIAL_IMAGE_WIDTH = "1536";
 const FALLBACK_SOCIAL_IMAGE_HEIGHT = "1024";
 const WEBPAGE_SCHEMA_SELECTOR = 'script[data-schema="webpage"]';
 const TRAVEL_KITS_DATA_PATH = "/data/travel-kits.json?v=20260406-2";
-const PRODUCTS_DATA_PATH = "/data/products.json?v=20260406-2";
 const KIT_SLUG_ALIASES = new Map([["wekend-w-gorach", "weekend-w-gorach"]]);
 let travelKitsInitialized = false;
 
@@ -427,7 +427,7 @@ export const initTravelKits = async () => {
   try {
     [kits, products] = await Promise.all([
       fetchJson(TRAVEL_KITS_DATA_PATH),
-      fetchJson(PRODUCTS_DATA_PATH),
+      loadNormalizedProducts(),
     ]);
   } catch (error) {
     console.error("Travel kits data error", error);
@@ -436,8 +436,8 @@ export const initTravelKits = async () => {
     return;
   }
 
-  if (!Array.isArray(kits) || !Array.isArray(products)) {
-    console.error("Travel kits data error", { kits, products });
+  if (!Array.isArray(kits)) {
+    console.error("Travel kits data error", { kits });
     travelKitsInitialized = false;
     renderKitLoadError(root);
     return;

@@ -4,14 +4,12 @@ import { formatCurrency } from "../utils.js";
 import { addToCart, updateCartCount } from "./cart.js";
 import { showToast } from "./toast.js";
 import { createFallbackNotice } from "./fallback.js";
-import { fetchJson } from "./data.js";
-import { findProductBySlug } from "./product-data.js";
+import { findProductBySlug, loadNormalizedProducts } from "./product-data.js";
 import { buildProductUrl, resolveProductSlug } from "./routes.js";
 import { setUiState, clearUiState } from "./ui-state.js";
 
 const SITE_NAME = "Outland Gear";
 const SITE_URL = "https://e-commerce-pr02-outlandgear.netlify.app/";
-const PRODUCTS_DATA_PATH = "/data/products.json";
 const FALLBACK_SOCIAL_IMAGE = "assets/og-img/og-img.png";
 const FALLBACK_SOCIAL_IMAGE_ALT =
   "Grafika Outland Gear przedstawiająca leśny krajobraz, góry, jezioro i centralne logo marki w zielono-beżowej kolorystyce.";
@@ -384,21 +382,13 @@ const renderProductLoadError = (root) => {
   root.appendChild(section);
 };
 
-const ensureProductsCollection = (value) => {
-  if (!Array.isArray(value)) {
-    throw new Error("Product payload must be an array.");
-  }
-
-  return value;
-};
-
 export const initProduct = async () => {
   const root = qs(CONFIG.selectors.productRoot);
   if (!root) return;
   const stateRegion = qs("[data-product-state]", root);
   let products;
   try {
-    products = ensureProductsCollection(await fetchJson(PRODUCTS_DATA_PATH));
+    products = await loadNormalizedProducts();
   } catch (error) {
     console.error("Product data error", error);
     renderProductLoadError(root);

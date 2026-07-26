@@ -36,7 +36,7 @@
 }
 
 .toast[data-feedback-type="info"] {
-  border-left-color: var(--color-sky);
+  border-left-color: var(--color-toast-info-border);
 }
 
 .toast--visible {

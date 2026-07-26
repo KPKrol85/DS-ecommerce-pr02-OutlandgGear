@@ -60,6 +60,7 @@ export const addToCart = (product, qty = 1) => {
   if (!saved) {
     showToast(
       "Nie udało się zapisać koszyka. Odśwież stronę i spróbuj ponownie.",
+      { type: "error" },
     );
   }
   return saved;

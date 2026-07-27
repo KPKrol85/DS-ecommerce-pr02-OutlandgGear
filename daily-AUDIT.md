@@ -54,7 +54,7 @@ No outstanding findings — 3 resolved (see below).
 
 ## P2 — Minor refinements
 
-2 outstanding — 3 resolved (see below).
+1 outstanding — 4 resolved (see below).
 
 ### [P2-01] Product-page quantity limit is not enforced beyond the input's `max` attribute — RESOLVED
 
@@ -83,8 +83,9 @@ No outstanding findings — 3 resolved (see below).
 - **Impact:** The visual weight of badges, table headers, the toast border, and `ui-state` panels in dark mode depends on whatever is rendered behind them — a rendering risk that requires browser verification, not a confirmed defect from source alone.
 - **Recommended direction:** Confirm the dark-mode translucency is an intentional layering effect for each consuming component, or convert `--color-sky` to an opaque dark-theme value consistent with its light-theme counterpart.
 
-### [P2-04] Duplicate `data.js` module instance from differing import specifiers
+### [P2-04] Duplicate `data.js` module instance from differing import specifiers — RESOLVED
 
+- **Status:** Resolved 2026-07-26 — `travel-kits.js`'s `data.js` import specifier was aligned with `product-data.js`'s, collapsing the two instances into one. The same versioned-specifier pattern was then traced project-wide: the remaining five versioned specifiers in `travel-kits.js` (`dom.js`, `ui-state.js`, `fallback.js`, `utils.js`, `routes.js`) and all 14 versioned specifiers in `js/app.js` (including `config.js`, `dom.js`, and `cart.js`, the only three of those 14 with another importer) were aligned to plain specifiers, confirmed by grep to leave no versioned import specifier anywhere in `js/`.
 - **Classification:** Maintenance risk
 - **Evidence:** `js/modules/travel-kits.js` imports `./data.js?v=20260405-3`; `js/modules/product-data.js` imports `./data.js` (no query string)
 - **Current behavior:** The differing specifiers cause the module resolver to treat them as two distinct modules, so `data.js` is instantiated twice.

@@ -366,6 +366,10 @@
   border: none;
 }
 
+.nav-drawer__panel .theme-toggle--drawer {
+  opacity: 1;
+}
+
 .nav-drawer__links {
   display: flex;
   flex-direction: column;

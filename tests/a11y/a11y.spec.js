@@ -148,6 +148,17 @@ test.describe("rendered accessibility audit", () => {
           window.localStorage.setItem("outlandgear-theme", themeName);
         }, theme);
 
+        // Suppresses the legal modal's 700ms auto-open (legal-modal.js:124-131)
+        // so it doesn't overlay the page during these resting-state scans.
+        // Written the same way acceptAndClose itself does, and the same way
+        // a11y-interactive.spec.js seeds it for its own non-modal states.
+        await page.addInitScript(() => {
+          window.localStorage.setItem(
+            "outlandGearLegalAcceptedAt",
+            new Date().toISOString(),
+          );
+        });
+
         if (route.beforeVisit) {
           await route.beforeVisit(page);
         }
@@ -160,6 +171,23 @@ test.describe("rendered accessibility audit", () => {
           "data-theme",
           theme,
         );
+
+        // Confirms the acceptance-flag seeding above suppressed the legal
+        // modal's auto-open (P2-07), so this scan analyses the route's
+        // resting content only. An absent modal element counts as closed —
+        // there is nothing open for axe to encounter either way.
+        const legalModalIsClosed = await page.evaluate(() => {
+          const modal = document.querySelector("#outland-legal-modal");
+          if (!modal) return true;
+          return (
+            modal.getAttribute("aria-hidden") === "true" ||
+            modal.hasAttribute("hidden")
+          );
+        });
+        expect(
+          legalModalIsClosed,
+          `Legal modal was open during the ${route.name} scan (${theme} theme); acceptance-flag seeding did not suppress auto-open.`,
+        ).toBe(true);
 
         const accessibilityScanResults = await new AxeBuilder({ page })
           .analyze();

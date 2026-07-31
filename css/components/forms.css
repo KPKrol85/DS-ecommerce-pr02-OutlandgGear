@@ -95,6 +95,6 @@
 }
 
 .form button[type="submit"]:disabled {
-  opacity: 0.75;
+  opacity: 0.95;
   cursor: progress;
 }

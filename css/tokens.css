@@ -127,7 +127,6 @@
   --color-notice-error-border: rgba(200, 67, 58, 0.35);
   --color-toast-bg: #1d2a26;
   --color-toast-info-border: #eef4f6;
-  --color-btn-disabled-text: #4b5854;
   --color-hero-bg: var(--color-ink);
   --color-hero-kicker: #93b29b;
 }
@@ -193,7 +192,6 @@ html[data-theme="dark"] {
   --color-notice-error-border: rgba(255, 145, 133, 0.32);
   --color-toast-bg: #1d2a26;
   --color-toast-info-border: #94b09a;
-  --color-btn-disabled-text: #a2b3a8;
   --color-hero-bg: #081412;
   --color-hero-kicker: #a9cab3;
 }

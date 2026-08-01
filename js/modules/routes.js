@@ -33,3 +33,10 @@ export const resolveTravelKitSlug = () =>
     new URLSearchParams(window.location.search).get("slug") ||
       readSlugFromPath(TRAVEL_KIT_ROUTE_SEGMENT),
   );
+
+// Build-generated detail routes carry data-prerendered="true" on their page
+// root (see scripts/build-dist.mjs). On those pages the served HTML is already
+// complete, so client-side rendering must refresh it in place instead of
+// hiding or replacing it.
+export const isPrerenderedRoot = (root) =>
+  root instanceof HTMLElement && root.dataset.prerendered === "true";

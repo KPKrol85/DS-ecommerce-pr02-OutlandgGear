@@ -3,7 +3,12 @@ import { fetchJson } from "./data.js";
 import { setUiState, clearUiState } from "./ui-state.js";
 import { createFallbackNotice } from "./fallback.js";
 import { formatCurrency } from "../utils.js";
-import { buildProductUrl, buildTravelKitUrl, resolveTravelKitSlug } from "./routes.js";
+import {
+  buildProductUrl,
+  buildTravelKitUrl,
+  isPrerenderedRoot,
+  resolveTravelKitSlug,
+} from "./routes.js";
 import { loadNormalizedProducts } from "./product-data.js";
 
 const SITE_NAME = "Outland Gear";
@@ -408,6 +413,24 @@ const renderKitLoadError = (root) => {
   root.appendChild(section);
 };
 
+const KIT_REFRESH_ERROR_STATE = {
+  type: "error",
+  title: "Nie udało się odświeżyć danych",
+  message:
+    "Pokazujemy zapisaną wersję tego kompletu. Odśwież stronę, aby spróbować ponownie.",
+};
+
+// On a prerendered page the served HTML is already complete, so a failed
+// refresh is reported next to the content instead of replacing it.
+const reportKitLoadFailure = (root, stateRegion) => {
+  if (isPrerenderedRoot(root)) {
+    setUiState(stateRegion, KIT_REFRESH_ERROR_STATE);
+    return;
+  }
+
+  renderKitLoadError(root);
+};
+
 export const initTravelKits = async () => {
   const root = qs(KIT_ROOT_SELECTOR);
   if (!root) return;
@@ -415,12 +438,18 @@ export const initTravelKits = async () => {
   travelKitsInitialized = true;
 
   const stateRegion = qs("[data-kit-state]", root);
-  hideKitContent(root);
-  setUiState(stateRegion, {
-    type: "loading",
-    title: "Ładujemy komplet",
-    message: "Pobieramy opis zestawu i przypisane produkty.",
-  });
+  const prerendered = isPrerenderedRoot(root);
+
+  // A prerendered page already shows the full kit, so it refreshes in place
+  // rather than collapsing to a loading state first.
+  if (!prerendered) {
+    hideKitContent(root);
+    setUiState(stateRegion, {
+      type: "loading",
+      title: "Ładujemy komplet",
+      message: "Pobieramy opis zestawu i przypisane produkty.",
+    });
+  }
 
   let kits;
   let products;
@@ -432,14 +461,14 @@ export const initTravelKits = async () => {
   } catch (error) {
     console.error("Travel kits data error", error);
     travelKitsInitialized = false;
-    renderKitLoadError(root);
+    reportKitLoadFailure(root, stateRegion);
     return;
   }
 
   if (!Array.isArray(kits)) {
     console.error("Travel kits data error", { kits });
     travelKitsInitialized = false;
-    renderKitLoadError(root);
+    reportKitLoadFailure(root, stateRegion);
     return;
   }
 
@@ -447,12 +476,17 @@ export const initTravelKits = async () => {
   const matchedKit = findKitBySlug(kits, slug);
 
   if (!matchedKit) {
-    setUiState(stateRegion, {
-      type: "info",
-      title: "Nie znaleźliśmy tego kompletu",
-      message:
-        "Wróć do strony głównej lub przejdź do katalogu, aby zobaczyć inne propozycje.",
-    });
+    setUiState(
+      stateRegion,
+      prerendered
+        ? KIT_REFRESH_ERROR_STATE
+        : {
+            type: "info",
+            title: "Nie znaleźliśmy tego kompletu",
+            message:
+              "Wróć do strony głównej lub przejdź do katalogu, aby zobaczyć inne propozycje.",
+          },
+    );
     travelKitsInitialized = false;
     return;
   }
@@ -465,6 +499,6 @@ export const initTravelKits = async () => {
   } catch (error) {
     console.error("Travel kits render error", error);
     travelKitsInitialized = false;
-    renderKitLoadError(root);
+    reportKitLoadFailure(root, stateRegion);
   }
 };

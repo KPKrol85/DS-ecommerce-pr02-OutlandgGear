@@ -206,7 +206,15 @@ const STATES = [
   },
   {
     name: "travel kit loading state banner",
-    path: "/komplety/weekend-w-gorach/",
+    // Deliberately the template route, not the prerendered /komplety/<slug>/
+    // one. Prerendered pages are marked data-prerendered="true" by the build,
+    // and travel-kits.js skips the loading state on them so the already-served
+    // content is never hidden and rebuilt (see routes.js isPrerenderedRoot).
+    // The loading state is therefore reachable only where it is still correct:
+    // the unprerendered template, which really does start empty. Do not point
+    // this back at the prerendered route — it would assert the flash that the
+    // guard exists to remove.
+    path: "/komplety.html?slug=weekend-w-gorach",
     // The loading state clears as soon as the kit and product data resolve,
     // which is too fast on a local/static server to observe reliably. The
     // travel-kits.json request is held open briefly so the loading state

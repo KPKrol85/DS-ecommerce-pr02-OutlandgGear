@@ -5,7 +5,11 @@ import { addToCart, updateCartCount } from "./cart.js";
 import { showToast } from "./toast.js";
 import { createFallbackNotice } from "./fallback.js";
 import { findProductBySlug, loadNormalizedProducts } from "./product-data.js";
-import { buildProductUrl, resolveProductSlug } from "./routes.js";
+import {
+  buildProductUrl,
+  isPrerenderedRoot,
+  resolveProductSlug,
+} from "./routes.js";
 import { setUiState, clearUiState } from "./ui-state.js";
 
 const SITE_NAME = "Outland Gear";
@@ -395,6 +399,24 @@ const renderProductLoadError = (root) => {
   root.appendChild(section);
 };
 
+const PRODUCT_REFRESH_ERROR_STATE = {
+  type: "error",
+  title: "Nie udało się odświeżyć danych",
+  message:
+    "Pokazujemy zapisaną wersję tej karty produktu. Odśwież stronę, aby spróbować ponownie.",
+};
+
+// On a prerendered page the served HTML is already complete, so a failed
+// refresh is reported next to the content instead of replacing it.
+const reportProductLoadFailure = (root, stateRegion) => {
+  if (isPrerenderedRoot(root)) {
+    setUiState(stateRegion, PRODUCT_REFRESH_ERROR_STATE);
+    return;
+  }
+
+  renderProductLoadError(root);
+};
+
 export const initProduct = async () => {
   const root = qs(CONFIG.selectors.productRoot);
   if (!root) return;
@@ -404,15 +426,24 @@ export const initProduct = async () => {
     products = await loadNormalizedProducts();
   } catch (error) {
     console.error("Product data error", error);
-    renderProductLoadError(root);
+    reportProductLoadFailure(root, stateRegion);
     return;
   }
 
   const normalizedSlug = resolveProductSlug();
   const matchedProduct = findProductBySlug(products, normalizedSlug);
+
+  // A prerendered page's URL, canonical link and product schema all commit to
+  // one specific product, so a slug that no longer resolves must not fall back
+  // to a different record. The built page stays as served, with the banner.
+  if (!matchedProduct && isPrerenderedRoot(root)) {
+    reportProductLoadFailure(root, stateRegion);
+    return;
+  }
+
   const product = matchedProduct || products[0];
   if (!product) {
-    renderProductLoadError(root);
+    reportProductLoadFailure(root, stateRegion);
     return;
   }
 

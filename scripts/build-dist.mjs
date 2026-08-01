@@ -190,7 +190,22 @@ const injectBaseHref = (html) => {
 };
 
 const removeHiddenAttributeFromElement = (html, pattern) =>
-  html.replace(pattern, (match) => match.replace(/\s hidden\b/, ""));
+  html.replace(pattern, (match) => match.replace(/\s+hidden\b/, ""));
+
+// Marks the page root of a prerendered detail page so client-side modules can
+// treat the served HTML as the baseline instead of a placeholder.
+const markPrerenderedRoot = (html, rootAttribute) => {
+  const pattern = new RegExp(
+    `<main([^>]*\\s${escapeForRegExp(rootAttribute)})([^>]*)>`,
+    "i",
+  );
+
+  if (!pattern.test(html)) {
+    throw new Error(`Missing prerender root <main ${rootAttribute}>`);
+  }
+
+  return html.replace(pattern, `<main$1 data-prerendered="true"$2>`);
+};
 
 const buildOrganizationSchema = () => ({
   "@context": "https://schema.org",
@@ -302,6 +317,7 @@ const applyProductPrerender = (html, product) => {
     : "";
 
   let nextHtml = injectBaseHref(html);
+  nextHtml = markPrerenderedRoot(nextHtml, "data-product-root");
   nextHtml = replaceTitleTag(nextHtml, metadata.pageTitle);
   nextHtml = replaceMetaContent(
     nextHtml,
@@ -489,6 +505,7 @@ const applyTravelKitPrerender = (html, kit, products) => {
   const primaryHref = `kategoria.html${kit.ctaQuery ? `?q=${encodeURIComponent(kit.ctaQuery)}` : ""}`;
 
   let nextHtml = injectBaseHref(html);
+  nextHtml = markPrerenderedRoot(nextHtml, "data-kit-root");
   nextHtml = replaceTitleTag(nextHtml, metadata.pageTitle);
   nextHtml = replaceMetaContent(
     nextHtml,

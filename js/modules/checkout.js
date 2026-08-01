@@ -4,13 +4,19 @@ import { clearCart } from "./storage.js";
 import { initFormFieldUX, setSubmitState, validateFormFields } from "./form-ux.js";
 import { clearUiState, setUiState } from "./ui-state.js";
 
-const getSuccessUrl = (form) => new URL(form.getAttribute("action") || window.location.href, window.location.href);
+const getSuccessUrl = (form) =>
+  new URL(form.getAttribute("action") || window.location.href, window.location.href);
 
 export const initCheckout = () => {
   const form = qs(CONFIG.selectors.checkoutForm);
   if (!form) return;
 
-  const status = qs(CONFIG.selectors.checkoutStatus) || qs("[data-checkout-status]", form);
+  window.addEventListener("pageshow", (e) => {
+    if (e.persisted) setSubmitState(form, false);
+  });
+
+  const status =
+    qs(CONFIG.selectors.checkoutStatus) || qs("[data-checkout-status]", form);
 
   form.noValidate = true;
   initFormFieldUX(form);

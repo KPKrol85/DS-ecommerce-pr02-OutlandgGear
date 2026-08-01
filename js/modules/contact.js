@@ -1,5 +1,10 @@
 import { qs, on } from "./dom.js";
-import { initFormFieldUX, setFormStatus, setSubmitState, validateFormFields } from "./form-ux.js";
+import {
+  initFormFieldUX,
+  setFormStatus,
+  setSubmitState,
+  validateFormFields,
+} from "./form-ux.js";
 
 const encodeFormBody = (form) => new URLSearchParams(new FormData(form)).toString();
 
@@ -9,6 +14,10 @@ export const initContactForm = () => {
 
   form.noValidate = true;
   initFormFieldUX(form);
+
+  window.addEventListener("pageshow", (e) => {
+    if (e.persisted) setSubmitState(form, false);
+  });
 
   on(form, "submit", async (event) => {
     event.preventDefault();

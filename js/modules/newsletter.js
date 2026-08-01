@@ -6,11 +6,16 @@ import {
   validateFormFields,
 } from "./form-ux.js";
 
-const getSuccessUrl = (form) => new URL(form.getAttribute("action") || window.location.href, window.location.href);
+const getSuccessUrl = (form) =>
+  new URL(form.getAttribute("action") || window.location.href, window.location.href);
 
 export const initNewsletterForm = () => {
   const form = qs("[data-newsletter-form]");
   if (!form) return;
+
+  window.addEventListener("pageshow", (e) => {
+    if (e.persisted) setSubmitState(form, false);
+  });
 
   form.noValidate = true;
   initFormFieldUX(form);

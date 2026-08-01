@@ -59,7 +59,7 @@
 .btn[aria-disabled="true"] {
   background: var(--color-stone);
   border-color: var(--color-border);
-  color: var(--color-muted);
+  color: var(--color-btn-disabled-text);
 }
 
 .btn--small {

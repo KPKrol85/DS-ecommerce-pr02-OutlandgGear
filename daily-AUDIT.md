@@ -1,12 +1,12 @@
 # Daily Front-End Audit — Outland Gear
 
-**Audit date:** 2026-07-26
+**Audit date:** 2026-08-01
 **Project type:** Static multi-page demo e-commerce frontend (MPA) built with semantic HTML, modular CSS, Vanilla JavaScript ES modules, local JSON data, and a Node.js build pipeline generating production files into `dist/` for Netlify deployment.
 **Audit mode:** static repository review
 
 ## Overall assessment
 
-The implementation is stable and consistent with its documented architecture: MPA HTML pages, layered CSS, and guarded Vanilla JS modules coordinated through `js/app.js`. No blockers were found — forms, storage access, and focus management are defensively coded across the board, and `robots.txt`/`sitemap.xml` are currently in sync with `data/products.json` and `data/travel-kits.json`. The structural gap in the automated accessibility suite that let two toast contrast defects (P1-02, P1-03) reach production undetected has been closed: a new interaction-state spec (P2-05) now scans interaction-only component states, and its first run immediately caught a real contrast defect in the navigation drawer (P1-04), since fixed. Two further contrast-related items remain open: an unaddressed disabled-button contrast mismatch (P2-06) and an unconfirmed question of whether the existing resting-state scans include the legal modal (P2-07). Remaining findings are minor and proportionate to a solo-maintained static frontend project. The project is ready for normal continued development.
+The implementation is stable and consistent with its documented architecture: MPA HTML pages, layered CSS, and guarded Vanilla JS modules coordinated through `js/app.js`. No blockers were found — forms, storage access, and focus management are defensively coded across the board, and `robots.txt`/`sitemap.xml` are currently in sync with `data/products.json` and `data/travel-kits.json`. The structural gap in the automated accessibility suite that let two toast contrast defects (P1-02, P1-03) reach production undetected has been closed: a new interaction-state spec (P2-05) now scans interaction-only component states, and its first run immediately caught a real contrast defect in the navigation drawer (P1-04), since fixed. Both contrast-related items that were open on 2026-07-27 are now closed: the disabled-button contrast defect (P2-06) was fixed after browser measurement corrected its recorded scope, and the legal-modal question (P2-07) was settled by an instrumented run that contradicted its hypothesis and led to deterministic seeding in the resting-state suite. Three new findings are open, none of them a live rendering defect: a tooling coverage limitation in axe-core (P2-08), a missing busy state on the checkout submit button (P2-09), and a latent `pointer-events` risk on the `aria-disabled` branch of the base disabled rule (P2-10). Remaining findings are minor and proportionate to a solo-maintained static frontend project. The project is ready for normal continued development.
 
 ## Verified strengths
 
@@ -63,7 +63,7 @@ No outstanding findings — 4 resolved (see below).
 
 ## P2 — Minor refinements
 
-2 outstanding — 5 resolved (see below).
+3 outstanding — 7 resolved (see below).
 
 ### [P2-01] Product-page quantity limit is not enforced beyond the input's `max` attribute — RESOLVED
 
@@ -110,26 +110,53 @@ No outstanding findings — 4 resolved (see below).
 - **Impact:** The toast component's contrast defects (P1-02, P1-03) reached production undetected because the toast region is absent from the DOM until `showToast` runs. The same mechanism — accessible markup that only exists post-interaction — applies to the nav drawer, search panel, legal modal, and state banners; a regression in any of them would pass the suite the same way.
 - **Recommended direction:** Extend the suite's coverage to include at least one interaction-triggered state per affected component, starting with the toast variants already found to fail; the specific mechanism is an open implementation decision, not fixed by this finding.
 
-### [P2-06] `.btn:disabled`/`[aria-disabled="true"]` text fails color-contrast against its background
+### [P2-06] `.btn:disabled`/`[aria-disabled="true"]` text fails color-contrast against its background — RESOLVED
 
+- **Status:** Resolved 2026-08-01 — added `--color-btn-disabled-text` to both theme blocks in `css/tokens.css` (`#4b5854` light, `#a2b3a8` dark), referenced it from the disabled-state `color` in `css/components/buttons.css:62` in place of `--color-muted`, raised `css/components/forms.css:98` from `opacity: 0.75` to `0.95`, and raised `css/base.css:89` from `opacity: 0.55` to `0.95`. `--color-muted`'s own value was left unchanged; it has 16 declarations across 12 files. Resulting light-theme contrast: 5.07:1 for the contact button and approximately 5.4:1 for the newsletter button across the footer gradient; the dark theme passed before and after. Verified by direct browser measurement of computed styles — `rgb(75, 88, 84)` on `rgb(229, 225, 216)` at `opacity: 0.95` — not by the automated suite, which cannot evaluate this state (see P2-08); `npm run qa:a11y` passed 42 of 42, confirming only that nothing else regressed. The recorded evidence below was incomplete in four respects, established by source inspection and browser measurement: (1) opacity is involved in every real instance — `css/components/forms.css:97` applied `opacity: 0.75` to `.form button[type="submit"]:disabled` and `css/base.css:87-94` applied `opacity: 0.55` to everything its `:where()` selector matched outside `.form` — so this was not a direct token-on-token mismatch as recorded; (2) the checkout submit button is never disabled by application code, as `js/modules/checkout.js` does not call `setSubmitState` and never sets `.disabled`, so it was not an instance of this defect (tracked separately as P2-09); (3) `aria-disabled="true"` is never set by JavaScript and never declared in markup anywhere in the project — it appears only in CSS selectors, at `css/base.css:83,88`, `css/components/buttons.css:25,33,43,53,59`, and `css/components/nav.css:204` — so that half of this finding's title matched nothing at runtime; (4) the gallery thumbnail buttons are set `disabled` and `hidden` from the same condition on adjacent lines (`js/modules/product.js:277-278`), so they are never visible while disabled and contain no text. The two real instances were the contact submit button (`kontakt.html`, inside `<form class="form card info-card">`, governed by `forms.css:97`, measured 2.70:1 as rendered in the light theme) and the newsletter submit button (`partials/footer.html:21`, inside `<form class="site-footer__subscribe">`, which lacks the `.form` class so `forms.css:97` never matched it, governed by `base.css`, 2.63-2.70:1 over the footer's gradient); the newsletter button renders on every page.
 - **Classification:** Defect
 - **Evidence:** `css/components/buttons.css:62` (`color: var(--color-muted)` on `background: var(--color-stone)`, `#e5e1d8` in the light theme); no axe-core spec in `tests/a11y/` currently exercises a disabled or `aria-disabled` button, so this state is not covered by either `a11y.spec.js` or `a11y-interactive.spec.js`.
 - **Current behavior:** `--color-muted` on `--color-stone` measures 4.28:1 in the light theme, below the 4.5:1 threshold. This is unrelated to the opacity mechanism behind P1-04 — no ancestor opacity or gradient is involved, it is a direct token-on-token mismatch. Found by manual contrast auditing of `--color-muted`'s other consumers while investigating P1-04.
 - **Impact:** Disabled/`aria-disabled` button text renders below the WCAG AA text-contrast threshold in the light theme.
 - **Recommended direction:** Address the token-on-token contrast mismatch between `--color-muted` and `--color-stone` for this state; the specific color value is a decision for the project owner, not fixed by this finding.
 
-### [P2-07] Unconfirmed: existing resting-state a11y scans may include the legal modal
+### [P2-07] Unconfirmed: existing resting-state a11y scans may include the legal modal — RESOLVED
 
+- **Status:** Resolved 2026-07-30 — an instrumented run measured the modal's actual state at each of the 22 scans and contradicted the hypothesis recorded below: 20 reported closed and 2 reported open (`product` in the light theme, `cart` in the dark theme). The same route reported different states in different themes, so the real behavior is not "the modal is open" but "the modal's state varies between runs" — a race between the modal's 700 ms auto-open timer and each test reaching its scan. Fixed by seeding the acceptance flag in `tests/a11y/a11y.spec.js` through `page.addInitScript` — the same mechanism `tests/a11y/a11y-interactive.spec.js` already uses — so auto-open is suppressed before the timer can fire, plus a permanent assertion immediately before each `analyze()` that the modal is closed, with route and theme in the failure message; an absent modal element counts as closed. The temporary diagnostic logging used for the measurement was removed. `npm run qa:a11y` passed 42 of 42 afterwards. The modal's own auto-open coverage remains in `a11y-interactive.spec.js`, unchanged.
 - **Classification:** Methodological/coverage question — not a confirmed defect
 - **Evidence:** `tests/a11y/a11y.spec.js`'s 22 existing scans do not seed the legal modal's acceptance flag (localStorage key `outlandGearLegalAcceptedAt` or sessionStorage key `outlandGearLegalAcceptedSession`), while `tests/a11y/a11y-interactive.spec.js` seeds it for every state except the modal's own auto-open test. The modal opens 700ms after load when neither key is present. A timing analysis — not an instrumented run of `a11y.spec.js` — suggests the modal is very likely already open during some or all of the 22 existing resting-state scans.
 - **Current behavior:** Unconfirmed. This has not been verified by running `a11y.spec.js` with instrumentation to check the modal's actual state at scan time; it remains an open question, not a settled fact.
 - **Impact:** If confirmed, this would mean the 22 existing resting-state scans include the legal modal in what they analyse, rather than scanning each route's page content in isolation as their names imply — a coverage/interpretation question about what those scans actually validate, not a described rendering defect.
 - **Recommended direction:** Confirm or rule out the modal's presence during those 22 scans by instrumented execution (e.g. checking `#outland-legal-modal`'s `aria-hidden` state at scan time) before drawing further conclusions.
 
+### [P2-08] axe-core's `color-contrast` rule excludes disabled controls
+
+- **Classification:** Tooling coverage limitation — not a project defect
+- **Evidence:** `node_modules/axe-core/axe.js:27555-27557` (inside `colorContrastMatches`, returns false for any node where `isDisabled` or `_isInert` is true); `node_modules/axe-core/axe.js:24476-24494` (`isDisabled` covers the native `disabled` attribute on elements in `disabledNodeNames` and `aria-disabled="true"`, walking ancestors)
+- **Current behavior:** Any node the `color-contrast` rule would otherwise evaluate is skipped outright if it is disabled by either mechanism, so no axe scan in this project — `a11y.spec.js` or `a11y-interactive.spec.js` — can evaluate contrast on a disabled control.
+- **Impact:** An automated test for a disabled control's contrast would pass identically with or without a fix, so such a state can only be verified by direct browser measurement. This is why P2-06's fix was verified manually rather than by the suite.
+- **Recommended direction:** None — this is a property of the tooling, not something the project can address. Recorded so that future contrast work on disabled states is verified by measurement rather than assumed covered by the suite.
+
+### [P2-09] Checkout submit button has no busy state
+
+- **Classification:** Defect
+- **Evidence:** `js/modules/form-ux.js:67` (`setSubmitState` disables the submit button and updates its text while a form is submitting); `js/modules/contact.js` and `js/modules/newsletter.js` (both call `setSubmitState`); `js/modules/checkout.js` (calls neither and never sets `.disabled`)
+- **Current behavior:** A user who submits a valid checkout form receives no visual acknowledgement that submission is in progress, and the button remains clickable, unlike the contact and newsletter forms which both disable their submit button and swap its label.
+- **Impact:** Missing feedback rather than a contrast issue. In this demo the flow completes immediately, which limits the practical impact; the gap would matter in an implementation with a real backend, where the submission window is long enough for a user to click again.
+- **Recommended direction:** Bring the checkout form's submit handling in line with the contact and newsletter forms by routing it through the existing `setSubmitState` helper; the specific labelling is an implementation decision, not fixed by this finding.
+
+### [P2-10] `pointer-events: none` applies to the `aria-disabled` branch of the base disabled rule
+
+- **Classification:** Latent risk — no runtime effect today
+- **Evidence:** `css/base.css:87-94` (the rule sets `pointer-events: none` for both its selector lists, the second of which is the `[aria-disabled="true"]` branch covering `.btn`, `a`, `[role="button"]`, `.dropdown__toggle`, and `.nav-toggle`); `aria-disabled="true"` is never set by JavaScript and never declared in markup anywhere in the project, appearing only in CSS selectors (see P2-06)
+- **Current behavior:** The `aria-disabled` pattern exists specifically so an element stays focusable and reachable by assistive technology while being marked unavailable. `pointer-events: none` prevents such an element from receiving focus by click and suppresses hover feedback, working against that purpose. Nothing in the project currently sets the attribute, so the branch matches no element at runtime.
+- **Impact:** No effect today. The rule would apply the moment `aria-disabled` is used anywhere, at which point the affected element would silently lose the pointer interaction the pattern is meant to preserve.
+- **Recommended direction:** Decide whether `pointer-events: none` should apply to the `aria-disabled` branch at all before that attribute is introduced anywhere in the project; splitting the rule's two selector lists is one option, but the choice is a project-owner decision, not fixed by this finding.
+
 ## Extra quality improvements
 
-### Pin the Node.js engine version
+### Pin the Node.js engine version — DONE
 
+- **Status:** Complete — `package.json` declares an `engines.node` range of `>=20 <23`.
 - **Evidence:** `package.json` has no `engines` field; `.github/workflows/*.yml` pin CI to `node-version: 20`.
 - **Potential value:** Prevents local/CI Node-version drift (the audit environment resolved Node v22) from causing hard-to-reproduce build or dependency differences.
 - **Scope boundary:** Add an `engines.node` field to `package.json`; no behavior change required.
@@ -146,9 +173,11 @@ No outstanding findings — 4 resolved (see below).
 - Did not run `npm ci`, `npm run lint`, `npm run build`, or `npm run qa:a11y` — `node_modules` is absent and dependency installation is outside this audit's allowed scope, so the checks wired into `code-quality-ci.yml` and `accessibility-ci.yml` could not be executed locally.
 - On 2026-07-26, the project owner independently ran `npm run build`, exercised the local preview build in a browser session, and ran `npm run qa:a11y`, passing 22 of 22 across both themes — the checks this audit's environment could not execute (above) were subsequently verified outside it.
 - On 2026-07-27, the project owner ran `npm run qa:a11y` twice, both times 42 of 42 passing across both themes, confirming P2-05's resolution and the P1-04 fix.
+- On 2026-07-30, `tests/a11y/a11y.spec.js` was run once with temporary diagnostic instrumentation reading the legal modal's live state immediately before each `analyze()`, measuring 20 scans closed and 2 open (`product` light, `cart` dark) — the measurement that settled P2-07. The instrumentation was removed after the run, and `npm run qa:a11y` passed 42 of 42 with the resulting seeding and assertion in place.
+- On 2026-08-01, the disabled-state computed styles were measured directly in a browser session for P2-06 (`rgb(75, 88, 84)` on `rgb(229, 225, 216)` at `opacity: 0.95`), and `npm run qa:a11y` passed 42 of 42 — the latter confirming only that nothing else regressed, since axe cannot evaluate contrast on disabled controls (P2-08).
 
 ## Senior rating
 
 **Rating:** 9/10
 
-The codebase is well-architected for its stated scope: defensive storage handling, consistent accessible-interaction patterns, and CI-enforced accessibility scanning are all real and verifiable. P1-01's architectural inconsistency is resolved, and the build/lint/a11y pipeline is now verified passing (`npm run qa:a11y`, 42/42, both themes) rather than unverifiable. The interaction-state spec added to close P2-05's coverage gap proved its value immediately, catching a real contrast defect (P1-04) on its first run. The score is held to 9 rather than 10 by two open items: a confirmed but unaddressed contrast defect on disabled/`aria-disabled` buttons (P2-06), and an unconfirmed question of whether the existing resting-state scans include the legal modal (P2-07).
+The codebase is well-architected for its stated scope: defensive storage handling, consistent accessible-interaction patterns, and CI-enforced accessibility scanning are all real and verifiable. P1-01's architectural inconsistency is resolved, and the build/lint/a11y pipeline is now verified passing (`npm run qa:a11y`, 42/42, both themes) rather than unverifiable. The interaction-state spec added to close P2-05's coverage gap proved its value immediately, catching a real contrast defect (P1-04) on its first run. Both contrast items open at the last revision are now closed, each after measurement corrected what the finding originally recorded (P2-06, P2-07) — a pattern worth noting in its own right. The score is held to 9 rather than 10 by three open items, none of them a live rendering defect: a tooling limitation that leaves disabled-control contrast outside automated coverage (P2-08), a missing busy state on the checkout submit button (P2-09), and a latent `pointer-events` conflict on the `aria-disabled` branch of the base disabled rule (P2-10).

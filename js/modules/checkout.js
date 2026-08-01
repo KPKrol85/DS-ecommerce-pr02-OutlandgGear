@@ -1,7 +1,7 @@
 import { CONFIG } from "../config.js";
 import { qs, on } from "./dom.js";
 import { clearCart } from "./storage.js";
-import { initFormFieldUX, validateFormFields } from "./form-ux.js";
+import { initFormFieldUX, setSubmitState, validateFormFields } from "./form-ux.js";
 import { clearUiState, setUiState } from "./ui-state.js";
 
 const getSuccessUrl = (form) => new URL(form.getAttribute("action") || window.location.href, window.location.href);
@@ -29,6 +29,8 @@ export const initCheckout = () => {
       firstInvalidField.focus();
       return;
     }
+
+    setSubmitState(form, true, "Składanie zamówienia...");
 
     clearCart();
     window.location.assign(getSuccessUrl(form));

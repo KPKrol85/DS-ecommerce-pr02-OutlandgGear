@@ -11,9 +11,9 @@ The implementation is coherent and matches its documented architecture. Product 
 
 No critical or important findings remain open. The prerender contract is now declared in the generated output and honoured by both detail-page modules, so the build's prerendered routes deliver their content without depending on JavaScript to reveal it.
 
-Open findings are contained and all P2: two dangling image references that reach production structured data, a component whose background tokens are declared but never consumed, formatting drift that no CI job checks, two forms that carry personal data in a URL on the no-JavaScript path, one documentation claim that the implementation does not support, a missing live region on the catalog result count, and one stale cache-busting query.
+Open findings are contained and all P2: a component whose background tokens are declared but never consumed, formatting drift that no CI job checks, two forms that carry personal data in a URL on the no-JavaScript path, one documentation claim that the implementation does not support, a missing live region on the catalog result count, and one stale cache-busting query.
 
-The project is suitable for continued development and, once the two P2 items that affect published output are taken, for portfolio presentation within its documented demo scope.
+The project is suitable for continued development and, once the P2 item that affects published output (P2-04) is taken, for portfolio presentation within its documented demo scope.
 
 ## 2. Audit scope and verification
 
@@ -38,7 +38,7 @@ The project is suitable for continued development and, once the two P2 items tha
 - `npx prettier --check .` — executed and failed; 58 files reported as unformatted
 - `git status` / `git log` — executed; working tree clean, branch `main` up to date with `origin/main`
 - Regenerated `robots.txt` and `sitemap.xml` in memory from `scripts/seo-config.mjs` and `data/*.json` and compared against the tracked files — both byte-identical; sitemap contains 46 URLs (8 static + 35 product slugs + 3 travel-kit slugs)
-- Resolved all 124 image paths declared in `data/products.json` and `data/travel-kits.json` against the filesystem — 2 missing (see P2-01)
+- Resolved all 124 image paths declared in `data/products.json` and `data/travel-kits.json` against the filesystem — all present
 - Resolved all 107 `src`/`href` asset references across the root HTML pages and both partials against the filesystem — 0 missing
 - Cross-checked all 9 `sprite.svg#…` references against the ids declared in `assets/svg/sprite.svg` — all present
 - Grepped the JavaScript, script, HTML, and JSON sources for credential-like strings, `.env` files, `TODO`/`FIXME`/`HACK`/`debugger`, and `console.log` in application code — none found; `console` use in `js/` is limited to `error` and `warn` diagnostics
@@ -80,16 +80,6 @@ None detected.
 None detected.
 
 ## 6. P2 — Minor refinements
-
-### [P2-01] Two product records reference image files that do not exist, and the paths reach production structured data
-
-- **Classification:** Defect
-- **Affected area:** Application data, prerendered product pages, structured data
-- **Evidence:** `data/products.json:285` (`assets/img/products/pr-id-112-640x427.jpg`, product `outland-summit-2p`) and `data/products.json:492` (`assets/img/products/pr-id-121-07-640x427.jpg`, product `outland-trek-pro-55l`); neither file exists in `assets/img/products/` or `dist/assets/img/products/`; `scripts/build-dist.mjs:279-282` maps the full `images` array into the JSON-LD `Product.image` list
-- **Current behavior:** Both products declare a seventh image entry pointing at a file that was never generated. `produkt.html` provides only six thumbnail buttons, so the entry never renders as a visible thumbnail; it surfaces only in the generated structured data, where `dist/produkt/outland-summit-2p/index.html:90` and the equivalent line in `dist/produkt/outland-trek-pro-55l/index.html` publish an absolute URL to a 404 asset.
-- **Impact:** Two indexable product pages publish a `Product.image` array containing a dead URL. Search engines fetch these URLs, and an unresolvable entry can degrade or invalidate the product rich result. The dangling reference is also a data-integrity problem that any future consumer of `images` — a lightbox, a larger gallery, an image sitemap — would hit as a visible broken image.
-- **Recommended direction:** Decide per product whether the seventh image should exist and be generated from `assets/img-src/`, or whether the entry is a leftover and should be removed from `data/products.json`. Consider making the missing-asset check part of an existing validation step so the same class of drift is caught before a build.
-- **Verification criteria:** Every path in every `images` array in `data/products.json` resolves on disk, and no generated `Product.image` entry points at a missing asset.
 
 ### [P2-02] `.ui-state` variants declare background tokens that no rule consumes
 
@@ -180,7 +170,7 @@ None detected.
 
 No blocker prevents the project from being built, deployed, or used, and no P0 or P1 finding is open. The prerender contract is explicit in the generated output and honoured by both detail-page modules, so the prerendered routes deliver their content to clients that do not execute JavaScript.
 
-The seven open findings are all P2, contained, and independently addressable. Two of them — the dangling image references reaching production structured data (P2-01) and the GET-submitted personal data on the no-JavaScript path (P2-04) — touch what the deployed site publishes and are the most worthwhile to take next. The remainder concern maintainability, documentation accuracy, one accessibility announcement gap, and one stale data path.
+The six open findings are all P2, contained, and independently addressable. The GET-submitted personal data on the no-JavaScript path (P2-04) touches what the deployed site publishes and is the most worthwhile to take next. The remainder concern maintainability, documentation accuracy, one accessibility announcement gap, and one stale data path.
 
 This status reflects a repository-level review with static analysis and the linters actually executed, plus one owner-run `npm run qa:a11y` pass. It is not an accessibility certification, a security guarantee, a browser-compatibility guarantee, or a statement about production performance, none of which were verified here.
 
@@ -192,4 +182,4 @@ The architecture is coherent and the discipline behind it is visible in places t
 
 The prerender contract earns particular credit: it is not an assumption the client makes about the server's output but a marker declared in the HTML, read through one shared helper, with the build failing loudly if the marked root disappears. The detail-page modules treat the served document as the baseline and refuse to render a product that the page's own canonical link and `Product` schema do not name.
 
-It is held at 9 rather than 10 by two things. First, the seven open P2 items, of which the dead asset URL in production structured data and the personal data placed in a URL on the no-JavaScript path affect what the deployed site actually publishes. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. The formatting drift across 58 files with no CI check behind it is a smaller instance of the same theme: declared standards the pipeline does not actually enforce. None of these are deep architectural problems; all are correctable without touching the structure the project has built.
+It is held at 9 rather than 10 by two things. First, the six open P2 items, of which the personal data placed in a URL on the no-JavaScript path affects what the deployed site actually publishes. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. The formatting drift across 58 files with no CI check behind it is a smaller instance of the same theme: declared standards the pipeline does not actually enforce. None of these are deep architectural problems; all are correctable without touching the structure the project has built.

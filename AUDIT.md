@@ -3,15 +3,13 @@
 **Audit date:** 2026-08-01
 **Project type:** Static multi-page demo e-commerce front end (MPA) built with semantic HTML, layered CSS, Vanilla JavaScript ES modules, local JSON data, and a Node.js build pipeline that generates `dist/` for Netlify deployment
 **Audit mode:** Final repository and implementation review
-**Current readiness:** Ready with minor refinements
+**Current readiness:** Ready
 
 ## 1. Executive assessment
 
 The implementation is coherent and matches its documented architecture. Product data flows through one validated loader, storage access is uniformly guarded, data-driven DOM construction avoids `innerHTML` for user- and data-derived content, and the design-token system is applied with unusual discipline — only 17 hardcoded colour values exist outside `css/tokens.css` across roughly 3,600 lines of CSS. Both CI workflows are real: linting and a production build on one, Playwright + axe scans on the other. The generated SEO output was verified byte-identical to a fresh regeneration from `data/`, and every asset path referenced from HTML resolves on disk.
 
-No critical or important findings remain open. The prerender contract is now declared in the generated output and honoured by both detail-page modules, so the build's prerendered routes deliver their content without depending on JavaScript to reveal it.
-
-Open findings are contained to one P2: a stale cache-busting query on the travel-kit data path.
+No critical, important, or minor findings remain open. The prerender contract is now declared in the generated output and honoured by both detail-page modules, so the build's prerendered routes deliver their content without depending on JavaScript to reveal it.
 
 The project is suitable for continued development and portfolio presentation within its documented demo scope.
 
@@ -80,15 +78,7 @@ None detected.
 
 ## 6. P2 — Minor refinements
 
-### [P2-07] Travel-kit data path carries a stale cache-busting query that no other data path uses
-
-- **Classification:** Maintenance risk
-- **Affected area:** Data loading
-- **Evidence:** `js/modules/travel-kits.js:24` (`const TRAVEL_KITS_DATA_PATH = "/data/travel-kits.json?v=20260406-2";`) against `js/modules/product-data.js:4` (`export const PRODUCTS_DATA_PATH = "/data/products.json";`); `netlify.toml` — the `/data/*` header block sets `Cache-Control: public, max-age=0, must-revalidate`
-- **Current behavior:** One of the project's two data fetches carries a hand-maintained version query while the other does not. The deployment already sends `must-revalidate` for `/data/*`, so the query changes nothing about caching. `js/modules/data.js:8-10` keys its cache on the exact path string, so the versioned and unversioned forms of the same file would be treated as distinct entries.
-- **Impact:** No current runtime effect — `travel-kits.json` has only this one consumer. It is an inconsistency of the same kind the project already eliminated from its import specifiers, and it leaves a date-stamped string that must be remembered and updated by hand to mean anything.
-- **Recommended direction:** Align the travel-kit data path with `PRODUCTS_DATA_PATH` and let the deployment's cache policy handle revalidation, or, if a version query is wanted, apply the same mechanism to both paths from one place.
-- **Verification criteria:** No hand-maintained version query remains on a data fetch path in `js/`, or every data path derives one from a single shared source.
+None detected.
 
 ## 7. Extra quality improvements
 
@@ -115,11 +105,11 @@ None detected.
 
 ## 8. Current readiness conclusion
 
-**Status:** Ready with minor refinements
+**Status:** Ready
 
-No blocker prevents the project from being built, deployed, or used, and no P0 or P1 finding is open. The prerender contract is explicit in the generated output and honoured by both detail-page modules, so the prerendered routes deliver their content to clients that do not execute JavaScript.
+No blocker prevents the project from being built, deployed, or used, and no P0, P1, or P2 finding is open. The prerender contract is explicit in the generated output and honoured by both detail-page modules, so the prerendered routes deliver their content to clients that do not execute JavaScript.
 
-The one open finding is P2, contained, and independently addressable: a stale cache-busting query on the travel-kit data path.
+Three optional, non-blocking quality improvements remain documented in Section 7 for future consideration; none of them affect readiness.
 
 This status reflects a repository-level review with static analysis and the linters actually executed, plus one owner-run `npm run qa:a11y` pass. It is not an accessibility certification, a security guarantee, a browser-compatibility guarantee, or a statement about production performance, none of which were verified here.
 
@@ -131,4 +121,4 @@ The architecture is coherent and the discipline behind it is visible in places t
 
 The prerender contract earns particular credit: it is not an assumption the client makes about the server's output but a marker declared in the HTML, read through one shared helper, with the build failing loudly if the marked root disappears. The detail-page modules treat the served document as the baseline and refuse to render a product that the page's own canonical link and `Product` schema do not name.
 
-It is held at 9 rather than 10 by two things. First, the one open P2 item, which does not touch published output but remains worth closing. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. None of these are deep architectural problems; all are correctable without touching the structure the project has built.
+It is held at 9 rather than 10 by one remaining structural gap: the build's regex-based HTML transforms are load-bearing and uncovered. A pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. This is not a deep architectural problem, and it is correctable without touching the structure the project has built — but it is the one thing standing between this project and a full score now that every P0, P1, and P2 finding is resolved.

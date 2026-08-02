@@ -21,7 +21,7 @@ const FALLBACK_SOCIAL_IMAGE_TYPE = "image/png";
 const FALLBACK_SOCIAL_IMAGE_WIDTH = "1536";
 const FALLBACK_SOCIAL_IMAGE_HEIGHT = "1024";
 const WEBPAGE_SCHEMA_SELECTOR = 'script[data-schema="webpage"]';
-const TRAVEL_KITS_DATA_PATH = "/data/travel-kits.json?v=20260406-2";
+const TRAVEL_KITS_DATA_PATH = "/data/travel-kits.json";
 const KIT_SLUG_ALIASES = new Map([["wekend-w-gorach", "weekend-w-gorach"]]);
 let travelKitsInitialized = false;
 

@@ -131,6 +131,9 @@
   --color-btn-disabled-text: #4b5854;
   --color-hero-bg: var(--color-ink);
   --color-hero-kicker: #93b29b;
+  --color-modal-bg:
+    radial-gradient(circle at 85% -30%, rgba(131, 189, 127, 0.18), transparent 38%),
+    linear-gradient(150deg, var(--color-sand), var(--color-sky) 62%, var(--color-stone));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -198,4 +201,7 @@ html[data-theme="dark"] {
   --color-btn-disabled-text: #a2b3a8;
   --color-hero-bg: #081412;
   --color-hero-kicker: #a9cab3;
+  --color-modal-bg:
+    radial-gradient(circle at 85% -30%, rgba(131, 189, 127, 0.18), transparent 38%),
+    linear-gradient(150deg, #0f1e2b, #112a38 62%, #163848);
 }

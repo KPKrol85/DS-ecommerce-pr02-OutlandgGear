@@ -82,12 +82,7 @@ None detected.
 
 ## 7. Extra quality improvements
 
-### Extend `imageAlt` coverage across the product catalog
-
-- **Relevant area:** Product imagery, accessibility.
-- **Current evidence:** 4 of 35 records in `data/products.json` declare `imageAlt`. `js/modules/product-data.js:102` passes the field through when present, and `js/modules/product.js:270`, `js/modules/travel-kits.js:239`, and `scripts/build-dist.mjs:391` all fall back to `product.name`, so the remaining 31 products render an alt text identical to the adjacent visible heading.
-- **Potential value:** The field, the pass-through, and the fallback chain are already built; only the data is thin. Filling it in converts the duplicated-name fallback into descriptive alternative text on catalog cards, kit cards, and prerendered product pages at once.
-- **Scope boundary:** Optional. The current fallback produces valid, non-empty alternative text, so this is a quality improvement rather than a correction.
+None detected.
 
 ## 8. Current readiness conclusion
 
@@ -95,7 +90,7 @@ None detected.
 
 No blocker prevents the project from being built, deployed, or used, and no P0, P1, or P2 finding is open. The prerender contract is explicit in the generated output and honoured by both detail-page modules, so the prerendered routes deliver their content to clients that do not execute JavaScript.
 
-One optional, non-blocking quality improvement remains documented in Section 7 for future consideration; it does not affect readiness.
+No optional quality improvements remain documented in Section 7.
 
 This status reflects a repository-level review with static analysis and the linters actually executed, plus one owner-run `npm run qa:a11y` pass. It is not an accessibility certification, a security guarantee, a browser-compatibility guarantee, or a statement about production performance, none of which were verified here.
 

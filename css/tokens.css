@@ -125,6 +125,7 @@
   --color-notice-bg: var(--color-sky);
   --color-notice-error-bg: #fff4f3;
   --color-notice-error-border: rgba(200, 67, 58, 0.35);
+  --color-notice-success-border: rgba(35, 102, 77, 0.35);
   --color-toast-bg: #1d2a26;
   --color-toast-info-border: #eef4f6;
   --color-btn-disabled-text: #4b5854;
@@ -191,6 +192,7 @@ html[data-theme="dark"] {
   --color-notice-bg: #12201d;
   --color-notice-error-bg: rgba(112, 41, 37, 0.18);
   --color-notice-error-border: rgba(255, 145, 133, 0.32);
+  --color-notice-success-border: rgba(58, 168, 115, 0.32);
   --color-toast-bg: #1d2a26;
   --color-toast-info-border: #94b09a;
   --color-btn-disabled-text: #a2b3a8;

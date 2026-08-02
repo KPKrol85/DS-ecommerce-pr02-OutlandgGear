@@ -11,7 +11,7 @@ The implementation is coherent and matches its documented architecture. Product 
 
 No critical or important findings remain open. The prerender contract is now declared in the generated output and honoured by both detail-page modules, so the build's prerendered routes deliver their content without depending on JavaScript to reveal it.
 
-Open findings are contained and all P2: a component whose background tokens are declared but never consumed, formatting drift that no CI job checks, two forms that carry personal data in a URL on the no-JavaScript path, one documentation claim that the implementation does not support, a missing live region on the catalog result count, and one stale cache-busting query.
+Open findings are contained and all P2: formatting drift that no CI job checks, two forms that carry personal data in a URL on the no-JavaScript path, one documentation claim that the implementation does not support, a missing live region on the catalog result count, and one stale cache-busting query.
 
 The project is suitable for continued development and, once the P2 item that affects published output (P2-04) is taken, for portfolio presentation within its documented demo scope.
 
@@ -80,16 +80,6 @@ None detected.
 None detected.
 
 ## 6. P2 — Minor refinements
-
-### [P2-02] `.ui-state` variants declare background tokens that no rule consumes
-
-- **Classification:** Defect
-- **Affected area:** Loading, empty, error, and success state panels across catalog, cart, checkout, product, and travel-kit pages
-- **Evidence:** `css/components/ui-state.css:36,43,50,57,64` (five `--ui-state-bg` declarations); `css/components/ui-state.css:5-13` (`.ui-state` declares `border`, `border-left`, `color`, and no `background`); no other rule in `css/` reads `--ui-state-bg`
-- **Current behavior:** Each state variant sets a `--ui-state-bg` custom property, but the `.ui-state` block never declares a `background` property, so the value is never applied. All five state panels render transparent over whatever surface is behind them. Separately, `--ui-state-border` for the error and success variants is set to hardcoded light-theme values (`#f0cbc7`, `#b9dbc9`) with no dark-theme counterpart.
-- **Impact:** The tinted fills that are meant to distinguish an error panel from a success panel at a glance never render, leaving a 4px left border as the only colour signal — weaker differentiation than the stylesheet was written to provide. The unconsumed declarations also read as working code, so a future maintainer changing them will observe no effect. In the dark theme, the two hardcoded pale borders sit against dark surfaces, inconsistent with every other themed component.
-- **Recommended direction:** Decide whether the state panels should have a tinted background. If yes, apply `--ui-state-bg` from `.ui-state` and give the error and success variants dark-theme values, preferably as tokens in `css/tokens.css` alongside the existing `--color-notice-*` pair. If no, remove the five dead declarations so the stylesheet reflects what it renders.
-- **Verification criteria:** `--ui-state-bg` is either consumed by a `background` declaration with both themes covered, or absent from the stylesheet, and every colour used by `.ui-state` has a defined value in both themes.
 
 ### [P2-03] Repository does not satisfy its own Prettier configuration, and no automated check enforces it
 
@@ -170,7 +160,7 @@ None detected.
 
 No blocker prevents the project from being built, deployed, or used, and no P0 or P1 finding is open. The prerender contract is explicit in the generated output and honoured by both detail-page modules, so the prerendered routes deliver their content to clients that do not execute JavaScript.
 
-The six open findings are all P2, contained, and independently addressable. The GET-submitted personal data on the no-JavaScript path (P2-04) touches what the deployed site publishes and is the most worthwhile to take next. The remainder concern maintainability, documentation accuracy, one accessibility announcement gap, and one stale data path.
+The five open findings are all P2, contained, and independently addressable. The GET-submitted personal data on the no-JavaScript path (P2-04) touches what the deployed site publishes and is the most worthwhile to take next. The remainder concern maintainability, documentation accuracy, one accessibility announcement gap, and one stale data path.
 
 This status reflects a repository-level review with static analysis and the linters actually executed, plus one owner-run `npm run qa:a11y` pass. It is not an accessibility certification, a security guarantee, a browser-compatibility guarantee, or a statement about production performance, none of which were verified here.
 
@@ -182,4 +172,4 @@ The architecture is coherent and the discipline behind it is visible in places t
 
 The prerender contract earns particular credit: it is not an assumption the client makes about the server's output but a marker declared in the HTML, read through one shared helper, with the build failing loudly if the marked root disappears. The detail-page modules treat the served document as the baseline and refuse to render a product that the page's own canonical link and `Product` schema do not name.
 
-It is held at 9 rather than 10 by two things. First, the six open P2 items, of which the personal data placed in a URL on the no-JavaScript path affects what the deployed site actually publishes. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. The formatting drift across 58 files with no CI check behind it is a smaller instance of the same theme: declared standards the pipeline does not actually enforce. None of these are deep architectural problems; all are correctable without touching the structure the project has built.
+It is held at 9 rather than 10 by two things. First, the five open P2 items, of which the personal data placed in a URL on the no-JavaScript path affects what the deployed site actually publishes. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. The formatting drift across 58 files with no CI check behind it is a smaller instance of the same theme: declared standards the pipeline does not actually enforce. None of these are deep architectural problems; all are correctable without touching the structure the project has built.

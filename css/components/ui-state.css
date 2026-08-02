@@ -33,35 +33,30 @@
 }
 
 .ui-state--loading {
-  --ui-state-bg: #f8f7f3;
   --ui-state-border: var(--color-border);
   --ui-state-accent: var(--color-moss);
   --ui-state-icon: "⏳";
 }
 
 .ui-state--empty {
-  --ui-state-bg: #f8f7f3;
   --ui-state-border: var(--color-border);
   --ui-state-accent: var(--color-muted);
   --ui-state-icon: "◦";
 }
 
 .ui-state--error {
-  --ui-state-bg: #fdf4f3;
-  --ui-state-border: #f0cbc7;
+  --ui-state-border: var(--color-notice-error-border);
   --ui-state-accent: var(--color-alert);
   --ui-state-icon: "⚠";
 }
 
 .ui-state--success {
-  --ui-state-bg: #f2faf6;
-  --ui-state-border: #b9dbc9;
+  --ui-state-border: var(--color-notice-success-border);
   --ui-state-accent: var(--color-success);
   --ui-state-icon: "✓";
 }
 
 .ui-state--info {
-  --ui-state-bg: var(--color-sky);
   --ui-state-border: var(--color-border);
   --ui-state-accent: var(--color-forest);
   --ui-state-icon: "ℹ";

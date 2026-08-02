@@ -53,11 +53,23 @@ const resolveRequestPath = async (requestUrl) => {
   }
 };
 
+// Mirrors Netlify's behaviour: an unmatched route is answered with the built
+// 404 page at the requested URL, not a redirect. Falls back to plain text when
+// dist/404.html is absent (e.g. a partial build).
+const sendNotFound = async (res) => {
+  try {
+    const notFoundPage = await fs.readFile(path.join(DIST, "404.html"));
+    send(res, 404, notFoundPage, CONTENT_TYPES[".html"]);
+  } catch {
+    send(res, 404, "Not found");
+  }
+};
+
 const server = createServer(async (req, res) => {
   const filePath = await resolveRequestPath(req.url || "/");
 
   if (!filePath) {
-    send(res, 404, "Not found");
+    await sendNotFound(res);
     return;
   }
 

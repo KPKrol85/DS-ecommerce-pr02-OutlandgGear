@@ -11,7 +11,7 @@ The implementation is coherent and matches its documented architecture. Product 
 
 No critical or important findings remain open. The prerender contract is now declared in the generated output and honoured by both detail-page modules, so the build's prerendered routes deliver their content without depending on JavaScript to reveal it.
 
-Open findings are contained and all P2: formatting drift that no CI job checks, two forms that carry personal data in a URL on the no-JavaScript path, one documentation claim that the implementation does not support, a missing live region on the catalog result count, and one stale cache-busting query.
+Open findings are contained and all P2: two forms that carry personal data in a URL on the no-JavaScript path, one documentation claim that the implementation does not support, a missing live region on the catalog result count, and one stale cache-busting query.
 
 The project is suitable for continued development and, once the P2 item that affects published output (P2-04) is taken, for portfolio presentation within its documented demo scope.
 
@@ -35,14 +35,13 @@ The project is suitable for continued development and, once the P2 item that aff
 
 - `npx eslint js scripts tests` — executed and passed (exit 0)
 - `npx stylelint "css/**/*.css"` — executed and passed (exit 0)
-- `npx prettier --check .` — executed and failed; 58 files reported as unformatted
+- `npx prettier --check .` — executed and passed (exit 0)
 - `git status` / `git log` — executed; working tree clean, branch `main` up to date with `origin/main`
 - Regenerated `robots.txt` and `sitemap.xml` in memory from `scripts/seo-config.mjs` and `data/*.json` and compared against the tracked files — both byte-identical; sitemap contains 46 URLs (8 static + 35 product slugs + 3 travel-kit slugs)
 - Resolved all 124 image paths declared in `data/products.json` and `data/travel-kits.json` against the filesystem — all present
 - Resolved all 107 `src`/`href` asset references across the root HTML pages and both partials against the filesystem — 0 missing
 - Cross-checked all 9 `sprite.svg#…` references against the ids declared in `assets/svg/sprite.svg` — all present
 - Grepped the JavaScript, script, HTML, and JSON sources for credential-like strings, `.env` files, `TODO`/`FIXME`/`HACK`/`debugger`, and `console.log` in application code — none found; `console` use in `js/` is limited to `error` and `warn` diagnostics
-- Verified line-ending state in the working tree — files are LF, so the Prettier result is genuine formatting drift, not a checkout artifact
 - Confirmed the local Node.js version (v22.22.3) falls inside the declared `engines.node` range (`>=20 <23`)
 - Statically inspected all remaining findings against current source; every line reference in this document was re-read at audit time and again after the prerender and build-transform changes shifted line numbers in `scripts/build-dist.mjs`, `js/modules/travel-kits.js`, and `js/modules/product.js`
 - `npm run build:html` run into a scratch copy of the repository to inspect generated output — 38 of 38 detail pages carry `data-prerendered="true"`, no root or template page carries it, and the `hidden` attribute is stripped from prerendered kit content while the `komplety.html` template retains it
@@ -80,16 +79,6 @@ None detected.
 None detected.
 
 ## 6. P2 — Minor refinements
-
-### [P2-03] Repository does not satisfy its own Prettier configuration, and no automated check enforces it
-
-- **Classification:** Maintenance risk
-- **Affected area:** Code formatting, CI coverage
-- **Evidence:** `npx prettier --check .` — executed, reported 58 unformatted files spanning HTML pages, both partials, `css/`, `js/`, `scripts/`, `tests/`, and several config files including `.prettierrc.json` and `eslint.config.mjs`; `package.json` — `scripts.format:check`; `.github/workflows/code-quality-ci.yml` runs `lint:js`, `lint:css`, and `build`, but not `format:check`
-- **Current behavior:** The project declares a Prettier configuration, a `.prettierignore`, and both `format` and `format:check` scripts, but the tracked sources do not satisfy that configuration and no workflow runs the check. Working-tree line endings are LF, so this is genuine formatting drift rather than a checkout artifact.
-- **Impact:** The declared formatting standard is not the actual one. Anyone who runs `npm run format` will produce a 58-file diff unrelated to their change, which obscures review and raises the chance of spurious conflicts. Both lint tools are wired into CI, so the omission of the one check that currently fails makes the pipeline look more complete than it is.
-- **Recommended direction:** Decide whether Prettier governs this repository. If yes, normalise the tracked files in one dedicated commit and add `format:check` to `code-quality-ci.yml`. If Prettier's HTML output is not wanted, narrow `.prettierignore` or the config to the file types it should own, then apply and enforce that narrower scope.
-- **Verification criteria:** `npm run format:check` exits 0 on a clean checkout, and the same check runs in CI on pull requests and pushes to `main`.
 
 ### [P2-04] Checkout and newsletter forms submit personal data via GET on the no-JavaScript path
 
@@ -160,7 +149,7 @@ None detected.
 
 No blocker prevents the project from being built, deployed, or used, and no P0 or P1 finding is open. The prerender contract is explicit in the generated output and honoured by both detail-page modules, so the prerendered routes deliver their content to clients that do not execute JavaScript.
 
-The five open findings are all P2, contained, and independently addressable. The GET-submitted personal data on the no-JavaScript path (P2-04) touches what the deployed site publishes and is the most worthwhile to take next. The remainder concern maintainability, documentation accuracy, one accessibility announcement gap, and one stale data path.
+The four open findings are all P2, contained, and independently addressable. The GET-submitted personal data on the no-JavaScript path (P2-04) touches what the deployed site publishes and is the most worthwhile to take next. The remainder concern documentation accuracy, one accessibility announcement gap, and one stale data path.
 
 This status reflects a repository-level review with static analysis and the linters actually executed, plus one owner-run `npm run qa:a11y` pass. It is not an accessibility certification, a security guarantee, a browser-compatibility guarantee, or a statement about production performance, none of which were verified here.
 
@@ -172,4 +161,4 @@ The architecture is coherent and the discipline behind it is visible in places t
 
 The prerender contract earns particular credit: it is not an assumption the client makes about the server's output but a marker declared in the HTML, read through one shared helper, with the build failing loudly if the marked root disappears. The detail-page modules treat the served document as the baseline and refuse to render a product that the page's own canonical link and `Product` schema do not name.
 
-It is held at 9 rather than 10 by two things. First, the five open P2 items, of which the personal data placed in a URL on the no-JavaScript path affects what the deployed site actually publishes. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. The formatting drift across 58 files with no CI check behind it is a smaller instance of the same theme: declared standards the pipeline does not actually enforce. None of these are deep architectural problems; all are correctable without touching the structure the project has built.
+It is held at 9 rather than 10 by two things. First, the four open P2 items, of which the personal data placed in a URL on the no-JavaScript path affects what the deployed site actually publishes. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. None of these are deep architectural problems; all are correctable without touching the structure the project has built.

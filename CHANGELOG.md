@@ -25,6 +25,7 @@ All significant changes to this project are documented in this file.
 - Fixed the product page silently substituting a different product when a slug no longer resolves in the catalog data; on prerendered pages the `matchedProduct || products[0]` fallback is now blocked, so the page no longer renders one product under a URL, canonical link, and `Product` schema naming another.
 - Fixed two products (`outland-summit-2p`, `outland-trek-pro-55l`) in `data/products.json` declaring a seventh `images` entry that pointed to a file never generated in `assets/img/products/`; the dangling entries reached production as dead URLs in the `Product.image` structured-data array on both indexable product pages. Removed from the product data; both products now declare 6 images, all resolving on disk.
 - Removed five unused `--ui-state-bg` custom properties from `css/components/ui-state.css` (`.ui-state--loading`, `.ui-state--empty`, `.ui-state--error`, `.ui-state--success`, `.ui-state--info`); `.ui-state` never declared a `background` property to consume them, so the values had no visual effect. Panels remain background-less by design, distinguished by the left border and accent icon only. Also fixed the dark-theme gap in `--ui-state-border` for the error and success variants: added a `--color-notice-success-border` token alongside the existing `--color-notice-error-border`, defined in both `:root` and `html[data-theme="dark"]`, and switched both variants from hardcoded hex to these tokens.
+- Fixed the repository not satisfying its own declared Prettier configuration; 58 tracked files were reformatted to match it, so `npm run format:check` now exits 0 on a clean checkout.
 
 ### Security
 
@@ -40,6 +41,7 @@ All significant changes to this project are documented in this file.
 - Added `.gitattributes` to enforce LF line endings at the Git level.
 - Rewrote `.gitignore` with root-anchored patterns and added entries for Playwright caches and Windows-specific artifacts.
 - Added ESLint and Stylelint linting, Prettier formatting configuration, and a `code-quality-ci` GitHub Actions workflow.
+- Added a "Check formatting" step (`npm run format:check`) to `code-quality-ci.yml`, between "Lint CSS" and "Build production bundle", so the declared Prettier configuration is now enforced in CI rather than only available locally.
 
 ### Testing
 

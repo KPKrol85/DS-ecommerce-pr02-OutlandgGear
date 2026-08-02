@@ -1,10 +1,10 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-import postcss from "postcss";
-import postcssImport from "postcss-import";
-import cssnano from "cssnano";
-import * as esbuild from "esbuild";
+import { fileURLToPath, pathToFileURL } from "node:url";
+// postcss, cssnano and esbuild are loaded on demand inside buildCss/buildJs.
+// They are the heaviest dependencies here, and keeping them off the module's
+// top level lets `build:html` and the build-transform tests import this file
+// without paying for a toolchain they never use.
 import {
   SEO_ORIGIN,
   buildProductPath,
@@ -134,7 +134,7 @@ const renderSpecRows = (specs = {}) =>
     )
     .join("");
 
-const inlinePartial = (html, { tag, partialPath, partialContent }) => {
+export const inlinePartial = (html, { tag, partialPath, partialContent }) => {
   const partialPattern = new RegExp(
     `<${tag}([^>]*?)\\sdata-partial-src=["']${escapeForRegExp(partialPath)}["']([^>]*)>[\\s\\S]*?<\\/${tag}>`,
     "i",
@@ -153,10 +153,10 @@ const inlinePartial = (html, { tag, partialPath, partialContent }) => {
   );
 };
 
-const replaceTitleTag = (html, value) =>
+export const replaceTitleTag = (html, value) =>
   html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(value)}</title>`);
 
-const replaceMetaContent = (html, attrName, attrValue, content) => {
+export const replaceMetaContent = (html, attrName, attrValue, content) => {
   const pattern = new RegExp(
     `(<meta[^>]+${attrName}=["']${escapeForRegExp(attrValue)}["'][^>]+content=["'])[^"']*(["'][^>]*>)`,
     "i",
@@ -164,7 +164,7 @@ const replaceMetaContent = (html, attrName, attrValue, content) => {
   return html.replace(pattern, `$1${escapeHtml(content)}$2`);
 };
 
-const replaceLinkHref = (html, rel, href) => {
+export const replaceLinkHref = (html, rel, href) => {
   const pattern = new RegExp(
     `(<link[^>]+rel=["']${escapeForRegExp(rel)}["'][^>]+href=["'])[^"']*(["'][^>]*>)`,
     "i",
@@ -172,7 +172,7 @@ const replaceLinkHref = (html, rel, href) => {
   return html.replace(pattern, `$1${escapeHtml(href)}$2`);
 };
 
-const replaceJsonLdScript = (html, selector, payload) => {
+export const replaceJsonLdScript = (html, selector, payload) => {
   const attribute =
     selector === "organization"
       ? ""
@@ -184,17 +184,17 @@ const replaceJsonLdScript = (html, selector, payload) => {
   return html.replace(pattern, `$1\n${escapeJsonForScript(payload)}\n$2`);
 };
 
-const injectBaseHref = (html) => {
+export const injectBaseHref = (html) => {
   if (/<base\s/i.test(html)) return html;
   return html.replace(/<head>/i, '<head>\n    <base href="/" />');
 };
 
-const removeHiddenAttributeFromElement = (html, pattern) =>
+export const removeHiddenAttributeFromElement = (html, pattern) =>
   html.replace(pattern, (match) => match.replace(/\s+hidden\b/, ""));
 
 // Marks the page root of a prerendered detail page so client-side modules can
 // treat the served HTML as the baseline instead of a placeholder.
-const markPrerenderedRoot = (html, rootAttribute) => {
+export const markPrerenderedRoot = (html, rootAttribute) => {
   const pattern = new RegExp(
     `<main([^>]*\\s${escapeForRegExp(rootAttribute)})([^>]*)>`,
     "i",
@@ -310,7 +310,7 @@ const buildProductMetadata = (product) => {
   };
 };
 
-const applyProductPrerender = (html, product) => {
+export const applyProductPrerender = (html, product) => {
   const metadata = buildProductMetadata(product);
   const images =
     Array.isArray(product.images) && product.images.length
@@ -391,7 +391,7 @@ const applyProductPrerender = (html, product) => {
     `$1${escapeHtml(product.name)}$2`,
   );
   nextHtml = nextHtml.replace(
-    /(<img data-product-main[^>]*src=")[^"]*(" alt=")[^"]*("[^>]*>)/i,
+    /(<img\s+data-product-main[^>]*src=")[^"]*("\s+alt=")[^"]*("[^>]*>)/i,
     `$1${escapeHtml(images[0])}$2${escapeHtml(product.imageAlt || product.name)}$3`,
   );
   nextHtml = nextHtml.replace(
@@ -427,7 +427,7 @@ const applyProductPrerender = (html, product) => {
     `$1${renderSpecRows(product.specs || {})}$2`,
   );
 
-  const thumbPattern = /<button type="button" data-product-thumb[\s\S]*?<\/button>/gi;
+  const thumbPattern = /<button\s+type="button"\s+data-product-thumb[\s\S]*?<\/button>/gi;
   const thumbMatches = nextHtml.match(thumbPattern) || [];
   thumbMatches.forEach((thumbHtml, index) => {
     const imageSrc = images[index];
@@ -435,8 +435,8 @@ const applyProductPrerender = (html, product) => {
 
     if (imageSrc) {
       nextThumb = nextThumb
-        .replace(/\s hidden\b/gi, "")
-        .replace(/\s disabled\b/gi, "")
+        .replace(/\s+hidden\b/gi, "")
+        .replace(/\s+disabled\b/gi, "")
         .replace(
           /(<button[^>]*aria-label=")[^"]*("[^>]*aria-pressed=")[^"]*("[^>]*>)/i,
           `$1${escapeHtml(`Pokaz zdjecie ${index + 1} produktu ${product.name}`)}$2${index === 0 ? "true" : "false"}$3`,
@@ -444,7 +444,7 @@ const applyProductPrerender = (html, product) => {
         .replace(/(<img[^>]*src=")[^"]*("[^>]*>)/i, `$1${escapeHtml(imageSrc)}$2`);
     } else {
       nextThumb = nextThumb
-        .replace(/<button /i, "<button hidden disabled ")
+        .replace(/<button(\s)/i, "<button hidden disabled$1")
         .replace(/aria-pressed="[^"]*"/i, 'aria-pressed="false"');
     }
 
@@ -501,7 +501,7 @@ const renderTravelKitCards = (products = []) =>
     )
     .join("");
 
-const applyTravelKitPrerender = (html, kit, products) => {
+export const applyTravelKitPrerender = (html, kit, products) => {
   const metadata = buildTravelKitMetadata(kit);
   const matchedProducts = (Array.isArray(products) ? products : []).filter((product) =>
     Array.isArray(kit.productIds) ? kit.productIds.includes(product.id) : false,
@@ -626,11 +626,11 @@ const applyTravelKitPrerender = (html, kit, products) => {
     `$1${renderTravelKitCards(matchedProducts)}$2`,
   );
   nextHtml = nextHtml.replace(
-    /(<a class="btn" href=")[^"]*(" data-kit-primary-cta>)[\s\S]*?(<\/a>)/i,
+    /(<a\s+class="btn"\s+href=")[^"]*("\s+data-kit-primary-cta\s*>)[\s\S]*?(<\/a\s*>)/i,
     `$1${escapeHtml(primaryHref)}$2${escapeHtml(kit.ctaLabel || "Przejdz do katalogu")}$3`,
   );
   nextHtml = nextHtml.replace(
-    /(<a class="btn btn--ghost" href=")[^"]*(" data-kit-secondary-cta>)[\s\S]*?(<\/a>)/i,
+    /(<a\s+class="btn btn--ghost"\s+href=")[^"]*("\s+data-kit-secondary-cta\s*>)[\s\S]*?(<\/a\s*>)/i,
     `$1${escapeHtml(kit.secondaryCtaHref || "index.html#travel-kits")}$2${escapeHtml(kit.secondaryCtaLabel || "Wroc do zestawow")}$3`,
   );
   nextHtml = removeHiddenAttributeFromElement(
@@ -646,6 +646,8 @@ const applyTravelKitPrerender = (html, kit, products) => {
 };
 
 const buildCss = async () => {
+  const [{ default: postcss }, { default: postcssImport }, { default: cssnano }] =
+    await Promise.all([import("postcss"), import("postcss-import"), import("cssnano")]);
   const cssSourcePath = path.join(ROOT, "css/main.css");
   const cssSource = await fs.readFile(cssSourcePath, "utf8");
   const result = await postcss([postcssImport(), cssnano()]).process(cssSource, {
@@ -658,6 +660,7 @@ const buildCss = async () => {
 };
 
 const buildJs = async () => {
+  const esbuild = await import("esbuild");
   await ensureDir(DIST_JS);
   await esbuild.build({
     entryPoints: [path.join(ROOT, "js/app.js")],
@@ -744,62 +747,70 @@ const buildDist = async () => {
   ]);
 };
 
-switch (command) {
-  case "clean":
-    await fs.rm(DIST, { recursive: true, force: true });
-    break;
-  case "prepare":
-    await prepareDist();
-    break;
-  case "css":
-    await prepareDist();
-    await buildCss();
-    break;
-  case "js":
-    await prepareDist();
-    await buildJs();
-    break;
-  case "html":
-    await prepareDist();
-    {
-      const [products, travelKits] = await Promise.all([
-        readJson("data/products.json"),
-        readJson("data/travel-kits.json"),
-      ]);
-      await buildRootHtml();
-      await buildPrerenderedDetailPages(products, travelKits);
-    }
-    break;
-  case "assets":
-    await prepareDist();
-    {
-      const [products, travelKits] = await Promise.all([
-        readJson("data/products.json"),
-        readJson("data/travel-kits.json"),
-      ]);
-      const sitemapContext = { products, travelKits };
-      await generateSeoFiles(ROOT, sitemapContext);
-      await Promise.all([copyStaticAssets(), generateSeoFiles(DIST, sitemapContext)]);
-    }
-    break;
-  case "seo":
-    {
-      const [products, travelKits] = await Promise.all([
-        readJson("data/products.json"),
-        readJson("data/travel-kits.json"),
-      ]);
-      const sitemapContext = { products, travelKits };
-      await generateSeoFiles(ROOT, sitemapContext);
-      await generateSeoFiles(DIST, sitemapContext);
-    }
-    break;
-  case "images":
-    throw new Error(
-      "build-dist images command has been removed; use `npm run build:images`.",
-    );
-  case "build":
-    await buildDist();
-    break;
-  default:
-    throw new Error(`Unknown build-dist command: ${command}`);
+// Only dispatch a command when this file is executed directly. Importing it
+// (as the build-transform tests do) must not run a build or throw on the test
+// runner's own argv.
+const isMainModule =
+  process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isMainModule) {
+  switch (command) {
+    case "clean":
+      await fs.rm(DIST, { recursive: true, force: true });
+      break;
+    case "prepare":
+      await prepareDist();
+      break;
+    case "css":
+      await prepareDist();
+      await buildCss();
+      break;
+    case "js":
+      await prepareDist();
+      await buildJs();
+      break;
+    case "html":
+      await prepareDist();
+      {
+        const [products, travelKits] = await Promise.all([
+          readJson("data/products.json"),
+          readJson("data/travel-kits.json"),
+        ]);
+        await buildRootHtml();
+        await buildPrerenderedDetailPages(products, travelKits);
+      }
+      break;
+    case "assets":
+      await prepareDist();
+      {
+        const [products, travelKits] = await Promise.all([
+          readJson("data/products.json"),
+          readJson("data/travel-kits.json"),
+        ]);
+        const sitemapContext = { products, travelKits };
+        await generateSeoFiles(ROOT, sitemapContext);
+        await Promise.all([copyStaticAssets(), generateSeoFiles(DIST, sitemapContext)]);
+      }
+      break;
+    case "seo":
+      {
+        const [products, travelKits] = await Promise.all([
+          readJson("data/products.json"),
+          readJson("data/travel-kits.json"),
+        ]);
+        const sitemapContext = { products, travelKits };
+        await generateSeoFiles(ROOT, sitemapContext);
+        await generateSeoFiles(DIST, sitemapContext);
+      }
+      break;
+    case "images":
+      throw new Error(
+        "build-dist images command has been removed; use `npm run build:images`.",
+      );
+    case "build":
+      await buildDist();
+      break;
+    default:
+      throw new Error(`Unknown build-dist command: ${command}`);
+  }
 }

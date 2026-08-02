@@ -34,6 +34,7 @@
     "build": "node scripts/build-dist.mjs",
     "build:preview": "npm run build && node scripts/preview-dist.mjs",
     "qa:a11y": "playwright test --config=playwright.config.js tests/a11y",
+    "test:build": "node --test tests/build/html-transforms.test.mjs tests/build/template-contract.test.mjs",
     "watch:css": "npm run build:prepare && postcss css/main.css -o dist/css/main.min.css --watch",
     "watch:js": "npm run build:prepare && esbuild js/app.js --bundle --minify --outfile=dist/js/app.min.js --watch",
     "images:optimize": "node scripts/optimize-images.mjs --clean",

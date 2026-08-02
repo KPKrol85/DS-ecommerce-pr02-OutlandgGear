@@ -4,6 +4,7 @@ import globals from "globals";
 const browserModuleFiles = ["js/**/*.js"];
 const nodeScriptFiles = ["scripts/**/*.mjs"];
 const playwrightTestFiles = ["tests/**/*.js"];
+const nodeTestFiles = ["tests/**/*.mjs"];
 
 export default [
   {
@@ -26,6 +27,19 @@ export default [
   },
   {
     files: nodeScriptFiles,
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "module",
+      globals: {
+        ...globals.node,
+      },
+    },
+    rules: {
+      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    },
+  },
+  {
+    files: nodeTestFiles,
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",

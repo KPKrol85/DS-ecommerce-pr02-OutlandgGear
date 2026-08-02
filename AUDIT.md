@@ -82,13 +82,6 @@ None detected.
 
 ## 7. Extra quality improvements
 
-### Decide the `pointer-events` policy for the `aria-disabled` branch before the attribute is introduced
-
-- **Relevant area:** Base button and link disabled states.
-- **Current evidence:** `css/base.css:87-94` applies `pointer-events: none` to both of its selector lists, the second of which is the `[aria-disabled="true"]` branch covering `.btn`, `a`, `[role="button"]`, `.dropdown__toggle`, and `.nav-toggle`. The attribute is never set by JavaScript and never declared in markup — a repository-wide grep finds it only inside CSS selectors — so the branch currently matches no element at runtime.
-- **Potential value:** The `aria-disabled` pattern exists specifically so an element stays focusable and reachable while being marked unavailable; `pointer-events: none` suppresses click-to-focus and hover feedback, working against that purpose. Settling this while the branch is inert avoids a silent behaviour change on the day the attribute is first used.
-- **Scope boundary:** Optional, with no current runtime effect. Splitting the rule's two selector lists is one way to resolve it, but the decision belongs to the project owner.
-
 ### Extend `imageAlt` coverage across the product catalog
 
 - **Relevant area:** Product imagery, accessibility.
@@ -102,7 +95,7 @@ None detected.
 
 No blocker prevents the project from being built, deployed, or used, and no P0, P1, or P2 finding is open. The prerender contract is explicit in the generated output and honoured by both detail-page modules, so the prerendered routes deliver their content to clients that do not execute JavaScript.
 
-Two optional, non-blocking quality improvements remain documented in Section 7 for future consideration; neither affects readiness.
+One optional, non-blocking quality improvement remains documented in Section 7 for future consideration; it does not affect readiness.
 
 This status reflects a repository-level review with static analysis and the linters actually executed, plus one owner-run `npm run qa:a11y` pass. It is not an accessibility certification, a security guarantee, a browser-compatibility guarantee, or a statement about production performance, none of which were verified here.
 

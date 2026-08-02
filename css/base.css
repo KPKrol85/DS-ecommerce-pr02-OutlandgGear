@@ -95,7 +95,18 @@ h4 {
   transform: translateY(1px);
 }
 
-:where(button, input[type="submit"], input[type="button"], .btn):disabled,
+:where(button, input[type="submit"], input[type="button"], .btn):disabled {
+  opacity: 0.95;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Same disabled appearance as the :disabled branch above, but deliberately
+   without pointer-events: none. An element marked with aria-disabled stays
+   focusable and reachable by design, so it must keep hover feedback and
+   click-to-focus; suppressing pointer events would work against that. */
 :where(
   .btn,
   a,
@@ -106,7 +117,6 @@ h4 {
 )[aria-disabled="true"] {
   opacity: 0.95;
   cursor: not-allowed;
-  pointer-events: none;
   box-shadow: none;
   transform: none;
 }

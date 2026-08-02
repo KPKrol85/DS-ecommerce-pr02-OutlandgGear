@@ -225,7 +225,7 @@
 }
 
 .site-nav__actions .btn span {
-  font-size: var(--fs-05);
+  font-size: var(--fs-02);
   transition:
     transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
     opacity 220ms ease;
@@ -436,7 +436,12 @@
   transform: scale(1) rotate(0deg);
 }
 
+/* Hidden below the 1040px breakpoint, where .site-nav collapses and .nav-toggle
+   takes over: the drawer carries its own .theme-toggle--drawer instance, so the
+   header copy would be a redundant second control. Restored to the .btn default
+   inside the same media query that hides .nav-toggle. */
 .site-nav__actions .theme-toggle {
+  display: none;
   inline-size: var(--space-09);
   block-size: var(--space-09);
   padding: 0;
@@ -502,7 +507,6 @@
 }
 
 .site-header.is-shrunk .site-nav__actions .btn span {
-  font-size: var(--fs-04);
   transform: scale(0.9);
   opacity: 0.88;
 }
@@ -551,6 +555,9 @@
   .nav-toggle,
   .nav-drawer {
     display: none;
+  }
+  .site-nav__actions .theme-toggle {
+    display: inline-flex;
   }
   .logo {
     order: 0;

@@ -11,9 +11,9 @@ The implementation is coherent and matches its documented architecture. Product 
 
 No critical or important findings remain open. The prerender contract is now declared in the generated output and honoured by both detail-page modules, so the build's prerendered routes deliver their content without depending on JavaScript to reveal it.
 
-Open findings are contained and all P2: two forms that carry personal data in a URL on the no-JavaScript path, one documentation claim that the implementation does not support, a missing live region on the catalog result count, and one stale cache-busting query.
+Open findings are contained and all P2: one documentation claim that the implementation does not support, a missing live region on the catalog result count, and one stale cache-busting query.
 
-The project is suitable for continued development and, once the P2 item that affects published output (P2-04) is taken, for portfolio presentation within its documented demo scope.
+The project is suitable for continued development and portfolio presentation within its documented demo scope.
 
 ## 2. Audit scope and verification
 
@@ -80,16 +80,6 @@ None detected.
 
 ## 6. P2 — Minor refinements
 
-### [P2-04] Checkout and newsletter forms submit personal data via GET on the no-JavaScript path
-
-- **Classification:** Security exposure
-- **Affected area:** Checkout form, newsletter form, progressive enhancement
-- **Evidence:** `checkout.html:120` (`<form … data-checkout-form action="checkout-potwierdzenie.html" method="get">` with `name`, `email`, `phone`, `address`, `city`, and `zip` fields); `partials/footer.html:9` (`<form class="site-footer__subscribe" action="newsletter-potwierdzenie.html" method="get" data-newsletter-form>`); `js/modules/checkout.js:24-43` and `js/modules/newsletter.js:23-44` (both call `event.preventDefault()` and navigate to the action URL without a query string)
-- **Current behavior:** With JavaScript active, neither form performs a native submission, so no field value reaches the URL. Without JavaScript — or before `js/app.js` finishes initialising, since initialisation is deferred until the partials fetch resolves — both forms fall back to their declared `method="get"`. The checkout form then appends a full name, e-mail address, phone number, street address, city, and postcode to the confirmation page URL; the newsletter form appends an e-mail address.
-- **Impact:** On that path, personal data is written into the address bar, browser history, and the hosting provider's request logs, and would be forwarded in any same-origin referrer. The demo scope limits the consequences — nothing is stored or processed — but a checkout form that places a postal address in a URL is the wrong default for a page that also links to a privacy policy, and it is the behaviour a reviewer will read from the markup.
-- **Recommended direction:** Change both forms' declared method so the no-JavaScript fallback does not carry field values in the URL, or remove the field-carrying fallback for these two forms specifically. The chosen mechanism should keep the existing JavaScript flow unchanged.
-- **Verification criteria:** Submitting either form with JavaScript disabled produces a destination URL containing no field values.
-
 ### [P2-05] README claims Escape-key handling for the modal, which the modal does not implement
 
 - **Classification:** Documentation mismatch
@@ -149,7 +139,7 @@ None detected.
 
 No blocker prevents the project from being built, deployed, or used, and no P0 or P1 finding is open. The prerender contract is explicit in the generated output and honoured by both detail-page modules, so the prerendered routes deliver their content to clients that do not execute JavaScript.
 
-The four open findings are all P2, contained, and independently addressable. The GET-submitted personal data on the no-JavaScript path (P2-04) touches what the deployed site publishes and is the most worthwhile to take next. The remainder concern documentation accuracy, one accessibility announcement gap, and one stale data path.
+The three open findings are all P2, contained, and independently addressable. They concern documentation accuracy, one accessibility announcement gap, and one stale data path.
 
 This status reflects a repository-level review with static analysis and the linters actually executed, plus one owner-run `npm run qa:a11y` pass. It is not an accessibility certification, a security guarantee, a browser-compatibility guarantee, or a statement about production performance, none of which were verified here.
 
@@ -161,4 +151,4 @@ The architecture is coherent and the discipline behind it is visible in places t
 
 The prerender contract earns particular credit: it is not an assumption the client makes about the server's output but a marker declared in the HTML, read through one shared helper, with the build failing loudly if the marked root disappears. The detail-page modules treat the served document as the baseline and refuse to render a product that the page's own canonical link and `Product` schema do not name.
 
-It is held at 9 rather than 10 by two things. First, the four open P2 items, of which the personal data placed in a URL on the no-JavaScript path affects what the deployed site actually publishes. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. None of these are deep architectural problems; all are correctable without touching the structure the project has built.
+It is held at 9 rather than 10 by two things. First, the three open P2 items, none of which touch published output but which remain worth closing. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. None of these are deep architectural problems; all are correctable without touching the structure the project has built.

@@ -82,13 +82,6 @@ None detected.
 
 ## 7. Extra quality improvements
 
-### Add a branded 404 page and wire it into the deployment
-
-- **Relevant area:** Deployment and routing.
-- **Current evidence:** No `404.html` exists at the repository root, `netlify.toml` declares no redirects or error-page handling, and `scripts/preview-dist.mjs:57-60` responds with a plain-text `Not found`. Any mistyped path — including `/produkt/<unknown-slug>/`, which is reachable from the site's own URL shape — currently drops the visitor onto the hosting provider's default page with no header, footer, or route back into the catalog.
-- **Potential value:** Keeps a visitor inside the site on a bad URL, which matters more here than on most static sites because product and kit routes are slug-based and generated. It also removes a visible gap in what is otherwise a fully branded, consistently shelled set of pages.
-- **Scope boundary:** Optional. The current behaviour is a standard hosting default, not a malfunction, and nothing in the project documentation promises a custom error page.
-
 ### Decide the `pointer-events` policy for the `aria-disabled` branch before the attribute is introduced
 
 - **Relevant area:** Base button and link disabled states.
@@ -109,7 +102,7 @@ None detected.
 
 No blocker prevents the project from being built, deployed, or used, and no P0, P1, or P2 finding is open. The prerender contract is explicit in the generated output and honoured by both detail-page modules, so the prerendered routes deliver their content to clients that do not execute JavaScript.
 
-Three optional, non-blocking quality improvements remain documented in Section 7 for future consideration; none of them affect readiness.
+Two optional, non-blocking quality improvements remain documented in Section 7 for future consideration; neither affects readiness.
 
 This status reflects a repository-level review with static analysis and the linters actually executed, plus one owner-run `npm run qa:a11y` pass. It is not an accessibility certification, a security guarantee, a browser-compatibility guarantee, or a statement about production performance, none of which were verified here.
 

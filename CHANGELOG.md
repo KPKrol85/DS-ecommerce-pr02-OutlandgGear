@@ -7,6 +7,7 @@ All significant changes to this project are documented in this file.
 ### Added
 
 - Added the initial Outland Gear front-end implementation as a standalone repository, including build, testing, and accessibility CI workflows.
+- Added a branded `404.html` error page following the project's page shell — shared header and footer, design tokens, pre-paint theme script, and the `noindex` convention used by the other utility pages. It carries `<base href="/" />`, the same mechanism the build injects into prerendered detail pages, because Netlify serves the 404 body at the originally requested URL: without it, relative asset paths would resolve against a path like `/produkt/<unknown-slug>/` and the page would render unstyled. Netlify's built-in convention serves a root-level `404.html` from the publish directory for unmatched routes, including nested ones, so no `netlify.toml` redirect was needed; `buildRootHtml()` already picks up every root HTML file, so no build change was needed either. `scripts/preview-dist.mjs` now serves the built page with a 404 status instead of plain-text `Not found`, so local preview matches production, falling back to plain text when `dist/404.html` is absent.
 
 ### Changed
 

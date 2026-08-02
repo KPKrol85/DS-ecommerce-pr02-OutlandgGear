@@ -10,7 +10,6 @@
   gap: var(--space-04);
 }
 
-
 .filters form {
   display: grid;
   gap: var(--space-04);

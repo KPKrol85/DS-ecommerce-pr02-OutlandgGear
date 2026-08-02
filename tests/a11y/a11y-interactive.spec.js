@@ -249,9 +249,7 @@ const formatViolations = (label, violations) => {
   return [
     `Accessibility violations found on ${label}:`,
     ...violations.map((violation, index) => {
-      const targets = violation.nodes
-        .map((node) => node.target.join(" "))
-        .join(" | ");
+      const targets = violation.nodes.map((node) => node.target.join(" ")).join(" | ");
       return [
         `${index + 1}. [${violation.impact || "unknown"}] ${violation.id}`,
         `   Help: ${violation.help}`,
@@ -267,9 +265,7 @@ const THEMES = ["light", "dark"];
 test.describe("interaction-only state accessibility audit", () => {
   for (const theme of THEMES) {
     for (const state of STATES) {
-      test(`${state.name} has no axe violations (${theme} theme)`, async ({
-        page,
-      }) => {
+      test(`${state.name} has no axe violations (${theme} theme)`, async ({ page }) => {
         if (state.viewport) {
           await page.setViewportSize(state.viewport);
         }
@@ -302,10 +298,7 @@ test.describe("interaction-only state accessibility audit", () => {
 
         await state.waitFor(page);
 
-        await expect(page.locator("html")).toHaveAttribute(
-          "data-theme",
-          theme,
-        );
+        await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
 
         if (state.trigger) {
           await state.trigger(page);

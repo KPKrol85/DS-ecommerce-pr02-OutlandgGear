@@ -30,7 +30,9 @@ const send = (res, statusCode, body, contentType = "text/plain; charset=utf-8") 
 };
 
 const resolveRequestPath = async (requestUrl) => {
-  const pathname = decodeURIComponent(new URL(requestUrl, `http://127.0.0.1:${PORT}`).pathname);
+  const pathname = decodeURIComponent(
+    new URL(requestUrl, `http://127.0.0.1:${PORT}`).pathname,
+  );
   const normalized = pathname === "/" ? "/index.html" : pathname;
   const targetPath = path.normalize(path.join(DIST, normalized));
 

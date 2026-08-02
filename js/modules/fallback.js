@@ -1,6 +1,12 @@
 import { on } from "./dom.js";
 
-export const createFallbackNotice = ({ message, actionLabel, onAction, role = "alert", polite = false }) => {
+export const createFallbackNotice = ({
+  message,
+  actionLabel,
+  onAction,
+  role = "alert",
+  polite = false,
+}) => {
   const notice = document.createElement("div");
   notice.className = "notice notice--error";
   notice.setAttribute("role", role);

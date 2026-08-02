@@ -32,8 +32,10 @@ const sorters = {
 
 let addToCartHandlersBound = false;
 
-
-const hasOption = (select, value) => Boolean(select && value && qsa("option", select).some((option) => option.value === value));
+const hasOption = (select, value) =>
+  Boolean(
+    select && value && qsa("option", select).some((option) => option.value === value),
+  );
 
 const parseStateFromUrl = (form) => {
   const params = new URLSearchParams(window.location.search);
@@ -63,7 +65,9 @@ const parseStateFromUrl = (form) => {
     if (!hasOption(subSelect, state.subcategory)) state.subcategory = "";
     if (!hasOption(sortSelect, state.sort)) state.sort = DEFAULT_FILTERS.sort;
 
-    state.badges = state.badges.filter((badge, index, arr) => badgeValues.includes(badge) && arr.indexOf(badge) === index);
+    state.badges = state.badges.filter(
+      (badge, index, arr) => badgeValues.includes(badge) && arr.indexOf(badge) === index,
+    );
   }
 
   if (!Number.isInteger(state.limit) || state.limit < CONFIG.perPage) {
@@ -101,7 +105,8 @@ const syncUrlState = (searchTerm, filters, limit) => {
   if (filters.category) params.set("category", filters.category);
   if (filters.subcategory) params.set("subcategory", filters.subcategory);
   if (filters.badges.length) params.set("badges", filters.badges.join(","));
-  if (filters.sort && filters.sort !== DEFAULT_FILTERS.sort) params.set("sort", filters.sort);
+  if (filters.sort && filters.sort !== DEFAULT_FILTERS.sort)
+    params.set("sort", filters.sort);
   if (limit > CONFIG.perPage) params.set("limit", String(limit));
 
   const nextQuery = params.toString();
@@ -196,10 +201,12 @@ const applyFilters = (products, filters, searchTerm) => {
         if (!haystack.includes(term)) return false;
       }
       if (filters.category && product.category !== filters.category) return false;
-      if (filters.subcategory && product.subcategory !== filters.subcategory) return false;
+      if (filters.subcategory && product.subcategory !== filters.subcategory)
+        return false;
       if (filters.rating && product.rating < filters.rating) return false;
       if (filters.range) {
-        if (product.price < filters.range.min || product.price > filters.range.max) return false;
+        if (product.price < filters.range.min || product.price > filters.range.max)
+          return false;
       }
       if (filters.badges.length) {
         const hasBadge = filters.badges.some((badge) => badges.includes(badge));
@@ -225,7 +232,6 @@ const getFilters = (form) => {
     sort: sortValue || DEFAULT_FILTERS.sort,
   };
 };
-
 
 const renderCatalogLoadError = (grid, countEl, loadMoreBtn) => {
   if (!grid) return;
@@ -346,7 +352,7 @@ export const initCatalog = async () => {
         searchTerm = event.target.value.trim();
         limit = CONFIG.perPage;
         updateListing();
-      }, CONFIG.debounceMs)
+      }, CONFIG.debounceMs),
     );
   }
 

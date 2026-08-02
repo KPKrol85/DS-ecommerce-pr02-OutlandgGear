@@ -29,8 +29,7 @@
   gap: var(--space-04);
   padding: var(--space-05);
   align-items: start;
-  border: 1px solid
-    color-mix(in srgb, var(--color-border) 88%, var(--color-white));
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, var(--color-white));
   border-radius: var(--radius-ui);
   background: linear-gradient(
     180deg,
@@ -43,15 +42,10 @@
 .cart-item__media {
   width: 96px;
   height: 96px;
-  background: linear-gradient(
-    180deg,
-    var(--color-surface-alt),
-    var(--color-page-bg)
-  );
+  background: linear-gradient(180deg, var(--color-surface-alt), var(--color-page-bg));
   border-radius: var(--radius-ui);
   padding: var(--space-02);
-  border: 1px solid
-    color-mix(in srgb, var(--color-border) 80%, var(--color-white));
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, var(--color-white));
   object-fit: cover;
   object-position: center;
 }
@@ -100,16 +94,8 @@
   position: relative;
   align-content: start;
   background:
-    radial-gradient(
-      circle at top right,
-      var(--color-page-accent-soft),
-      transparent 32%
-    ),
-    linear-gradient(
-      180deg,
-      var(--color-surface-elevated),
-      var(--color-page-bg)
-    );
+    radial-gradient(circle at top right, var(--color-page-accent-soft), transparent 32%),
+    linear-gradient(180deg, var(--color-surface-elevated), var(--color-page-bg));
   border: 1px solid var(--color-border);
   border-radius: var(--radius-ui);
   padding: var(--space-06);
@@ -151,8 +137,7 @@
   align-items: baseline;
   gap: var(--space-04);
   padding-bottom: var(--space-03);
-  border-bottom: 1px solid
-    color-mix(in srgb, var(--color-border) 84%, var(--color-white));
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 84%, var(--color-white));
   font-weight: var(--fw-semibold);
 }
 

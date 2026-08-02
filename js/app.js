@@ -1,10 +1,7 @@
 import { CONFIG } from "./config.js";
 import { qs, on } from "./modules/dom.js";
 import { initNav } from "./modules/nav.js";
-import {
-  initPartials,
-  PARTIALS_READY_EVENT,
-} from "./modules/partials.js";
+import { initPartials, PARTIALS_READY_EVENT } from "./modules/partials.js";
 import { initCatalog } from "./modules/catalog.js";
 import { initProduct } from "./modules/product.js";
 import { initCart, updateCartCount } from "./modules/cart.js";

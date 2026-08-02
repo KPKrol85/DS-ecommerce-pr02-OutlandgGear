@@ -97,46 +97,28 @@ const resolveKitProducts = (kit, products) => {
 const setKitMetadata = (kit) => {
   if (!kit?.slug) return;
 
-  const pageTitle = [kit.title, kit.label, SITE_NAME]
-    .filter(Boolean)
-    .join(" | ");
+  const pageTitle = [kit.title, kit.label, SITE_NAME].filter(Boolean).join(" | ");
   const description = [kit.description, kit.duration].filter(Boolean).join(" ");
   const canonicalUrl = new URL(buildTravelKitUrl(kit.slug), window.location.origin);
   const canonicalHref = canonicalUrl.href;
   const imageUrl = new URL(FALLBACK_SOCIAL_IMAGE, window.location.origin).href;
 
   document.title = pageTitle;
-  setMetaContent(
-    'meta[name="description"]',
-    { name: "description" },
-    description,
-  );
+  setMetaContent('meta[name="description"]', { name: "description" }, description);
 
   const canonicalLink = document.querySelector('link[rel="canonical"]');
   if (canonicalLink) {
     canonicalLink.setAttribute("href", canonicalHref);
   }
 
-  setMetaContent(
-    'meta[property="og:title"]',
-    { property: "og:title" },
-    pageTitle,
-  );
+  setMetaContent('meta[property="og:title"]', { property: "og:title" }, pageTitle);
   setMetaContent(
     'meta[property="og:description"]',
     { property: "og:description" },
     description,
   );
-  setMetaContent(
-    'meta[property="og:url"]',
-    { property: "og:url" },
-    canonicalHref,
-  );
-  setMetaContent(
-    'meta[property="og:image"]',
-    { property: "og:image" },
-    imageUrl,
-  );
+  setMetaContent('meta[property="og:url"]', { property: "og:url" }, canonicalHref);
+  setMetaContent('meta[property="og:image"]', { property: "og:image" }, imageUrl);
   setMetaContent(
     'meta[property="og:image:alt"]',
     { property: "og:image:alt" },
@@ -158,21 +140,13 @@ const setKitMetadata = (kit) => {
     FALLBACK_SOCIAL_IMAGE_HEIGHT,
   );
 
-  setMetaContent(
-    'meta[name="twitter:title"]',
-    { name: "twitter:title" },
-    pageTitle,
-  );
+  setMetaContent('meta[name="twitter:title"]', { name: "twitter:title" }, pageTitle);
   setMetaContent(
     'meta[name="twitter:description"]',
     { name: "twitter:description" },
     description,
   );
-  setMetaContent(
-    'meta[name="twitter:image"]',
-    { name: "twitter:image" },
-    imageUrl,
-  );
+  setMetaContent('meta[name="twitter:image"]', { name: "twitter:image" }, imageUrl);
 
   setJsonLd(WEBPAGE_SCHEMA_SELECTOR, "webpage", {
     "@context": "https://schema.org",
@@ -248,9 +222,7 @@ const createKitProductCard = (product) => {
 
   const meta = document.createElement("p");
   meta.className = "subtle kit-product-card__meta";
-  meta.textContent = [product.category, product.subcategory]
-    .filter(Boolean)
-    .join(" • ");
+  meta.textContent = [product.category, product.subcategory].filter(Boolean).join(" • ");
 
   const title = document.createElement("h3");
   title.className = "kit-product-card__title";
@@ -346,10 +318,7 @@ const renderKit = (root, kit, products, missingIds) => {
     image.alt = kit.heroAlt || kit.title || "";
   }
 
-  setTextContent(
-    supportTitle,
-    kit.supportTitle || "Dlaczego ten komplet działa",
-  );
+  setTextContent(supportTitle, kit.supportTitle || "Dlaczego ten komplet działa");
   setTextContent(supportText, kit.supportText);
 
   renderMetaList(meta, kit.meta);
@@ -402,8 +371,7 @@ const renderKitLoadError = (root) => {
   container.className = "container";
 
   const fallback = createFallbackNotice({
-    message:
-      "Nie udało się załadować danych zestawu. Odśwież stronę i spróbuj ponownie.",
+    message: "Nie udało się załadować danych zestawu. Odśwież stronę i spróbuj ponownie.",
     actionLabel: "Odśwież stronę",
     onAction: () => window.location.reload(),
   });

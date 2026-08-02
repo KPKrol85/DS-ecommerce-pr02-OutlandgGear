@@ -41,7 +41,9 @@ const getNavElements = () => {
 
 const getDrawerFocusable = (drawer) => {
   if (!drawer) return [];
-  return qsa(FOCUSABLE_SELECTOR, drawer).filter((element) => !element.hasAttribute("disabled"));
+  return qsa(FOCUSABLE_SELECTOR, drawer).filter(
+    (element) => !element.hasAttribute("disabled"),
+  );
 };
 
 const setDrawerState = (isOpen) => {
@@ -64,7 +66,10 @@ const setSearchState = (isOpen) => {
   header.classList.toggle("is-search-open", isOpen);
   searchPanel.classList.toggle("is-open", isOpen);
   searchToggle.setAttribute("aria-expanded", String(isOpen));
-  searchToggle.setAttribute("aria-label", isOpen ? "Zamknij wyszukiwanie" : "Otwórz wyszukiwanie");
+  searchToggle.setAttribute(
+    "aria-label",
+    isOpen ? "Zamknij wyszukiwanie" : "Otwórz wyszukiwanie",
+  );
   return true;
 };
 
@@ -181,11 +186,16 @@ const setupDrawer = () => {
     }
   });
 
-  on(window, "resize", () => {
-    if (window.innerWidth >= DESKTOP_NAV_MIN) {
-      closeDrawer();
-    }
-  }, { passive: true });
+  on(
+    window,
+    "resize",
+    () => {
+      if (window.innerWidth >= DESKTOP_NAV_MIN) {
+        closeDrawer();
+      }
+    },
+    { passive: true },
+  );
 
   setDrawerState(false);
 };
@@ -233,16 +243,26 @@ const setupSearchToggle = () => {
   on(document, "keydown", (event) => {
     const { header } = getNavElements();
     if (!header) return;
-    if (event.key !== "Escape" || isDesktop() || !header.classList.contains("is-search-open")) return;
+    if (
+      event.key !== "Escape" ||
+      isDesktop() ||
+      !header.classList.contains("is-search-open")
+    )
+      return;
     closeSearch();
   });
 
-  on(window, "resize", () => {
-    if (isDesktop()) {
-      setSearchState(false);
-      lastActiveElement = null;
-    }
-  }, { passive: true });
+  on(
+    window,
+    "resize",
+    () => {
+      if (isDesktop()) {
+        setSearchState(false);
+        lastActiveElement = null;
+      }
+    },
+    { passive: true },
+  );
 
   setSearchState(false);
 };

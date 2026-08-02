@@ -18,9 +18,7 @@ const ROUTES = [
         const grid = document.querySelector("[data-listing-grid]");
         const state = document.querySelector("[data-listing-state]");
         return Boolean(
-          grid &&
-            (grid.children.length > 0 ||
-              (state && !state.hasAttribute("hidden"))),
+          grid && (grid.children.length > 0 || (state && !state.hasAttribute("hidden"))),
         );
       });
     },
@@ -56,8 +54,8 @@ const ROUTES = [
         const summary = document.querySelector("[data-cart-summary]");
         return Boolean(
           container &&
-            summary &&
-            (container.children.length > 0 || summary.textContent.trim()),
+          summary &&
+          (container.children.length > 0 || summary.textContent.trim()),
         );
       });
     },
@@ -82,9 +80,7 @@ const ROUTES = [
     async waitFor(page) {
       await page.locator("[data-kit-root]").waitFor();
       await page.locator("[data-kit-content]").waitFor();
-      await expect(page.locator("[data-kit-title]")).not.toHaveText(
-        /Komplety podróżne/i,
-      );
+      await expect(page.locator("[data-kit-title]")).not.toHaveText(/Komplety podróżne/i);
     },
   },
   {
@@ -123,9 +119,7 @@ const formatViolations = (pageName, violations) => {
   return [
     `Accessibility violations found on ${pageName}:`,
     ...violations.map((violation, index) => {
-      const targets = violation.nodes
-        .map((node) => node.target.join(" "))
-        .join(" | ");
+      const targets = violation.nodes.map((node) => node.target.join(" ")).join(" | ");
       return [
         `${index + 1}. [${violation.impact || "unknown"}] ${violation.id}`,
         `   Help: ${violation.help}`,
@@ -141,9 +135,7 @@ const THEMES = ["light", "dark"];
 test.describe("rendered accessibility audit", () => {
   for (const theme of THEMES) {
     for (const route of ROUTES) {
-      test(`${route.name} has no axe violations (${theme} theme)`, async ({
-        page,
-      }) => {
+      test(`${route.name} has no axe violations (${theme} theme)`, async ({ page }) => {
         await page.addInitScript((themeName) => {
           window.localStorage.setItem("outlandgear-theme", themeName);
         }, theme);
@@ -167,10 +159,7 @@ test.describe("rendered accessibility audit", () => {
         await page.waitForLoadState("networkidle");
         await route.waitFor(page);
 
-        await expect(page.locator("html")).toHaveAttribute(
-          "data-theme",
-          theme,
-        );
+        await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
 
         // Confirms the acceptance-flag seeding above suppressed the legal
         // modal's auto-open (P2-07), so this scan analyses the route's
@@ -180,8 +169,7 @@ test.describe("rendered accessibility audit", () => {
           const modal = document.querySelector("#outland-legal-modal");
           if (!modal) return true;
           return (
-            modal.getAttribute("aria-hidden") === "true" ||
-            modal.hasAttribute("hidden")
+            modal.getAttribute("aria-hidden") === "true" || modal.hasAttribute("hidden")
           );
         });
         expect(
@@ -189,8 +177,7 @@ test.describe("rendered accessibility audit", () => {
           `Legal modal was open during the ${route.name} scan (${theme} theme); acceptance-flag seeding did not suppress auto-open.`,
         ).toBe(true);
 
-        const accessibilityScanResults = await new AxeBuilder({ page })
-          .analyze();
+        const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
 
         expect(
           accessibilityScanResults.violations,

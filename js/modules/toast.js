@@ -40,7 +40,8 @@ export const showToast = (message, options = {}) => {
   const duration = Number.isFinite(options.duration) ? options.duration : type.duration;
 
   toast.innerHTML = "";
-  toast.dataset.feedbackType = options.type && TOAST_TYPES[options.type] ? options.type : "info";
+  toast.dataset.feedbackType =
+    options.type && TOAST_TYPES[options.type] ? options.type : "info";
   toast.setAttribute("role", type.role);
   toast.setAttribute("aria-live", type.live);
   toast.setAttribute("aria-atomic", "true");

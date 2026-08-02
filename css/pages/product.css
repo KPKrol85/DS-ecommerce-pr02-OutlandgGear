@@ -54,7 +54,9 @@
   border: 1px solid color-mix(in srgb, var(--color-forest) 10%, var(--color-border));
   padding: var(--space-01);
   border-radius: var(--radius-ui);
-  background: radial-gradient(circle at top right, var(--color-page-accent-soft), transparent 40%), linear-gradient(180deg, var(--color-surface-elevated), var(--color-surface-alt));
+  background:
+    radial-gradient(circle at top right, var(--color-page-accent-soft), transparent 40%),
+    linear-gradient(180deg, var(--color-surface-elevated), var(--color-surface-alt));
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   overflow: hidden;
@@ -89,7 +91,13 @@
   box-shadow:
     inset 0 0 0 1px var(--color-forest),
     var(--shadow-sm);
-  background: radial-gradient(circle at top right, var(--color-page-accent-strong), transparent 36%), linear-gradient(180deg, var(--color-surface-elevated), var(--color-page-bg));
+  background:
+    radial-gradient(
+      circle at top right,
+      var(--color-page-accent-strong),
+      transparent 36%
+    ),
+    linear-gradient(180deg, var(--color-surface-elevated), var(--color-page-bg));
 }
 
 .product-meta {

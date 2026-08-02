@@ -43,7 +43,6 @@
   justify-content: space-between;
 }
 
-
 /* Headers */
 
 .section-header {
@@ -69,7 +68,7 @@
 
 .section-header__lead {
   margin: 0;
-    font-weight: var(--fw-medium);
+  font-weight: var(--fw-medium);
 }
 
 .section-header .kicker,
@@ -116,7 +115,6 @@
   gap: var(--space-06);
   align-items: center;
 }
-
 
 @media (min-width: 900px) {
   .hero__content {

@@ -4,29 +4,60 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kategoria — Outland Gear</title>
-    <meta name="description" content="Przeglądaj sprzęt outdoor i travel gear Outland Gear. Filtrowanie po cenie, ocenach i badge." />
+    <meta
+      name="description"
+      content="Przeglądaj sprzęt outdoor i travel gear Outland Gear. Filtrowanie po cenie, ocenach i badge."
+    />
     <meta name="author" content="Outland Gear" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
     <meta name="theme-color" content="#0f172a" />
-    <link rel="canonical" href="https://e-commerce-pr02-outlandgear.netlify.app/kategoria.html" />
-    <link rel="alternate" hreflang="pl-PL" href="https://e-commerce-pr02-outlandgear.netlify.app/kategoria.html" />
+    <link
+      rel="canonical"
+      href="https://e-commerce-pr02-outlandgear.netlify.app/kategoria.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="pl-PL"
+      href="https://e-commerce-pr02-outlandgear.netlify.app/kategoria.html"
+    />
     <!-- Open Graph data -->
     <meta property="og:locale" content="pl_PL" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Outland Gear" />
     <meta property="og:title" content="Kategoria — Outland Gear" />
-    <meta property="og:description" content="Przeglądaj sprzęt outdoor i travel gear Outland Gear. Filtrowanie po cenie, ocenach i badge." />
-    <meta property="og:url" content="https://e-commerce-pr02-outlandgear.netlify.app/kategoria.html" />
-    <meta property="og:image" content="https://e-commerce-pr02-outlandgear.netlify.app/assets/og-img/og-img.png" />
-    <meta property="og:image:alt" content="Grafika Outland Gear przedstawiająca leśny krajobraz, góry, jezioro i centralne logo marki w zielono-beżowej kolorystyce." />
+    <meta
+      property="og:description"
+      content="Przeglądaj sprzęt outdoor i travel gear Outland Gear. Filtrowanie po cenie, ocenach i badge."
+    />
+    <meta
+      property="og:url"
+      content="https://e-commerce-pr02-outlandgear.netlify.app/kategoria.html"
+    />
+    <meta
+      property="og:image"
+      content="https://e-commerce-pr02-outlandgear.netlify.app/assets/og-img/og-img.png"
+    />
+    <meta
+      property="og:image:alt"
+      content="Grafika Outland Gear przedstawiająca leśny krajobraz, góry, jezioro i centralne logo marki w zielono-beżowej kolorystyce."
+    />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1536" />
     <meta property="og:image:height" content="1024" />
     <!-- Twitter Card data -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Kategoria — Outland Gear" />
-    <meta name="twitter:description" content="Przeglądaj sprzęt outdoor i travel gear Outland Gear. Filtrowanie po cenie, ocenach i badge." />
-    <meta name="twitter:image" content="https://e-commerce-pr02-outlandgear.netlify.app/assets/og-img/og-img.png" />
+    <meta
+      name="twitter:description"
+      content="Przeglądaj sprzęt outdoor i travel gear Outland Gear. Filtrowanie po cenie, ocenach i badge."
+    />
+    <meta
+      name="twitter:image"
+      content="https://e-commerce-pr02-outlandgear.netlify.app/assets/og-img/og-img.png"
+    />
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="assets/fav-icons/favicon.svg" />
     <link rel="icon" type="image/x-icon" href="assets/fav-icons/favicon.ico" />
@@ -40,7 +71,8 @@
         try {
           const storedTheme = window.localStorage.getItem(storageKey);
           if (storedTheme === "light" || storedTheme === "dark") theme = storedTheme;
-          else if (window.matchMedia?.("(prefers-color-scheme: dark)").matches) theme = "dark";
+          else if (window.matchMedia?.("(prefers-color-scheme: dark)").matches)
+            theme = "dark";
         } catch {
           if (window.matchMedia?.("(prefers-color-scheme: dark)").matches) theme = "dark";
         }
@@ -104,7 +136,9 @@
             <div class="hero-subpage__body">
               <p class="kicker">Marketplace</p>
               <h1 class="hero-subpage__title">Nowości i bestsellery</h1>
-              <p class="hero-subpage__lead">Wszystkie produkty Outland Gear w jednym miejscu.</p>
+              <p class="hero-subpage__lead">
+                Wszystkie produkty Outland Gear w jednym miejscu.
+              </p>
             </div>
           </div>
         </div>
@@ -130,7 +164,9 @@
                 </fieldset>
                 <fieldset class="filters__group">
                   <legend class="filters__title">Minimalna ocena</legend>
-                  <label class="form__label" for="filters-rating">Wybierz minimalną ocenę</label>
+                  <label class="form__label" for="filters-rating"
+                    >Wybierz minimalną ocenę</label
+                  >
                   <select class="form__select" id="filters-rating" name="rating">
                     <option value="">Każda</option>
                     <option value="4">4.0+</option>
@@ -139,8 +175,14 @@
                 </fieldset>
                 <fieldset class="filters__group">
                   <legend class="filters__title">Podkategorie</legend>
-                  <label class="form__label" for="filters-subcategory">Wybierz podkategorię</label>
-                  <select class="form__select" id="filters-subcategory" name="subcategory">
+                  <label class="form__label" for="filters-subcategory"
+                    >Wybierz podkategorię</label
+                  >
+                  <select
+                    class="form__select"
+                    id="filters-subcategory"
+                    name="subcategory"
+                  >
                     <option value="">Wszystkie</option>
                     <option value="Plecaki trekkingowe">Plecaki trekkingowe</option>
                     <option value="Plecaki miejskie">Plecaki miejskie</option>
@@ -181,7 +223,9 @@
                 </fieldset>
                 <fieldset class="filters__group">
                   <legend class="filters__title">Sortowanie</legend>
-                  <label class="form__label" for="filters-sort">Wybierz sposób sortowania</label>
+                  <label class="form__label" for="filters-sort"
+                    >Wybierz sposób sortowania</label
+                  >
                   <select class="form__select" id="filters-sort" name="sort">
                     <option value="popularity">Popularność</option>
                     <option value="priceAsc">Cena rosnąco</option>
@@ -201,9 +245,16 @@
               </div>
               <div class="grid grid--3" data-listing-grid></div>
               <noscript>
-                <section class="notice stack" role="status" aria-label="Informacje bez JavaScriptu">
+                <section
+                  class="notice stack"
+                  role="status"
+                  aria-label="Informacje bez JavaScriptu"
+                >
                   <h2>Przeglądanie kategorii bez JavaScriptu</h2>
-                  <p>Interaktywna lista produktów i filtry nie są dostępne bez JavaScriptu. Możesz jednak kontynuować zakupy, korzystając z poniższych stron:</p>
+                  <p>
+                    Interaktywna lista produktów i filtry nie są dostępne bez JavaScriptu.
+                    Możesz jednak kontynuować zakupy, korzystając z poniższych stron:
+                  </p>
                   <ul>
                     <li>
                       <a href="index.html">Strona główna z polecanymi produktami</a>
@@ -219,7 +270,9 @@
               </noscript>
               <div class="ui-state" data-listing-state hidden></div>
               <div class="section-actions text-center">
-                <button class="btn btn--ghost" type="button" data-load-more>Pokaż więcej</button>
+                <button class="btn btn--ghost" type="button" data-load-more>
+                  Pokaż więcej
+                </button>
               </div>
             </div>
           </div>
@@ -228,7 +281,11 @@
     </main>
 
     <!-- Footer -->
-    <footer class="site-footer" aria-label="Stopka Outland Gear" data-partial-src="partials/footer.html"></footer>
+    <footer
+      class="site-footer"
+      aria-label="Stopka Outland Gear"
+      data-partial-src="partials/footer.html"
+    ></footer>
 
     <div class="toast" data-toast role="status" aria-live="polite"></div>
 

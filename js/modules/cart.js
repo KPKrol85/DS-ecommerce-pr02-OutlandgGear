@@ -18,10 +18,7 @@ const upsertStorageNotice = (container, actionLabel, onAction) => {
   if (!container) return;
 
   const status = getStorageStatus();
-  const existing = qs(
-    "[data-storage-warning]",
-    container.parentElement || container,
-  );
+  const existing = qs("[data-storage-warning]", container.parentElement || container);
 
   if (status.available) {
     if (existing) existing.remove();
@@ -58,10 +55,9 @@ export const addToCart = (product, qty = 1) => {
   }
   const saved = setCart(cart);
   if (!saved) {
-    showToast(
-      "Nie udało się zapisać koszyka. Odśwież stronę i spróbuj ponownie.",
-      { type: "error" },
-    );
+    showToast("Nie udało się zapisać koszyka. Odśwież stronę i spróbuj ponownie.", {
+      type: "error",
+    });
   }
   return saved;
 };
@@ -211,8 +207,7 @@ const renderCartLoadError = (container, summary) => {
   container.innerHTML = "";
   syncCartLayout(summary, false);
   const fallback = createFallbackNotice({
-    message:
-      "Nie udało się załadować danych produktów w koszyku. Spróbuj ponownie.",
+    message: "Nie udało się załadować danych produktów w koszyku. Spróbuj ponownie.",
     actionLabel: "Spróbuj ponownie",
     onAction: () => initCart(),
   });
@@ -246,9 +241,7 @@ export const initCart = async () => {
   const items = hydrateItems(productsCache, cart);
   renderCart(items, stateRegion);
   updateCartCount();
-  upsertStorageNotice(container, "Odśwież stronę", () =>
-    window.location.reload(),
-  );
+  upsertStorageNotice(container, "Odśwież stronę", () => window.location.reload());
 
   if (cartHandlersBound) return;
 
@@ -257,18 +250,14 @@ export const initCart = async () => {
     if (!Number.isInteger(id)) return;
     const updated = removeItem(id);
     if (!updated) {
-      upsertStorageNotice(container, "Odśwież stronę", () =>
-        window.location.reload(),
-      );
+      upsertStorageNotice(container, "Odśwież stronę", () => window.location.reload());
       return;
     }
 
     const refreshed = hydrateItems(productsCache, getCart());
     renderCart(refreshed, stateRegion);
     updateCartCount();
-    upsertStorageNotice(container, "Odśwież stronę", () =>
-      window.location.reload(),
-    );
+    upsertStorageNotice(container, "Odśwież stronę", () => window.location.reload());
   });
 
   delegate(container, "[data-qty-input]", "change", (_, target) => {
@@ -278,18 +267,14 @@ export const initCart = async () => {
     const updated = updateQty(id, qty);
 
     if (!updated) {
-      upsertStorageNotice(container, "Odśwież stronę", () =>
-        window.location.reload(),
-      );
+      upsertStorageNotice(container, "Odśwież stronę", () => window.location.reload());
       return;
     }
 
     const refreshed = hydrateItems(productsCache, getCart());
     renderCart(refreshed, stateRegion);
     updateCartCount();
-    upsertStorageNotice(container, "Odśwież stronę", () =>
-      window.location.reload(),
-    );
+    upsertStorageNotice(container, "Odśwież stronę", () => window.location.reload());
   });
 
   cartHandlersBound = true;

@@ -23,11 +23,7 @@
       var(--color-page-accent-strong),
       transparent 34%
     ),
-    linear-gradient(
-      180deg,
-      var(--color-surface-alt),
-      var(--color-surface-elevated)
-    );
+    linear-gradient(180deg, var(--color-surface-alt), var(--color-surface-elevated));
 }
 
 .about-overview__panel::after {
@@ -140,11 +136,7 @@
       var(--color-page-accent-strong),
       transparent 34%
     ),
-    linear-gradient(
-      180deg,
-      var(--color-surface-alt),
-      var(--color-surface-elevated)
-    );
+    linear-gradient(180deg, var(--color-surface-alt), var(--color-surface-elevated));
 }
 
 .about-cta__content {

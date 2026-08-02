@@ -31,13 +31,14 @@ const withStorageGuard = (operation, fallbackValue) => {
 
 export const getStorageStatus = () => ({
   available: !storageIssue,
-  message: storageIssue
-    ? "Nie możemy zapisać zmian w koszyku w tej przeglądarce."
-    : "",
+  message: storageIssue ? "Nie możemy zapisać zmian w koszyku w tej przeglądarce." : "",
 });
 
 export const loadCart = () => {
-  const parsed = withStorageGuard(() => safeParse(localStorage.getItem(CONFIG.storageKey), null), null);
+  const parsed = withStorageGuard(
+    () => safeParse(localStorage.getItem(CONFIG.storageKey), null),
+    null,
+  );
   if (!parsed || parsed.version !== CONFIG.storageVersion) {
     return defaultCart();
   }

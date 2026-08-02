@@ -75,14 +75,14 @@ const shouldCopyAssetPath = (sourcePath) => {
   const normalizedPath = relativePath.split(path.sep).join("/");
 
   if (!normalizedPath || normalizedPath.startsWith("..")) return false;
-  if (normalizedPath === "assets/img-src" || normalizedPath.startsWith("assets/img-src/")) return false;
+  if (normalizedPath === "assets/img-src" || normalizedPath.startsWith("assets/img-src/"))
+    return false;
   if (path.basename(sourcePath).startsWith(".")) return false;
 
   return true;
 };
 
-const escapeForRegExp = (value) =>
-  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escapeForRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const escapeHtml = (value = "") =>
   String(value)
@@ -186,7 +186,7 @@ const replaceJsonLdScript = (html, selector, payload) => {
 
 const injectBaseHref = (html) => {
   if (/<base\s/i.test(html)) return html;
-  return html.replace(/<head>/i, "<head>\n    <base href=\"/\" />");
+  return html.replace(/<head>/i, '<head>\n    <base href="/" />');
 };
 
 const removeHiddenAttributeFromElement = (html, pattern) =>
@@ -246,8 +246,12 @@ const writeDistHtml = async (relativePath, html) => {
 const buildProductMetadata = (product) => {
   const canonicalPath = buildProductPath(product.slug);
   const canonicalUrl = new URL(canonicalPath, `${SEO_ORIGIN}/`).toString();
-  const pageTitle = [product.name, product.category, SITE_NAME].filter(Boolean).join(" | ");
-  const description = [product.shortDescription, product.subcategory].filter(Boolean).join(" ");
+  const pageTitle = [product.name, product.category, SITE_NAME]
+    .filter(Boolean)
+    .join(" | ");
+  const description = [product.shortDescription, product.subcategory]
+    .filter(Boolean)
+    .join(" ");
   const socialImagePath = selectSocialImagePath(product.images?.[0]);
   const socialImageUrl = buildAbsoluteAssetUrl(socialImagePath);
 
@@ -790,7 +794,9 @@ switch (command) {
     }
     break;
   case "images":
-    throw new Error("build-dist images command has been removed; use `npm run build:images`.");
+    throw new Error(
+      "build-dist images command has been removed; use `npm run build:images`.",
+    );
   case "build":
     await buildDist();
     break;

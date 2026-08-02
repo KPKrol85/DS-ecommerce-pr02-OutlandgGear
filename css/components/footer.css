@@ -1,11 +1,7 @@
 .site-footer {
   margin-top: var(--space-09);
   background:
-    radial-gradient(
-      circle at top right,
-      rgba(131, 189, 127, 0.25),
-      transparent 38%
-    ),
+    radial-gradient(circle at top right, rgba(131, 189, 127, 0.25), transparent 38%),
     linear-gradient(150deg, #0d1722, #0f2230 65%, #102e3a);
   color: var(--color-white);
   padding: var(--space-07) 0 var(--space-05);

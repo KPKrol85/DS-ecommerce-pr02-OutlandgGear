@@ -5,11 +5,7 @@ import { addToCart, updateCartCount } from "./cart.js";
 import { showToast } from "./toast.js";
 import { createFallbackNotice } from "./fallback.js";
 import { findProductBySlug, loadNormalizedProducts } from "./product-data.js";
-import {
-  buildProductUrl,
-  isPrerenderedRoot,
-  resolveProductSlug,
-} from "./routes.js";
+import { buildProductUrl, isPrerenderedRoot, resolveProductSlug } from "./routes.js";
 import { setUiState, clearUiState } from "./ui-state.js";
 
 const SITE_NAME = "Outland Gear";
@@ -75,44 +71,26 @@ const setProductMetadata = (product, slug) => {
   const description = [product.shortDescription, product.subcategory]
     .filter(Boolean)
     .join(" ");
-  setMetaContent(
-    'meta[name="description"]',
-    { name: "description" },
-    description,
-  );
+  setMetaContent('meta[name="description"]', { name: "description" }, description);
 
   const canonicalUrl = new URL(buildProductUrl(slug), window.location.origin);
   const canonicalHref = canonicalUrl.href;
   const imageUrl = new URL(FALLBACK_SOCIAL_IMAGE, window.location.origin).href;
-  const formattedPrice = Number.isFinite(product.price)
-    ? product.price.toFixed(2)
-    : "";
+  const formattedPrice = Number.isFinite(product.price) ? product.price.toFixed(2) : "";
 
   const canonicalLink = document.querySelector('link[rel="canonical"]');
   if (canonicalLink) {
     canonicalLink.setAttribute("href", canonicalHref);
   }
 
-  setMetaContent(
-    'meta[property="og:title"]',
-    { property: "og:title" },
-    pageTitle,
-  );
+  setMetaContent('meta[property="og:title"]', { property: "og:title" }, pageTitle);
   setMetaContent(
     'meta[property="og:description"]',
     { property: "og:description" },
     description,
   );
-  setMetaContent(
-    'meta[property="og:url"]',
-    { property: "og:url" },
-    canonicalHref,
-  );
-  setMetaContent(
-    'meta[property="og:image"]',
-    { property: "og:image" },
-    imageUrl,
-  );
+  setMetaContent('meta[property="og:url"]', { property: "og:url" }, canonicalHref);
+  setMetaContent('meta[property="og:image"]', { property: "og:image" }, imageUrl);
   setMetaContent(
     'meta[property="og:image:alt"]',
     { property: "og:image:alt" },
@@ -134,21 +112,13 @@ const setProductMetadata = (product, slug) => {
     FALLBACK_SOCIAL_IMAGE_HEIGHT,
   );
 
-  setMetaContent(
-    'meta[name="twitter:title"]',
-    { name: "twitter:title" },
-    pageTitle,
-  );
+  setMetaContent('meta[name="twitter:title"]', { name: "twitter:title" }, pageTitle);
   setMetaContent(
     'meta[name="twitter:description"]',
     { name: "twitter:description" },
     description,
   );
-  setMetaContent(
-    'meta[name="twitter:image"]',
-    { name: "twitter:image" },
-    imageUrl,
-  );
+  setMetaContent('meta[name="twitter:image"]', { name: "twitter:image" }, imageUrl);
 
   setJsonLd(WEBPAGE_SCHEMA_SELECTOR, "webpage", {
     "@context": "https://schema.org",
@@ -211,8 +181,7 @@ const renderProduct = (product) => {
   const specs = qs("[data-product-specs]", root);
 
   if (title) title.textContent = product.name || "";
-  if (price)
-    price.textContent = formatCurrency(product.price, product.currency);
+  if (price) price.textContent = formatCurrency(product.price, product.currency);
   if (oldPrice) {
     if (product.oldPrice) {
       oldPrice.textContent = formatCurrency(product.oldPrice, product.currency);
@@ -252,15 +221,10 @@ const renderProduct = (product) => {
   const mainImage = qs("[data-product-main]", root);
   const thumbs = qsa("[data-product-thumb]", root);
   const images =
-    Array.isArray(product?.images) && product.images.length
-      ? product.images
-      : [""];
+    Array.isArray(product?.images) && product.images.length ? product.images : [""];
   const setActiveThumb = (activeIndex) => {
     thumbs.forEach((thumb, index) => {
-      thumb.setAttribute(
-        "aria-pressed",
-        index === activeIndex ? "true" : "false",
-      );
+      thumb.setAttribute("aria-pressed", index === activeIndex ? "true" : "false");
       thumb.tabIndex = index === activeIndex ? 0 : -1;
     });
   };
@@ -331,9 +295,7 @@ const renderRelated = (products, current) => {
   if (!grid) return;
   grid.innerHTML = "";
   const related = products
-    .filter(
-      (item) => item.category === current.category && item.id !== current.id,
-    )
+    .filter((item) => item.category === current.category && item.id !== current.id)
     .slice(0, 3);
   related.forEach((product) => {
     const article = document.createElement("article");
@@ -388,8 +350,7 @@ const renderProductLoadError = (root) => {
   container.className = "container";
 
   const fallback = createFallbackNotice({
-    message:
-      "Nie udało się załadować produktu. Odśwież stronę i spróbuj ponownie.",
+    message: "Nie udało się załadować produktu. Odśwież stronę i spróbuj ponownie.",
     actionLabel: "Odśwież stronę",
     onAction: () => window.location.reload(),
   });

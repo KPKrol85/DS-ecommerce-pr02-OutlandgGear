@@ -8,7 +8,8 @@ const DEFAULT_STOCK_STATUS = "Brak informacji";
 
 const isNonEmptyString = (value) => typeof value === "string" && value.trim().length > 0;
 
-const toSafeString = (value, fallback = "") => (isNonEmptyString(value) ? value.trim() : fallback);
+const toSafeString = (value, fallback = "") =>
+  isNonEmptyString(value) ? value.trim() : fallback;
 
 const toFiniteNumber = (value, fallback = 0) => {
   const num = Number(value);
@@ -112,7 +113,9 @@ const reportValidation = (issues) => {
   issues.forEach(({ index, summary, details }) => {
     console.warn(`[data-validation] Product at index ${index} ${summary}.`, details);
   });
-  console.warn(`[data-validation] Loaded ${issues.length} malformed product record(s). Invalid records were skipped when unsafe.`);
+  console.warn(
+    `[data-validation] Loaded ${issues.length} malformed product record(s). Invalid records were skipped when unsafe.`,
+  );
 };
 
 let normalizedProductsPromise;
@@ -146,7 +149,12 @@ export const loadNormalizedProducts = async () => {
 
     const normalized = (Array.isArray(rawProducts) ? rawProducts : [])
       .map((entry, index) => {
-        const { product, issues: itemIssues } = normalizeProduct(entry, categoryMap, seenIds, seenSlugs);
+        const { product, issues: itemIssues } = normalizeProduct(
+          entry,
+          categoryMap,
+          seenIds,
+          seenSlugs,
+        );
         if (itemIssues.length) {
           issues.push({
             index,

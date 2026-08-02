@@ -22,15 +22,13 @@ const NON_INDEXABLE_PAGE_PATHS = [
 
 const resolveSeoUrl = (pathname) => new URL(pathname, `${SEO_ORIGIN}/`).toString();
 
-const isNonEmptyString = (value) =>
-  typeof value === "string" && value.trim().length > 0;
+const isNonEmptyString = (value) => typeof value === "string" && value.trim().length > 0;
 
 const normalizeSlug = (value) => (isNonEmptyString(value) ? value.trim() : "");
 
 const buildProductPath = (slug) => `/produkt/${encodeURIComponent(slug)}/`;
 
-const buildTravelKitPath = (slug) =>
-  `/komplety/${encodeURIComponent(slug)}/`;
+const buildTravelKitPath = (slug) => `/komplety/${encodeURIComponent(slug)}/`;
 
 const collectSlugPaths = (items, buildPath) => {
   const safeItems = Array.isArray(items) ? items : [];
@@ -41,7 +39,8 @@ const collectSlugPaths = (items, buildPath) => {
 };
 
 const buildRobotsTxt = () =>
-  ["User-agent: *", "Allow: /", `Sitemap: ${resolveSeoUrl("/sitemap.xml")}`].join("\n") + "\n";
+  ["User-agent: *", "Allow: /", `Sitemap: ${resolveSeoUrl("/sitemap.xml")}`].join("\n") +
+  "\n";
 
 const buildSitemapXml = ({ products = [], travelKits = [] } = {}) => {
   const uniquePaths = Array.from(
@@ -52,11 +51,17 @@ const buildSitemapXml = ({ products = [], travelKits = [] } = {}) => {
     ]),
   );
 
-  const urls = uniquePaths.map(
-    (pathname) => `  <url>\n    <loc>${resolveSeoUrl(pathname)}</loc>\n  </url>`
-  ).join("\n");
+  const urls = uniquePaths
+    .map((pathname) => `  <url>\n    <loc>${resolveSeoUrl(pathname)}</loc>\n  </url>`)
+    .join("\n");
 
-  return ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">', urls, "</urlset>", ""].join("\n");
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    urls,
+    "</urlset>",
+    "",
+  ].join("\n");
 };
 
 export {

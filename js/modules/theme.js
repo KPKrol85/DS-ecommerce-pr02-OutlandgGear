@@ -38,9 +38,7 @@ const getToggleState = (theme) => {
   return {
     isDark,
     label: isDark ? "Ciemny" : "Jasny",
-    ariaLabel: isDark
-      ? "Przełącz na jasny motyw"
-      : "Przełącz na ciemny motyw",
+    ariaLabel: isDark ? "Przełącz na jasny motyw" : "Przełącz na ciemny motyw",
   };
 };
 
@@ -78,11 +76,8 @@ const setupThemeToggle = () => {
     if (!(toggle instanceof HTMLButtonElement)) return;
 
     const currentTheme =
-      document.documentElement.dataset.theme === DARK_THEME
-        ? DARK_THEME
-        : LIGHT_THEME;
-    const nextTheme =
-      currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME;
+      document.documentElement.dataset.theme === DARK_THEME ? DARK_THEME : LIGHT_THEME;
+    const nextTheme = currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME;
     setTheme(nextTheme, { persist: true });
   });
 };

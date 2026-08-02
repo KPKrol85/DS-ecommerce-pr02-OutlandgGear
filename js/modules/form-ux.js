@@ -4,7 +4,13 @@ const FIELD_SELECTOR = "input, select, textarea";
 
 const isEligibleField = (input) => {
   const type = input.type ? input.type.toLowerCase() : "";
-  return !input.disabled && type !== "hidden" && type !== "submit" && type !== "button" && type !== "reset";
+  return (
+    !input.disabled &&
+    type !== "hidden" &&
+    type !== "submit" &&
+    type !== "button" &&
+    type !== "reset"
+  );
 };
 
 const getErrorTarget = (form, input) => {
@@ -16,8 +22,10 @@ const getErrorTarget = (form, input) => {
 const getFriendlyMessage = (input) => {
   const validity = input.validity;
   if (validity.valueMissing) return "To pole jest wymagane.";
-  if (validity.typeMismatch && input.type === "email") return "Podaj poprawny adres e-mail.";
-  if (validity.patternMismatch && input.name === "zip") return "Użyj formatu kodu pocztowego 00-000.";
+  if (validity.typeMismatch && input.type === "email")
+    return "Podaj poprawny adres e-mail.";
+  if (validity.patternMismatch && input.name === "zip")
+    return "Użyj formatu kodu pocztowego 00-000.";
   if (validity.tooShort) return `Wpisz co najmniej ${input.minLength} znaki.`;
   return input.validationMessage || "Sprawdź poprawność tego pola.";
 };
@@ -35,7 +43,9 @@ export const showFieldError = (form, input, message = getFriendlyMessage(input))
   input.setAttribute("aria-invalid", "true");
 
   if (error && error.id) {
-    const describedBy = new Set((input.getAttribute("aria-describedby") || "").split(" ").filter(Boolean));
+    const describedBy = new Set(
+      (input.getAttribute("aria-describedby") || "").split(" ").filter(Boolean),
+    );
     describedBy.add(error.id);
     input.setAttribute("aria-describedby", Array.from(describedBy).join(" "));
   }

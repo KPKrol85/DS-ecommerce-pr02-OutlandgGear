@@ -20,6 +20,9 @@ All significant changes to this project are documented in this file.
 - Fixed the product-page add-to-cart quantity input not enforcing its own `max` attribute before adding to the cart, which allowed quantities up to the cart's separate 99-unit ceiling.
 - Fixed dark-theme contrast failures on solid buttons, the header search button, and the skip link by introducing theme-invariant `--color-brand-solid`/`--color-brand-solid-strong` tokens for solid CTA fills.
 - Fixed illegible dark-theme text on legal-page content cards caused by a hardcoded white card background; switched to the theme-aware `--color-surface-base` token.
+- Fixed `removeHiddenAttributeFromElement` in `scripts/build-dist.mjs` matching a literal space (`/\s hidden\b/`) rather than any whitespace (`/\s+hidden\b/`), which meant the `hidden` attribute was never actually stripped during the build; every generated `/komplety/<slug>/` page had been shipping its entire detail block hidden to clients that do not execute JavaScript, while the build reported success.
+- Fixed client-side rendering treating prerendered detail-page content as a placeholder rather than the baseline. Build-generated `/produkt/<slug>/` and `/komplety/<slug>/` pages now carry `data-prerendered="true"` on their page root, read through a shared `isPrerenderedRoot` helper in `routes.js`; `travel-kits.js` no longer hides and rebuilds content that was already served, and both detail modules now report a data-fetch failure through a non-blocking `ui-state` banner instead of clearing the page root.
+- Fixed the product page silently substituting a different product when a slug no longer resolves in the catalog data; on prerendered pages the `matchedProduct || products[0]` fallback is now blocked, so the page no longer renders one product under a URL, canonical link, and `Product` schema naming another.
 
 ### Security
 
@@ -39,3 +42,4 @@ All significant changes to this project are documented in this file.
 ### Testing
 
 - Added dark-theme coverage to the Playwright/`@axe-core` accessibility test suite, scanning routes in both light and dark themes.
+- Retargeted the travel-kit loading-state accessibility scan from the prerendered `/komplety/<slug>/` route to the `komplety.html` template, the only route where that state still legitimately occurs now that prerendered pages skip the loading step.

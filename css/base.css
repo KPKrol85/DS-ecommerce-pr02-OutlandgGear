@@ -76,16 +76,34 @@ h4 {
     opacity var(--transition-fast);
 }
 
-:where(button, [role="button"], input[type="submit"], input[type="button"], .btn, .nav-toggle, .dropdown__toggle, .gallery__thumbs button) {
+:where(
+  button,
+  [role="button"],
+  input[type="submit"],
+  input[type="button"],
+  .btn,
+  .nav-toggle,
+  .dropdown__toggle,
+  .gallery__thumbs button
+) {
   cursor: pointer;
 }
 
-:where(a, button, [role="button"], input[type="submit"], input[type="button"]):where(:not(:disabled):not([aria-disabled="true"])):active {
+:where(a, button, [role="button"], input[type="submit"], input[type="button"]):where(
+    :not(:disabled):not([aria-disabled="true"])
+  ):active {
   transform: translateY(1px);
 }
 
 :where(button, input[type="submit"], input[type="button"], .btn):disabled,
-:where(.btn, a, button, [role="button"], .dropdown__toggle, .nav-toggle)[aria-disabled="true"] {
+:where(
+  .btn,
+  a,
+  button,
+  [role="button"],
+  .dropdown__toggle,
+  .nav-toggle
+)[aria-disabled="true"] {
   opacity: 0.95;
   cursor: not-allowed;
   pointer-events: none;

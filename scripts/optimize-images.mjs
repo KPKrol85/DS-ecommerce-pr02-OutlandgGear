@@ -191,7 +191,7 @@ const isDirectRun = process.argv[1] && path.resolve(process.argv[1]) === __filen
 
 if (isDirectRun) {
   buildImages({ clean: process.argv.includes("--clean") }).catch((error) => {
-    log.error(error instanceof Error ? error.stack ?? error.message : String(error));
+    log.error(error instanceof Error ? (error.stack ?? error.message) : String(error));
     process.exit(1);
   });
 }

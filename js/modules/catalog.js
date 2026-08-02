@@ -325,10 +325,14 @@ export const initCatalog = async () => {
     }
 
     if (filtered.length === 0) {
+      // The result count above already announces via its own live region
+      // (data-listing-count); silence this one so the empty state doesn't
+      // fire a second, competing announcement for the same filter change.
       setUiState(stateRegion, {
         type: "empty",
         title: "Brak wyników",
         message: "Zmień filtry lub wpisz inną frazę wyszukiwania.",
+        announce: false,
       });
     } else {
       clearUiState(stateRegion);

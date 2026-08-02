@@ -16,11 +16,17 @@ export const setUiState = (container, options = {}) => {
   const type = getType(options.type);
   const titleText = options.title?.trim() || "";
   const messageText = options.message?.trim() || "";
+  const shouldAnnounce = options.announce !== false;
 
   container.hidden = false;
   container.className = `ui-state ui-state--${type}`;
-  container.setAttribute("role", type === "error" ? "alert" : "status");
-  container.setAttribute("aria-live", type === "error" ? "assertive" : "polite");
+  if (shouldAnnounce) {
+    container.setAttribute("role", type === "error" ? "alert" : "status");
+    container.setAttribute("aria-live", type === "error" ? "assertive" : "polite");
+  } else {
+    container.removeAttribute("role");
+    container.removeAttribute("aria-live");
+  }
   container.textContent = "";
 
   if (titleText) {

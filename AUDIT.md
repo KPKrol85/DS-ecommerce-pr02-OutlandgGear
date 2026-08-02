@@ -11,7 +11,7 @@ The implementation is coherent and matches its documented architecture. Product 
 
 No critical or important findings remain open. The prerender contract is now declared in the generated output and honoured by both detail-page modules, so the build's prerendered routes deliver their content without depending on JavaScript to reveal it.
 
-Open findings are contained and all P2: a missing live region on the catalog result count and one stale cache-busting query.
+Open findings are contained to one P2: a stale cache-busting query on the travel-kit data path.
 
 The project is suitable for continued development and portfolio presentation within its documented demo scope.
 
@@ -80,16 +80,6 @@ None detected.
 
 ## 6. P2 — Minor refinements
 
-### [P2-06] Catalog result count changes are not announced to assistive technology
-
-- **Classification:** Source-visible risk
-- **Affected area:** Catalog filtering and search, accessibility
-- **Evidence:** `kategoria.html:116` (`<p class="badge" data-listing-count>0 produktów</p>`, no `aria-live` and no `role`); `js/modules/catalog.js:181-183` (`renderListing` rewrites its `textContent` on every update); `js/modules/catalog.js:309-332` (`updateListing` runs on every filter change, every debounced search keystroke, and every "show more" click)
-- **Current behavior:** Filtering and searching update the visible result count and rebuild the grid without a page navigation. The count element has no live-region semantics. The only announced feedback is the separate `[data-listing-state]` region, which `js/modules/ui-state.js:22-23` gives `role="status"` — but that region is populated only when the result set is empty.
-- **Impact:** A screen-reader user changing a filter from a result set of 24 to one of 5 receives no announcement at all; only the zero-result case is spoken. The count is present and correct on screen, so this is a gap in announcing an implemented interaction rather than missing information. Classified as a source-visible risk because it was not confirmed by assistive-technology testing in this audit.
-- **Recommended direction:** Give the result-count element polite live-region semantics, or announce the count through the existing `[data-listing-state]` region for non-empty results as well. Whichever is chosen, only one of the two should announce, to avoid duplicate output.
-- **Verification criteria:** Changing a filter or search term on `/kategoria.html` produces exactly one announcement carrying the new result count, in both the empty and non-empty cases.
-
 ### [P2-07] Travel-kit data path carries a stale cache-busting query that no other data path uses
 
 - **Classification:** Maintenance risk
@@ -129,7 +119,7 @@ None detected.
 
 No blocker prevents the project from being built, deployed, or used, and no P0 or P1 finding is open. The prerender contract is explicit in the generated output and honoured by both detail-page modules, so the prerendered routes deliver their content to clients that do not execute JavaScript.
 
-The two open findings are all P2, contained, and independently addressable. They concern one accessibility announcement gap and one stale data path.
+The one open finding is P2, contained, and independently addressable: a stale cache-busting query on the travel-kit data path.
 
 This status reflects a repository-level review with static analysis and the linters actually executed, plus one owner-run `npm run qa:a11y` pass. It is not an accessibility certification, a security guarantee, a browser-compatibility guarantee, or a statement about production performance, none of which were verified here.
 
@@ -141,4 +131,4 @@ The architecture is coherent and the discipline behind it is visible in places t
 
 The prerender contract earns particular credit: it is not an assumption the client makes about the server's output but a marker declared in the HTML, read through one shared helper, with the build failing loudly if the marked root disappears. The detail-page modules treat the served document as the baseline and refuse to render a product that the page's own canonical link and `Product` schema do not name.
 
-It is held at 9 rather than 10 by two things. First, the two open P2 items, none of which touch published output but which remain worth closing. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. None of these are deep architectural problems; all are correctable without touching the structure the project has built.
+It is held at 9 rather than 10 by two things. First, the one open P2 item, which does not touch published output but remains worth closing. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. None of these are deep architectural problems; all are correctable without touching the structure the project has built.

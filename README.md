@@ -144,7 +144,7 @@ Projekt zawiera konkretne mechanizmy dostępności, bez deklarowania formalnej z
 - widoczne style `:focus-visible` i obsługę `prefers-reduced-motion`;
 - etykiety formularzy, komunikaty błędów, `aria-invalid`, `aria-describedby` i regiony live;
 - synchronizację `aria-expanded`, `aria-hidden`, `aria-current` i `aria-pressed`;
-- obsługę klawisza Escape, pułapkę fokusu i przywracanie fokusu w panelu mobilnym oraz modalu;
+- obsługę klawisza Escape w panelu mobilnym oraz pułapkę fokusu i przywracanie fokusu w panelu mobilnym i modalu;
 - automatyczne skany axe skonfigurowane w Playwright.
 
 ### SEO
@@ -329,7 +329,7 @@ The project includes concrete accessibility mechanisms without claiming formal s
 - visible `:focus-visible` styles and `prefers-reduced-motion` handling;
 - form labels, error messages, `aria-invalid`, `aria-describedby`, and live regions;
 - synchronized `aria-expanded`, `aria-hidden`, `aria-current`, and `aria-pressed` states;
-- Escape-key handling, focus trapping, and focus restoration in the mobile drawer and modal;
+- Escape-key handling in the mobile drawer, plus focus trapping and focus restoration in the mobile drawer and modal;
 - automated axe scans configured in Playwright.
 
 ### SEO

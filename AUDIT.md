@@ -11,7 +11,7 @@ The implementation is coherent and matches its documented architecture. Product 
 
 No critical or important findings remain open. The prerender contract is now declared in the generated output and honoured by both detail-page modules, so the build's prerendered routes deliver their content without depending on JavaScript to reveal it.
 
-Open findings are contained and all P2: one documentation claim that the implementation does not support, a missing live region on the catalog result count, and one stale cache-busting query.
+Open findings are contained and all P2: a missing live region on the catalog result count and one stale cache-busting query.
 
 The project is suitable for continued development and portfolio presentation within its documented demo scope.
 
@@ -80,16 +80,6 @@ None detected.
 
 ## 6. P2 — Minor refinements
 
-### [P2-05] README claims Escape-key handling for the modal, which the modal does not implement
-
-- **Classification:** Documentation mismatch
-- **Affected area:** Legal information modal, accessibility documentation
-- **Evidence:** `README.md:147` and `README.md:332` ("Escape-key handling, focus trapping, and focus restoration in the mobile drawer and modal"); `js/modules/legal-modal.js:88-89` (`trapFocus` returns immediately unless `event.key === "Tab"`); `js/modules/legal-modal.js:122` (the only `keydown` listener registered on the modal)
-- **Current behavior:** The navigation drawer implements Escape (`js/modules/nav.js:154-156`), and the legal modal implements focus trapping and focus restoration — but no Escape handling. The modal's only exit is the "Akceptuję" button, and while it is open the body is scroll-locked.
-- **Impact:** The README overstates the project's accessibility surface in both language sections, in a list that is otherwise accurate and deliberately hedged. A reviewer or maintainer reading it will assume dismissal-by-Escape is covered for the dialog and will not look for it. The behaviour itself may well be intentional for a mandatory acceptance notice; the documentation is what is currently wrong.
-- **Recommended direction:** Decide whether the acceptance modal should be dismissible by Escape. If it should not, narrow the README claim to the mobile drawer in both sections. If it should, add the handler and route it through the same acceptance-and-restore path the button uses.
-- **Verification criteria:** The README's accessibility list describes only mechanisms present in the source, and any Escape behaviour it claims for the modal is implemented.
-
 ### [P2-06] Catalog result count changes are not announced to assistive technology
 
 - **Classification:** Source-visible risk
@@ -139,7 +129,7 @@ None detected.
 
 No blocker prevents the project from being built, deployed, or used, and no P0 or P1 finding is open. The prerender contract is explicit in the generated output and honoured by both detail-page modules, so the prerendered routes deliver their content to clients that do not execute JavaScript.
 
-The three open findings are all P2, contained, and independently addressable. They concern documentation accuracy, one accessibility announcement gap, and one stale data path.
+The two open findings are all P2, contained, and independently addressable. They concern one accessibility announcement gap and one stale data path.
 
 This status reflects a repository-level review with static analysis and the linters actually executed, plus one owner-run `npm run qa:a11y` pass. It is not an accessibility certification, a security guarantee, a browser-compatibility guarantee, or a statement about production performance, none of which were verified here.
 
@@ -151,4 +141,4 @@ The architecture is coherent and the discipline behind it is visible in places t
 
 The prerender contract earns particular credit: it is not an assumption the client makes about the server's output but a marker declared in the HTML, read through one shared helper, with the build failing loudly if the marked root disappears. The detail-page modules treat the served document as the baseline and refuse to render a product that the page's own canonical link and `Product` schema do not name.
 
-It is held at 9 rather than 10 by two things. First, the three open P2 items, none of which touch published output but which remain worth closing. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. None of these are deep architectural problems; all are correctable without touching the structure the project has built.
+It is held at 9 rather than 10 by two things. First, the two open P2 items, none of which touch published output but which remain worth closing. Second, and more structurally, the build's regex-based HTML transforms are load-bearing and uncovered: a pattern there can stop matching and the build will still exit 0, with no lint rule, CI job, or test able to notice that the generated output changed. None of these are deep architectural problems; all are correctable without touching the structure the project has built.

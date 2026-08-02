@@ -15,8 +15,8 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: rgba(4, 12, 19, 0.72);
-  backdrop-filter: blur(3px);
+  background: rgba(4, 12, 19, 0.22);
+  backdrop-filter: blur(2px);
 }
 
 .outland-legal-modal__panel {
@@ -41,7 +41,7 @@
 
 .outland-legal-modal__text {
   color: var(--color-text);
-  max-width: 58ch;
+  max-width: 42ch;
 }
 
 .outland-legal-modal__text a,

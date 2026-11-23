@@ -2,6 +2,61 @@
   command = "npm run build"
   publish = "dist"
 
+[[redirects]]
+  from = "/kategoria.html"
+  to = "/catalog.html"
+  status = 301
+
+[[redirects]]
+  from = "/produkt.html"
+  to = "/product.html"
+  status = 301
+
+[[redirects]]
+  from = "/komplety.html"
+  to = "/travel-kits.html"
+  status = 301
+
+[[redirects]]
+  from = "/koszyk.html"
+  to = "/cart.html"
+  status = 301
+
+[[redirects]]
+  from = "/kontakt.html"
+  to = "/contact.html"
+  status = 301
+
+[[redirects]]
+  from = "/kontakt-wyslano.html"
+  to = "/contact-confirmation.html"
+  status = 301
+
+[[redirects]]
+  from = "/checkout-potwierdzenie.html"
+  to = "/checkout-confirmation.html"
+  status = 301
+
+[[redirects]]
+  from = "/newsletter-potwierdzenie.html"
+  to = "/newsletter-confirmation.html"
+  status = 301
+
+[[redirects]]
+  from = "/o-nas.html"
+  to = "/about.html"
+  status = 301
+
+[[redirects]]
+  from = "/polityka-prywatnosci.html"
+  to = "/privacy-policy.html"
+  status = 301
+
+[[redirects]]
+  from = "/regulamin.html"
+  to = "/terms.html"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]

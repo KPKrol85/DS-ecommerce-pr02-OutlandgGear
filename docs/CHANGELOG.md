@@ -30,6 +30,7 @@ For each implementation task, determine `Changelog: yes` or `Changelog: no`. Add
 
 ### Changed
 
+- Renamed 11 public HTML pages to use English filenames and redirected their previous URLs with HTTP 301.
 - Consolidated cart, catalog, product-detail, and travel-kit product data loading through one validated, memoized loader (`loadNormalizedProducts`) in `product-data.js`, replacing four duplicated fetch paths and adding `imageAlt` as a pass-through field.
 - Changed project licensing from an MIT reference to proprietary KP_Code terms, establishing `LICENSE` as the single source of truth for project licensing.
 - Made `scripts/build-dist.mjs` importable without side effects so its HTML transforms can be exercised directly by tests: the CLI `switch` now runs only when the file is executed as the main module, the transform functions are exported, and `postcss`, `postcss-import`, `cssnano` and `esbuild` moved from top-level imports to on-demand imports inside `buildCss`/`buildJs`. Behaviour is unchanged — the generated `dist/` was compared file by file before and after the refactor and is identical — and `build:html` no longer loads the CSS and bundling toolchain it never uses.

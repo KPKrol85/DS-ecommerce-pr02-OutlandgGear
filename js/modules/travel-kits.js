@@ -327,18 +327,18 @@ const renderKit = (root, kit, products, missingIds) => {
 
   if (primaryCta) {
     primaryCta.textContent = kit.ctaLabel || "Przejdź do katalogu";
-    primaryCta.href = `kategoria.html?q=${encodeURIComponent(kit.ctaQuery || "")}`;
+    primaryCta.href = `catalog.html?q=${encodeURIComponent(kit.ctaQuery || "")}`;
   }
 
   if (secondaryCta) {
-    const secondaryHref = kit.secondaryCtaHref || "kategoria.html";
+    const secondaryHref = kit.secondaryCtaHref || "catalog.html";
     const hasDistinctSecondary = Boolean(
       kit.secondaryCtaLabel &&
       secondaryHref &&
       secondaryHref !== primaryCta?.href &&
       !(
-        secondaryHref.startsWith("kategoria.html?q=") &&
-        primaryCta?.href?.includes("kategoria.html?q=")
+        secondaryHref.startsWith("catalog.html?q=") &&
+        primaryCta?.href?.includes("catalog.html?q=")
       ),
     );
 

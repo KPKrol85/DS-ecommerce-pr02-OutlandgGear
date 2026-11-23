@@ -11,7 +11,7 @@ const ROUTES = [
   },
   {
     name: "category",
-    path: "/kategoria.html",
+    path: "/catalog.html",
     async waitFor(page) {
       await page.locator("[data-listing-grid]").waitFor();
       await page.waitForFunction(() => {
@@ -35,7 +35,7 @@ const ROUTES = [
   },
   {
     name: "cart",
-    path: "/koszyk.html",
+    path: "/cart.html",
     async beforeVisit(page) {
       await page.addInitScript(() => {
         localStorage.setItem(
@@ -69,7 +69,7 @@ const ROUTES = [
   },
   {
     name: "contact",
-    path: "/kontakt.html",
+    path: "/contact.html",
     waitFor(page) {
       return page.locator("[data-contact-form]").waitFor();
     },
@@ -85,21 +85,21 @@ const ROUTES = [
   },
   {
     name: "about",
-    path: "/o-nas.html",
+    path: "/about.html",
     waitFor(page) {
       return page.locator("main.about-page").waitFor();
     },
   },
   {
     name: "terms",
-    path: "/regulamin.html",
+    path: "/terms.html",
     waitFor(page) {
       return page.locator("#legal-page-title").waitFor();
     },
   },
   {
     name: "privacy policy",
-    path: "/polityka-prywatnosci.html",
+    path: "/privacy-policy.html",
     waitFor(page) {
       return page.locator("#legal-page-title").waitFor();
     },

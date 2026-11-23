@@ -7,7 +7,7 @@ import {
 } from "./form-ux.js";
 
 const getSuccessUrl = (form) =>
-  new URL(form.getAttribute("action") || window.location.href, window.location.href);
+  new URL(form.getAttribute("action") || window.location.href, document.baseURI);
 
 export const initNewsletterForm = () => {
   const form = qs("[data-newsletter-form]");

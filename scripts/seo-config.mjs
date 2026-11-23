@@ -2,22 +2,22 @@ const SEO_ORIGIN = "https://e-commerce-pr02-outlandgear.netlify.app";
 
 const INDEXABLE_PAGE_PATHS = [
   "/",
-  "/kategoria.html",
-  "/o-nas.html",
-  "/kontakt.html",
+  "/catalog.html",
+  "/about.html",
+  "/contact.html",
   "/cookies.html",
-  "/regulamin.html",
-  "/polityka-prywatnosci.html",
+  "/terms.html",
+  "/privacy-policy.html",
   "/faq.html",
 ];
 
 const NON_INDEXABLE_PAGE_PATHS = [
-  "/produkt.html",
-  "/komplety.html",
+  "/product.html",
+  "/travel-kits.html",
   "/checkout.html",
-  "/checkout-potwierdzenie.html",
-  "/kontakt-wyslano.html",
-  "/koszyk.html",
+  "/checkout-confirmation.html",
+  "/contact-confirmation.html",
+  "/cart.html",
 ];
 
 const resolveSeoUrl = (pathname) => new URL(pathname, `${SEO_ORIGIN}/`).toString();

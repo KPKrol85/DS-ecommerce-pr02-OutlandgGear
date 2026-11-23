@@ -31,8 +31,8 @@ const PARTIALS = {
     tag: "footer",
   },
 };
-const PRODUCT_TEMPLATE = "produkt.html";
-const TRAVEL_KIT_TEMPLATE = "komplety.html";
+const PRODUCT_TEMPLATE = "product.html";
+const TRAVEL_KIT_TEMPLATE = "travel-kits.html";
 const SITE_NAME = "Outland Gear";
 const FALLBACK_SOCIAL_IMAGE = "/assets/og-img/og-img.png";
 const FALLBACK_SOCIAL_IMAGE_ALT =
@@ -506,7 +506,7 @@ export const applyTravelKitPrerender = (html, kit, products) => {
   const matchedProducts = (Array.isArray(products) ? products : []).filter((product) =>
     Array.isArray(kit.productIds) ? kit.productIds.includes(product.id) : false,
   );
-  const primaryHref = `kategoria.html${kit.ctaQuery ? `?q=${encodeURIComponent(kit.ctaQuery)}` : ""}`;
+  const primaryHref = `catalog.html${kit.ctaQuery ? `?q=${encodeURIComponent(kit.ctaQuery)}` : ""}`;
 
   let nextHtml = injectBaseHref(html);
   nextHtml = markPrerenderedRoot(nextHtml, "data-kit-root");

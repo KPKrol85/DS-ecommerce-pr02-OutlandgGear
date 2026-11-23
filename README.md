@@ -49,7 +49,7 @@ Projekt odwzorowuje ścieżkę od wyszukiwania i filtrowania produktów, przez k
 
 ### Architektura
 
-- Pliki HTML w katalogu głównym są kanonicznymi stronami MPA. `produkt.html` i `komplety.html` pełnią również rolę szablonów stron szczegółowych.
+- Pliki HTML w katalogu głównym są kanonicznymi stronami MPA. `product.html` i `travel-kits.html` pełnią również rolę szablonów stron szczegółowych.
 - `partials/header.html` i `partials/footer.html` są ładowane w źródłowych stronach przez `js/modules/partials.js`; build osadza ich treść bezpośrednio w wygenerowanym HTML.
 - `js/app.js` uruchamia moduły funkcjonalne po przygotowaniu części wspólnych. Logika katalogu, produktu, kompletów, koszyka, formularzy, nawigacji i motywu pozostaje rozdzielona w `js/modules/`.
 - `data/*.json` przechowuje statyczne dane produktów, kategorii i kompletów. Stan koszyka i preferencje pozostają po stronie przeglądarki.
@@ -150,7 +150,7 @@ Projekt zawiera konkretne mechanizmy dostępności, bez deklarowania formalnej z
 ### SEO
 
 - Strony źródłowe zawierają tytuły, opisy, adresy kanoniczne, Open Graph, Twitter Card i JSON-LD.
-- Szablony `produkt.html` i `komplety.html` są oznaczone jako `noindex`; build tworzy dla danych slugowych indeksowalne strony z indywidualnymi metadanymi.
+- Szablony `product.html` i `travel-kits.html` są oznaczone jako `noindex`; build tworzy dla danych slugowych indeksowalne strony z indywidualnymi metadanymi.
 - `scripts/seo-config.mjs` definiuje publiczny origin i rejestr tras używany do generowania `robots.txt` oraz `sitemap.xml`.
 - Koszyk, checkout i strony potwierdzeń mają dyrektywy `noindex`, a publiczne strony informacyjne znajdują się w generowanej mapie witryny.
 
@@ -234,7 +234,7 @@ The project models the path from product search and filtering through product de
 
 ### Architecture
 
-- Root HTML files are the canonical MPA pages. `produkt.html` and `komplety.html` also act as detail-page templates.
+- Root HTML files are the canonical MPA pages. `product.html` and `travel-kits.html` also act as detail-page templates.
 - `partials/header.html` and `partials/footer.html` are loaded into source pages by `js/modules/partials.js`; the build embeds their content directly in generated HTML.
 - `js/app.js` starts the feature modules after shared partials are ready. Catalog, product, travel-kit, cart, form, navigation, and theme logic remains separated under `js/modules/`.
 - `data/*.json` stores static product, category, and travel-kit data. Cart state and preferences remain in the browser.
@@ -335,7 +335,7 @@ The project includes concrete accessibility mechanisms without claiming formal s
 ### SEO
 
 - Source pages contain titles, descriptions, canonical URLs, Open Graph, Twitter Card, and JSON-LD metadata.
-- The `produkt.html` and `komplety.html` templates are marked `noindex`; the build creates indexable, data-driven pages with individual metadata.
+- The `product.html` and `travel-kits.html` templates are marked `noindex`; the build creates indexable, data-driven pages with individual metadata.
 - `scripts/seo-config.mjs` defines the public origin and route registry used to generate `robots.txt` and `sitemap.xml`.
 - Cart, checkout, and confirmation pages use `noindex`, while public information pages are included in the generated sitemap.
 

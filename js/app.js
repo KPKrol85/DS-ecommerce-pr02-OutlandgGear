@@ -21,9 +21,7 @@ const initSearch = () => {
   on(form, "submit", (event) => {
     event.preventDefault();
     const query = input.value.trim();
-    const target = query
-      ? `kategoria.html?q=${encodeURIComponent(query)}`
-      : "kategoria.html";
+    const target = query ? `catalog.html?q=${encodeURIComponent(query)}` : "catalog.html";
     window.location.href = target;
   });
 };

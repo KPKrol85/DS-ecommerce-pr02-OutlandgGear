@@ -174,7 +174,7 @@ const STATES = [
   },
   {
     name: "cart empty state banner",
-    path: "/koszyk.html",
+    path: "/cart.html",
     // No cart data is seeded, so the page's own default (empty) state is
     // what renders — this is the natural resting state of a fresh visit,
     // not a constructed one.
@@ -214,7 +214,7 @@ const STATES = [
     // the unprerendered template, which really does start empty. Do not point
     // this back at the prerendered route — it would assert the flash that the
     // guard exists to remove.
-    path: "/komplety.html?slug=weekend-w-gorach",
+    path: "/travel-kits.html?slug=weekend-w-gorach",
     // The loading state clears as soon as the kit and product data resolve,
     // which is too fast on a local/static server to observe reliably. The
     // travel-kits.json request is held open briefly so the loading state

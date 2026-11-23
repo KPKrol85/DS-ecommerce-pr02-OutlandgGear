@@ -46,7 +46,7 @@ export const initContactForm = () => {
         throw new Error(`Contact form request failed with status ${response.status}`);
       }
 
-      const successTarget = form.getAttribute("action") || "kontakt-wyslano.html";
+      const successTarget = form.getAttribute("action") || "contact-confirmation.html";
       window.location.assign(successTarget);
     } catch (error) {
       setSubmitState(form, false);

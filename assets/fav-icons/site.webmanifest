@@ -41,7 +41,7 @@
       "name": "Sklep",
       "short_name": "Shop",
       "description": "Otwórz katalog produktów Outland Gear.",
-      "url": "/kategoria.html",
+      "url": "/catalog.html",
       "icons": [
         {
           "src": "/assets/shortcuts/shop.png",
@@ -54,7 +54,7 @@
       "name": "Kontakt",
       "short_name": "Kontakt",
       "description": "Skontaktuj się z zespołem Outland Gear.",
-      "url": "/kontakt.html",
+      "url": "/contact.html",
       "icons": [
         {
           "src": "/assets/shortcuts/contact.png",

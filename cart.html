@@ -3,35 +3,35 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Newsletter zapisany — Outland Gear</title>
+    <title>Koszyk — Outland Gear</title>
     <meta
       name="description"
-      content="Potwierdzenie zgłoszenia do newslettera Outland Gear w demonstracyjnym scenariuszu interakcji."
+      content="Sprawdź wybrane produkty Outland Gear i przejdź do checkout demo."
     />
     <meta name="author" content="Outland Gear" />
     <meta name="robots" content="noindex" />
     <meta name="theme-color" content="#0f172a" />
     <link
       rel="canonical"
-      href="https://e-commerce-pr02-outlandgear.netlify.app/newsletter-potwierdzenie.html"
+      href="https://e-commerce-pr02-outlandgear.netlify.app/cart.html"
     />
     <link
       rel="alternate"
       hreflang="pl-PL"
-      href="https://e-commerce-pr02-outlandgear.netlify.app/newsletter-potwierdzenie.html"
+      href="https://e-commerce-pr02-outlandgear.netlify.app/cart.html"
     />
     <!-- Open Graph data -->
     <meta property="og:locale" content="pl_PL" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Outland Gear" />
-    <meta property="og:title" content="Newsletter zapisany — Outland Gear" />
+    <meta property="og:title" content="Koszyk — Outland Gear" />
     <meta
       property="og:description"
-      content="Potwierdzenie zgłoszenia do newslettera Outland Gear w demonstracyjnym scenariuszu interakcji."
+      content="Sprawdź wybrane produkty Outland Gear i przejdź do checkout demo."
     />
     <meta
       property="og:url"
-      content="https://e-commerce-pr02-outlandgear.netlify.app/newsletter-potwierdzenie.html"
+      content="https://e-commerce-pr02-outlandgear.netlify.app/cart.html"
     />
     <meta
       property="og:image"
@@ -46,10 +46,10 @@
     <meta property="og:image:height" content="1024" />
     <!-- Twitter Card data -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Newsletter zapisany — Outland Gear" />
+    <meta name="twitter:title" content="Koszyk — Outland Gear" />
     <meta
       name="twitter:description"
-      content="Potwierdzenie zgłoszenia do newslettera Outland Gear w demonstracyjnym scenariuszu interakcji."
+      content="Sprawdź wybrane produkty Outland Gear i przejdź do checkout demo."
     />
     <meta
       name="twitter:image"
@@ -90,9 +90,9 @@
       {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "name": "Newsletter zapisany — Outland Gear",
-        "description": "Potwierdzenie zgłoszenia do newslettera Outland Gear w demonstracyjnym scenariuszu interakcji.",
-        "url": "https://e-commerce-pr02-outlandgear.netlify.app/newsletter-potwierdzenie.html",
+        "name": "Koszyk — Outland Gear",
+        "description": "Sprawdź wybrane produkty Outland Gear i przejdź do checkout demo.",
+        "url": "https://e-commerce-pr02-outlandgear.netlify.app/cart.html",
         "inLanguage": "pl-PL",
         "isPartOf": {
           "@type": "WebSite",
@@ -108,11 +108,13 @@
   <!-- Body -->
   <body>
     <a class="skip-link" href="#main">Przejdź do treści</a>
+
     <!-- Header -->
     <header class="site-header" data-partial-src="partials/header.html"></header>
 
     <!-- Main -->
-    <main id="main">
+    <main id="main" class="cart-page">
+      <!-- Hero Subpage -->
       <section class="hero-subpage">
         <div class="container">
           <div class="hero-subpage__content">
@@ -123,43 +125,66 @@
                   <a class="breadcrumbs__link" href="index.html">Strona główna</a>
                 </li>
                 <li class="breadcrumbs__item">
-                  <span class="breadcrumbs__current" aria-current="page">Newsletter</span>
+                  <span class="breadcrumbs__current" aria-current="page">Koszyk</span>
                 </li>
               </ol>
             </nav>
             <!-- hero-subpage__body -->
             <div class="hero-subpage__body">
-              <p class="kicker">Outland Club</p>
-              <h1 class="hero-subpage__title">Zgłoszenie zostało przyjęte</h1>
-              <p class="hero-subpage__meta">
-                Potwierdzenie dla demonstracyjnego scenariusza zapisu do newslettera.
-              </p>
+              <p class="kicker">Twój koszyk</p>
+              <h1 class="hero-subpage__title">Podsumowanie zakupów</h1>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- newsletter-potwierdzenie -->
+      <!-- Cart -->
       <section class="section">
         <div class="container">
-          <article class="card info-card" aria-live="polite">
-            <h2>Co dalej?</h2>
-            <p>
-              Dziękujemy. Zgłoszenie do newslettera zostało przyjęte w ramach
-              prezentacyjnego przepływu interakcji.
-            </p>
-            <p>
-              Ta wersja formularza pokazuje sposób działania UI i potwierdzenia, ale nie
-              zapisuje adresu do rzeczywistej listy mailingowej.
-            </p>
-            <p class="subtle">
-              Jeśli chcesz dalej przeglądać ofertę, wróć do katalogu lub na stronę główną.
-            </p>
-            <div class="flow-actions">
-              <a class="btn" href="index.html">Wróć na stronę główną</a>
-              <a class="btn btn--outline" href="kategoria.html">Przejdź do katalogu</a>
+          <div class="cart">
+            <div class="card card--padded cart-panel">
+              <div data-cart-container></div>
+              <noscript>
+                <section
+                  class="notice stack"
+                  role="status"
+                  aria-label="Koszyk bez JavaScriptu"
+                >
+                  <h2>Podsumowanie koszyka bez JavaScriptu</h2>
+                  <p>
+                    Dynamiczna zawartość koszyka i automatyczne podsumowanie wartości
+                    zamówienia wymagają JavaScriptu.
+                  </p>
+                  <p>W trybie podstawowym możesz:</p>
+                  <ul>
+                    <li>
+                      <a href="catalog.html">wrócić do kategorii i przeglądać ofertę</a>
+                      ,
+                    </li>
+                    <li>
+                      <a href="product.html">otworzyć przykładową kartę produktu</a>
+                      ,
+                    </li>
+                    <li>
+                      <a href="contact.html"
+                        >skontaktować się z obsługą, aby dokończyć zamówienie</a
+                      >
+                      .
+                    </li>
+                  </ul>
+                </section>
+              </noscript>
+              <div class="ui-state" data-cart-state hidden></div>
             </div>
-          </article>
+            <div class="cart-summary" data-cart-summary>
+              <p class="subtle">Dodaj produkty, aby zobaczyć podsumowanie.</p>
+            </div>
+          </div>
+          <!-- section-actions -->
+          <div class="button-group section-actions">
+            <a class="btn btn--outline" href="catalog.html">Kontynuuj zakupy</a>
+            <a class="btn" href="checkout.html">Przejdź do checkout</a>
+          </div>
         </div>
       </section>
     </main>
@@ -170,6 +195,9 @@
       aria-label="Stopka Outland Gear"
       data-partial-src="partials/footer.html"
     ></footer>
+
+    <!-- Toast -->
+    <div class="toast" data-toast role="status" aria-live="polite"></div>
 
     <!-- Scripts -->
     <script type="module" src="js/app.js?v=20260405-3"></script>

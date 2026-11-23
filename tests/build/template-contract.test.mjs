@@ -5,7 +5,7 @@
  * The unit tests in html-transforms.test.mjs prove each transform works on
  * markup shaped the way the transform expects. They cannot catch the failure
  * that actually happened in this project: a regex that still worked in
- * isolation but stopped matching `produkt.html` / `komplety.html` after those
+ * isolation but stopped matching `product.html` / `travel-kits.html` after those
  * files were reformatted. The build kept exiting 0 and shipped corrupted
  * output.
  *
@@ -69,26 +69,26 @@ const TRAVEL_KIT = {
   secondaryCtaLabel: "Wroc do zestawow",
 };
 
-describe("produkt.html prerender contract", () => {
+describe("product.html prerender contract", () => {
   it("marks the page root as prerendered", async () => {
-    const result = applyProductPrerender(await readTemplate("produkt.html"), PRODUCT);
+    const result = applyProductPrerender(await readTemplate("product.html"), PRODUCT);
     assert.match(result, /data-prerendered="true"/);
   });
 
   it("injects a base href so nested routes resolve their assets", async () => {
-    const result = applyProductPrerender(await readTemplate("produkt.html"), PRODUCT);
+    const result = applyProductPrerender(await readTemplate("product.html"), PRODUCT);
     assert.match(result, /<base href="\/" \/>/);
   });
 
   it("writes the product name into the heading and breadcrumb", async () => {
-    const result = applyProductPrerender(await readTemplate("produkt.html"), PRODUCT);
+    const result = applyProductPrerender(await readTemplate("product.html"), PRODUCT);
 
     assert.match(result, /<h1 data-product-title>Contract Test Backpack<\/h1>/);
     assert.match(result, /aria-current="page">Contract Test Backpack</);
   });
 
   it("writes price, stock, rating and description into the page", async () => {
-    const result = applyProductPrerender(await readTemplate("produkt.html"), PRODUCT);
+    const result = applyProductPrerender(await readTemplate("product.html"), PRODUCT);
 
     assert.match(result, /599 PLN/);
     assert.match(result, /699 PLN/);
@@ -98,14 +98,14 @@ describe("produkt.html prerender contract", () => {
   });
 
   it("renders highlights and spec rows from the product data", async () => {
-    const result = applyProductPrerender(await readTemplate("produkt.html"), PRODUCT);
+    const result = applyProductPrerender(await readTemplate("product.html"), PRODUCT);
 
     assert.match(result, /<li>Lekka konstrukcja<\/li>/);
     assert.match(result, /<th scope="row">Pojemnosc<\/th><td>55 l<\/td>/);
   });
 
   it("rewrites title, canonical and JSON-LD from the product data", async () => {
-    const result = applyProductPrerender(await readTemplate("produkt.html"), PRODUCT);
+    const result = applyProductPrerender(await readTemplate("product.html"), PRODUCT);
 
     assert.match(result, /<title>Contract Test Backpack \| Plecaki \| Outland Gear/);
     // The templates write link tags one attribute per line, so this assertion
@@ -119,27 +119,27 @@ describe("produkt.html prerender contract", () => {
 
   // Both patterns previously assumed single-space attribute separation
   // (`<img data-product-main`, `<button type="button" data-product-thumb`) and
-  // silently stopped matching once produkt.html was reformatted to one
+  // silently stopped matching once product.html was reformatted to one
   // attribute per line. They now tolerate arbitrary whitespace.
   it("replaces the main gallery image with the product's own image", async () => {
-    const result = applyProductPrerender(await readTemplate("produkt.html"), PRODUCT);
+    const result = applyProductPrerender(await readTemplate("product.html"), PRODUCT);
 
     assert.match(result, /assets\/img\/products\/contract-test-01\.webp/);
     assert.doesNotMatch(result, /data-product-main[^>]*product-placeholder/);
   });
 
   it("personalises the gallery thumbnails", async () => {
-    const result = applyProductPrerender(await readTemplate("produkt.html"), PRODUCT);
+    const result = applyProductPrerender(await readTemplate("product.html"), PRODUCT);
 
     assert.match(result, /assets\/img\/products\/contract-test-02\.webp/);
     assert.match(result, /aria-label="Pokaz zdjecie 1 produktu Contract Test Backpack"/);
   });
 });
 
-describe("komplety.html prerender contract", () => {
+describe("travel-kits.html prerender contract", () => {
   it("marks the page root as prerendered", async () => {
     const result = applyTravelKitPrerender(
-      await readTemplate("komplety.html"),
+      await readTemplate("travel-kits.html"),
       TRAVEL_KIT,
       [PRODUCT],
     );
@@ -149,7 +149,7 @@ describe("komplety.html prerender contract", () => {
   // The regression that shipped every kit page with its content hidden.
   it("strips the hidden attribute from the kit detail block", async () => {
     const result = applyTravelKitPrerender(
-      await readTemplate("komplety.html"),
+      await readTemplate("travel-kits.html"),
       TRAVEL_KIT,
       [PRODUCT],
     );
@@ -164,7 +164,7 @@ describe("komplety.html prerender contract", () => {
 
   it("strips the hidden attribute from the kit label", async () => {
     const result = applyTravelKitPrerender(
-      await readTemplate("komplety.html"),
+      await readTemplate("travel-kits.html"),
       TRAVEL_KIT,
       [PRODUCT],
     );
@@ -175,7 +175,7 @@ describe("komplety.html prerender contract", () => {
 
   it("writes the kit's own copy into the page", async () => {
     const result = applyTravelKitPrerender(
-      await readTemplate("komplety.html"),
+      await readTemplate("travel-kits.html"),
       TRAVEL_KIT,
       [PRODUCT],
     );
@@ -187,7 +187,7 @@ describe("komplety.html prerender contract", () => {
 
   it("renders the kit's matched product cards", async () => {
     const result = applyTravelKitPrerender(
-      await readTemplate("komplety.html"),
+      await readTemplate("travel-kits.html"),
       TRAVEL_KIT,
       [PRODUCT],
     );
@@ -203,18 +203,18 @@ describe("komplety.html prerender contract", () => {
   // `</a\n  >`, so neither matched. Both now tolerate that formatting.
   it("rewrites the primary CTA to the kit's catalog query", async () => {
     const result = applyTravelKitPrerender(
-      await readTemplate("komplety.html"),
+      await readTemplate("travel-kits.html"),
       TRAVEL_KIT,
       [PRODUCT],
     );
 
-    assert.match(result, /kategoria\.html\?q=plecak/);
+    assert.match(result, /catalog\.html\?q=plecak/);
     assert.match(result, /Przejdz do katalogu/);
   });
 
   it("rewrites the secondary CTA to the kit's own target", async () => {
     const result = applyTravelKitPrerender(
-      await readTemplate("komplety.html"),
+      await readTemplate("travel-kits.html"),
       TRAVEL_KIT,
       [PRODUCT],
     );

@@ -88,6 +88,6 @@ Desktop.ini
 # scripts/          production build pipeline
 # tests/            automated project tests
 # package-lock.json
-# LICENSE
+# LICENSE.md
 # .codex/environments/environment.toml
 # ─────────────────────────────────────────────

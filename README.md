@@ -183,7 +183,7 @@ Projekt zawiera konkretne mechanizmy dostępności, bez deklarowania formalnej z
 
 ### Licencja
 
-Projekt jest udostępniony na [własnościowej licencji KP_Code](LICENSE) i nie jest oprogramowaniem open source. Publiczna widoczność repozytorium nie oznacza zgody na kopiowanie, modyfikowanie, wdrażanie ani komercyjne wykorzystanie Projektu.
+Projekt jest udostępniony na [własnościowej licencji KP_Code](LICENSE.md) i nie jest oprogramowaniem open source. Publiczna widoczność repozytorium nie oznacza zgody na kopiowanie, modyfikowanie, wdrażanie ani komercyjne wykorzystanie Projektu.
 
 ## EN
 
@@ -368,4 +368,4 @@ The project includes concrete accessibility mechanisms without claiming formal s
 
 ### License
 
-The project is available under a [proprietary KP_Code license](LICENSE) and is not open-source software. Public visibility of the repository does not grant permission to copy, modify, deploy, or commercially use the Project.
+The project is available under a [proprietary KP_Code license](LICENSE.md) and is not open-source software. Public visibility of the repository does not grant permission to copy, modify, deploy, or commercially use the Project.

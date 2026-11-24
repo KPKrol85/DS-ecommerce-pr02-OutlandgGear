@@ -2,22 +2,24 @@
   "name": "outlandgear",
   "version": "1.0.0",
   "private": true,
-  "description": "Static multi-page e-commerce front-end built with HTML, CSS, and vanilla JavaScript.",
-  "author": "Kamil Król — KP_Code Digital Studio",
-  "license": "SEE LICENSE IN LICENSE.md",
+  "description": "A portfolio demonstration website for a fictional outdoor equipment store, created by KP_Code Digital Studio.",
+  "author": "Kamil Król | KP_Code Digital Studio",
   "homepage": "https://e-commerce-pr02-outlandgear.netlify.app/",
+  "license": "SEE LICENSE IN LICENSE.md",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KPKrol85/DS-ecommerce-pr02-OutlandgGear.git"
   },
   "keywords": [
+    "portfolio",
+    "demo",
+    "ecommerce",
+    "outdoor",
     "frontend",
+    "static-site",
     "html",
     "css",
-    "javascript",
-    "ecommerce",
-    "static-site",
-    "pwa"
+    "javascript"
   ],
   "engines": {
     "node": ">=20 <23"

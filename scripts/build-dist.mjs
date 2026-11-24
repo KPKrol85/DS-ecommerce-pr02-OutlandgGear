@@ -673,14 +673,18 @@ const buildJs = async () => {
 };
 
 const copyStaticAssets = async () => {
-  await Promise.all(
-    STATIC_DIRS.map(async (dirName) => {
+  await Promise.all([
+    ...STATIC_DIRS.map(async (dirName) => {
       await fs.cp(path.join(ROOT, dirName), path.join(DIST, dirName), {
         recursive: true,
         filter: shouldCopyAssetPath,
       });
     }),
-  );
+    fs.copyFile(
+      path.join(ROOT, "THIRD-PARTY-NOTICES.md"),
+      path.join(DIST, "THIRD-PARTY-NOTICES.md"),
+    ),
+  ]);
 };
 
 const generateSeoFiles = async (targetDir, sitemapContext = {}) => {

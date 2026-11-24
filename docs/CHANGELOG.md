@@ -63,6 +63,7 @@ For each implementation task, determine `Changelog: yes` or `Changelog: no`. Add
 
 ### Documentation
 
+- Added verified third-party attribution and distributed upstream license notices with production assets.
 - Added `doc/daily-AUDIT.md` to track prioritized audit findings and resolution status.
 
 ### Build and Tooling

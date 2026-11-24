@@ -55,6 +55,7 @@ For each implementation task, determine `Changelog: yes` or `Changelog: no`. Add
 - Removed obsolete cache-busting query parameters from travel-kit data loading and its HTML template.
 - Fixed four HTML build transforms to support formatted attributes and restore product images, gallery thumbnails, and travel-kit CTA content.
 - Fixed legal modal readability in light mode by introducing theme-aware backgrounds, borders, text, and link colors.
+- Fixed Playwright compatibility in Accessibility CI by pinning the runner to Ubuntu 24.04.
 
 ### Security
 

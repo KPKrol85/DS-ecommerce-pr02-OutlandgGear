@@ -1,6 +1,12 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+
+import {
+  PRODUCT_ROUTE_SEGMENT,
+  TRAVEL_KIT_ROUTE_SEGMENT,
+} from "../js/modules/detail-routes.mjs";
+
 // postcss, cssnano and esbuild are loaded on demand inside buildCss/buildJs.
 // They are the heaviest dependencies here, and keeping them off the module's
 // top level lets `build:html` and the build-transform tests import this file
@@ -708,19 +714,23 @@ const buildRootHtml = async () => {
   );
 };
 
-const buildPrerenderedDetailPages = async (products = [], travelKits = []) => {
+export const buildPrerenderedDetailPages = async (
+  products = [],
+  travelKits = [],
+  writeHtml = writeDistHtml,
+) => {
   await Promise.all([
     ...products.map(async (product) => {
       const html = await createDistHtml(PRODUCT_TEMPLATE, (sourceHtml) =>
         applyProductPrerender(sourceHtml, product),
       );
-      await writeDistHtml(path.join("produkt", product.slug, "index.html"), html);
+      await writeHtml(path.join(PRODUCT_ROUTE_SEGMENT, product.slug, "index.html"), html);
     }),
     ...travelKits.map(async (kit) => {
       const html = await createDistHtml(TRAVEL_KIT_TEMPLATE, (sourceHtml) =>
         applyTravelKitPrerender(sourceHtml, kit, products),
       );
-      await writeDistHtml(path.join("komplety", kit.slug, "index.html"), html);
+      await writeHtml(path.join(TRAVEL_KIT_ROUTE_SEGMENT, kit.slug, "index.html"), html);
     }),
   ]);
 };

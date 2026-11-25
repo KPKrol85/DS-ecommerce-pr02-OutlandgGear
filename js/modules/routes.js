@@ -1,8 +1,10 @@
-const PRODUCT_ROUTE_SEGMENT = "produkt";
-const TRAVEL_KIT_ROUTE_SEGMENT = "komplety";
-
-const normalizeSlug = (value) =>
-  typeof value === "string" && value.trim() ? value.trim() : "";
+import {
+  PRODUCT_ROUTE_SEGMENT,
+  TRAVEL_KIT_ROUTE_SEGMENT,
+  buildProductPath,
+  buildTravelKitPath,
+  normalizeSlug,
+} from "./detail-routes.mjs";
 
 const normalizePathname = (pathname = "/") =>
   pathname.replace(/\/+/g, "/").replace(/\/$/, "") || "/";
@@ -16,11 +18,9 @@ const readSlugFromPath = (segmentName) => {
   return decodeURIComponent(segments[segmentIndex + 1] || "");
 };
 
-export const buildProductUrl = (slug) =>
-  `/${PRODUCT_ROUTE_SEGMENT}/${encodeURIComponent(normalizeSlug(slug))}/`;
+export const buildProductUrl = (slug) => buildProductPath(normalizeSlug(slug));
 
-export const buildTravelKitUrl = (slug) =>
-  `/${TRAVEL_KIT_ROUTE_SEGMENT}/${encodeURIComponent(normalizeSlug(slug))}/`;
+export const buildTravelKitUrl = (slug) => buildTravelKitPath(normalizeSlug(slug));
 
 export const resolveProductSlug = () =>
   normalizeSlug(

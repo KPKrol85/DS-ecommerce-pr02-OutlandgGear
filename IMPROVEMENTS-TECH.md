@@ -13,13 +13,9 @@ Root HTML pages and shared partials define the storefront. Browser modules handl
 
 ### IMP-TECH-01 — Share detail route definitions across browser and build
 
-- **Affected area:** Product and travel-kit detail routing.
-- **Evidence:** `js/modules/routes.js:1-35`, `scripts/seo-config.mjs:25-51`, `scripts/build-dist.mjs:711-725`, `index.html:394`, `index.html:590`.
-- **Current implementation:** Browser link builders and slug resolvers use route segments defined in `routes.js`. SEO config repeats those segments in its pathname builders, and the prerender writer repeats them when choosing output directories.
-- **Proposed improvement:** Define the two route segments and public pathname builders in one ES module that both the browser and Node.js can import. Use those segment definitions for prerender output placement.
-- **Expected engineering value:** A route change has one programmatic source for client links, canonical pathnames, sitemap entries, and the directories that serve those paths.
-- **Implementation scope:** Limit the change to the two dynamic route families. Keep location parsing in the browser, origin and indexing policy in the SEO layer, and filesystem path construction in the build.
-- **Acceptance criteria:** For every current product and kit slug, the client-generated pathname matches the sitemap and prerender canonical pathname and resolves to the corresponding generated directory. Direct detail paths, `?slug=` template URLs, and existing homepage links still resolve as before.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Centralized detail route segments and pathname builders for browser links, SEO, and prerender output while preserving existing URLs and slug handling.
+- **Verification:** `npm run test:build` passed all 36 tests, covering 35 product routes, 3 travel-kit routes, and 7 homepage links. esbuild bundled the production JavaScript entry point in memory. Full production output and browser runtime verification remain pending.
 - **Impact:** Medium
 - **Effort:** Medium
 

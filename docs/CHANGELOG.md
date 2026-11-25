@@ -34,6 +34,7 @@ For each implementation task, determine `Changelog: yes` or `Changelog: no`. Add
 - Consolidated product-data loading across cart, catalog, product, and travel-kit modules using the validated, memoized `loadNormalizedProducts` loader.
 - Replaced the MIT license reference with proprietary KP_Code terms, establishing `LICENSE` as the licensing source of truth.
 - Made `scripts/build-dist.mjs` importable for isolated transform testing and deferred toolchain imports without changing generated output.
+- Centralized product and travel-kit route definitions for browser links, SEO, and prerendered pages.
 
 ### Fixed
 

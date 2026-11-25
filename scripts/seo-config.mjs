@@ -1,3 +1,9 @@
+import {
+  buildProductPath,
+  buildTravelKitPath,
+  normalizeSlug,
+} from "../js/modules/detail-routes.mjs";
+
 const SEO_ORIGIN = "https://e-commerce-pr02-outlandgear.netlify.app";
 
 const INDEXABLE_PAGE_PATHS = [
@@ -21,14 +27,6 @@ const NON_INDEXABLE_PAGE_PATHS = [
 ];
 
 const resolveSeoUrl = (pathname) => new URL(pathname, `${SEO_ORIGIN}/`).toString();
-
-const isNonEmptyString = (value) => typeof value === "string" && value.trim().length > 0;
-
-const normalizeSlug = (value) => (isNonEmptyString(value) ? value.trim() : "");
-
-const buildProductPath = (slug) => `/produkt/${encodeURIComponent(slug)}/`;
-
-const buildTravelKitPath = (slug) => `/komplety/${encodeURIComponent(slug)}/`;
 
 const collectSlugPaths = (items, buildPath) => {
   const safeItems = Array.isArray(items) ? items : [];

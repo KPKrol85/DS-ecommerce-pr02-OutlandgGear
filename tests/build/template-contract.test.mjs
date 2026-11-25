@@ -1,6 +1,6 @@
 /**
- * Contract tests between the build's regex transforms and the real page
- * templates.
+ * Contract tests for detail routing and prerender transforms against the real
+ * catalog and page templates.
  *
  * The unit tests in html-transforms.test.mjs prove each transform works on
  * markup shaped the way the transform expects. They cannot catch the failure
@@ -12,19 +12,30 @@
  * These tests run the real prerender transforms over the real templates and
  * assert on the result, so a pattern that stops matching fails the suite.
  */
-import { describe, it } from "node:test";
+import { before, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { build } from "esbuild";
 
 import {
   applyProductPrerender,
   applyTravelKitPrerender,
+  buildPrerenderedDetailPages,
 } from "../../scripts/build-dist.mjs";
+import {
+  INDEXABLE_PAGE_PATHS,
+  SEO_ORIGIN,
+  buildProductPath,
+  buildSitemapXml,
+  buildTravelKitPath,
+} from "../../scripts/seo-config.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const readTemplate = (name) => fs.readFile(path.join(ROOT, name), "utf8");
+const readSitemapUrls = (xml) =>
+  Array.from(xml.matchAll(/<loc>([^<]+)<\/loc>/g), ([, url]) => url);
 
 const PRODUCT = {
   id: 4242,
@@ -219,5 +230,163 @@ describe("travel-kits.html prerender contract", () => {
       [PRODUCT],
     );
     assert.match(result, /Wroc do zestawow/);
+  });
+});
+
+describe("detail route contract", () => {
+  const slugWithSpecialCharacters = "Łódź / 50%?#";
+  const encodedSlug = "%C5%81%C3%B3d%C5%BA%20%2F%2050%25%3F%23";
+  const staticSitemapUrls = INDEXABLE_PAGE_PATHS.map(
+    (pathname) => new URL(pathname, SEO_ORIGIN).href,
+  );
+  let catalog;
+  let routeFamilies;
+
+  before(async () => {
+    const [productData, travelKitData, bundle] = await Promise.all([
+      fs.readFile(path.join(ROOT, "data/products.json"), "utf8"),
+      fs.readFile(path.join(ROOT, "data/travel-kits.json"), "utf8"),
+      // Load the browser .js module as ESM without relying on Node's module detection.
+      build({
+        entryPoints: [path.join(ROOT, "js/modules/routes.js")],
+        bundle: true,
+        format: "esm",
+        target: ["es2020"],
+        write: false,
+      }),
+    ]);
+    const moduleSource = Buffer.from(bundle.outputFiles[0].text).toString("base64");
+    const browserRoutes = await import(`data:text/javascript;base64,${moduleSource}`);
+    catalog = {
+      products: JSON.parse(productData),
+      travelKits: JSON.parse(travelKitData),
+    };
+    routeFamilies = [
+      {
+        segment: "produkt",
+        template: "product.html",
+        items: catalog.products,
+        buildUrl: browserRoutes.buildProductUrl,
+        buildPath: buildProductPath,
+        resolveSlug: browserRoutes.resolveProductSlug,
+      },
+      {
+        segment: "komplety",
+        template: "travel-kits.html",
+        items: catalog.travelKits,
+        buildUrl: browserRoutes.buildTravelKitUrl,
+        buildPath: buildTravelKitPath,
+        resolveSlug: browserRoutes.resolveTravelKitSlug,
+      },
+    ];
+  });
+
+  it("keeps browser links, sitemap URLs and prerendered pages aligned for the full catalog", async () => {
+    const pages = new Map();
+    await buildPrerenderedDetailPages(
+      catalog.products,
+      catalog.travelKits,
+      (relativePath, html) => {
+        assert.ok(
+          !pages.has(relativePath),
+          `Duplicate prerender output: ${relativePath}`,
+        );
+        pages.set(relativePath, html);
+      },
+    );
+
+    const expectedDetailUrls = [];
+    for (const { segment, items, buildUrl, buildPath } of routeFamilies) {
+      for (const { slug } of items) {
+        const pathname = `/${segment}/${slug}/`;
+        const canonicalUrl = new URL(pathname, SEO_ORIGIN).href;
+        const relativePath = path.join(segment, slug, "index.html");
+        const html = pages.get(relativePath);
+
+        assert.equal(buildUrl(slug), pathname);
+        assert.equal(buildPath(slug), pathname);
+        assert.ok(html, `Missing prerender output: ${relativePath}`);
+        assert.equal(html.match(/rel="canonical"\s+href="([^"]+)"/)?.[1], canonicalUrl);
+        expectedDetailUrls.push(canonicalUrl);
+      }
+    }
+    assert.equal(pages.size, expectedDetailUrls.length);
+    assert.deepEqual(readSitemapUrls(buildSitemapXml(catalog)), [
+      ...staticSitemapUrls,
+      ...expectedDetailUrls,
+    ]);
+  });
+
+  it("links the static homepage detail cards to catalog entries", async () => {
+    const homepage = await readTemplate("index.html");
+    const detailLinks = Array.from(
+      homepage.matchAll(/\bhref="(\/(?:produkt|komplety)\/[^"]*)"/g),
+      ([, href]) => href,
+    );
+    const catalogPaths = new Set(
+      routeFamilies.flatMap(({ segment, items }) =>
+        items.map(({ slug }) => `/${segment}/${slug}/`),
+      ),
+    );
+
+    assert.equal(detailLinks.length, 7);
+    for (const href of detailLinks) {
+      assert.ok(catalogPaths.has(href), `Unknown homepage detail URL: ${href}`);
+    }
+  });
+
+  it("preserves slug encoding and normalization in browser links and SEO", () => {
+    const paddedSlug = `  ${slugWithSpecialCharacters}  `;
+    const items = [
+      { slug: paddedSlug },
+      { slug: slugWithSpecialCharacters },
+      { slug: " " },
+      { slug: 42 },
+      {},
+    ];
+    const expectedDetailUrls = [];
+    for (const { segment, buildUrl, buildPath } of routeFamilies) {
+      assert.equal(buildUrl(paddedSlug), `/${segment}/${encodedSlug}/`);
+      assert.equal(buildPath(paddedSlug), `/${segment}/%20%20${encodedSlug}%20%20/`);
+      for (const emptySlug of ["", " \t ", null, undefined, 42]) {
+        assert.equal(buildUrl(emptySlug), `/${segment}//`);
+      }
+      assert.equal(buildPath(""), `/${segment}//`);
+      assert.equal(buildPath(undefined), `/${segment}/undefined/`);
+      expectedDetailUrls.push(new URL(`/${segment}/${encodedSlug}/`, SEO_ORIGIN).href);
+    }
+    assert.deepEqual(
+      readSitemapUrls(buildSitemapXml({ products: items, travelKits: items })),
+      [...staticSitemapUrls, ...expectedDetailUrls],
+    );
+  });
+
+  it("resolves direct and template URLs with the existing query precedence", (context) => {
+    const window = { location: null };
+    globalThis.window = window;
+    context.after(() => {
+      delete globalThis.window;
+    });
+    const resolveAt = (resolveSlug, href) => {
+      window.location = new URL(href, SEO_ORIGIN);
+      return resolveSlug();
+    };
+
+    for (const { segment, template, items, resolveSlug } of routeFamilies) {
+      for (const { slug } of items) {
+        assert.equal(resolveAt(resolveSlug, `/${segment}/${slug}/`), slug);
+        assert.equal(resolveAt(resolveSlug, `/${template}?slug=${slug}`), slug);
+      }
+      assert.equal(resolveAt(resolveSlug, `/${template}`), "");
+      assert.equal(
+        resolveAt(resolveSlug, `/${segment}/path/?slug=+query+slug+`),
+        "query slug",
+      );
+      assert.equal(resolveAt(resolveSlug, `/${segment}/path/?slug=%20`), "");
+      assert.equal(
+        resolveAt(resolveSlug, `/${segment}//%20${encodedSlug}%20?slug=`),
+        slugWithSpecialCharacters,
+      );
+    }
   });
 });

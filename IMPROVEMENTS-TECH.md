@@ -21,13 +21,9 @@ Root HTML pages and shared partials define the storefront. Browser modules handl
 
 ### IMP-TECH-02 — Use one catalog state for rendering and URL updates
 
-- **Affected area:** Catalog filters, search, and pagination state.
-- **Evidence:** `js/modules/catalog.js:40-115`, `js/modules/catalog.js:191-234`, `js/modules/catalog.js:305-383`, `catalog.html:155-239`.
-- **Current implementation:** The catalog decodes URL values, copies filter values to the controls, and reads them back for filtering and URL serialization. Each listing update also decodes the full URL state again to read the category.
-- **Proposed improvement:** Keep one catalog state snapshot per listing update. Initialize or restore the snapshot from the URL, update it from control and pagination events, and pass it to both filtering and URL serialization.
-- **Expected engineering value:** Each listing refresh uses the same values for the visible results and the shareable URL. Changes to a filter have an identifiable path from the control to the listing and URL.
-- **Implementation scope:** Keep the change inside `catalog.js`. Use the existing form options for URL validation and derive numeric rating and price bounds where filtering needs them.
-- **Acceptance criteria:** A bookmarked URL restores the selected controls, category, sort order, and result limit. Filter or search changes reset the limit, Load More increases it, and Back or Forward restores the URL-selected state. Existing parameter names, default omission, invalid-option handling, and result-count announcements are preserved.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Catalog filtering, sorting, pagination, and URL serialization share one state. Restoring the state during history navigation invalidates queued search updates.
+- **Verification:** Eight focused Playwright tests passed in Chrome against the production preview. Syntax, ESLint, Prettier, and diff checks passed. A baseline comparison reproduced the existing Load More visibility issue caused by CSS overriding `hidden`.
 - **Impact:** Medium
 - **Effort:** Medium
 

@@ -14,14 +14,7 @@ const parseRange = (value) => {
   return { min, max };
 };
 
-const DEFAULT_FILTERS = {
-  range: null,
-  price: "",
-  rating: 0,
-  subcategory: "",
-  badges: [],
-  sort: "popularity",
-};
+const DEFAULT_SORT = "popularity";
 
 const sorters = {
   popularity: (a, b) => b.rating * b.reviewsCount - a.rating * a.reviewsCount,
@@ -32,82 +25,22 @@ const sorters = {
 
 let addToCartHandlersBound = false;
 
-const hasOption = (select, value) =>
-  Boolean(
-    select && value && qsa("option", select).some((option) => option.value === value),
-  );
+const getOptionValue = (select, value, fallback = "") =>
+  select && value && qsa("option", select).some((option) => option.value === value)
+    ? value
+    : fallback;
 
-const parseStateFromUrl = (form) => {
-  const params = new URLSearchParams(window.location.search);
-  const state = {
-    searchTerm: params.get("q")?.trim() || "",
-    price: params.get("price") || "",
-    rating: params.get("rating") || "",
-    category: params.get("category") || "",
-    subcategory: params.get("subcategory") || "",
-    badges: (params.get("badges") || "")
-      .split(",")
-      .map((badge) => badge.trim())
-      .filter(Boolean),
-    sort: params.get("sort") || DEFAULT_FILTERS.sort,
-    limit: Number.parseInt(params.get("limit") || "", 10),
-  };
-
-  if (form) {
-    const priceSelect = qs("[name=price]", form);
-    const ratingSelect = qs("[name=rating]", form);
-    const subSelect = qs("[name=subcategory]", form);
-    const sortSelect = qs("[name=sort]", form);
-    const badgeValues = qsa("[name=badge]", form).map((input) => input.value);
-
-    if (!hasOption(priceSelect, state.price)) state.price = "";
-    if (!hasOption(ratingSelect, state.rating)) state.rating = "";
-    if (!hasOption(subSelect, state.subcategory)) state.subcategory = "";
-    if (!hasOption(sortSelect, state.sort)) state.sort = DEFAULT_FILTERS.sort;
-
-    state.badges = state.badges.filter(
-      (badge, index, arr) => badgeValues.includes(badge) && arr.indexOf(badge) === index,
-    );
-  }
-
-  if (!Number.isInteger(state.limit) || state.limit < CONFIG.perPage) {
-    state.limit = CONFIG.perPage;
-  }
-
-  return state;
-};
-
-const applyStateToForm = (form, state) => {
-  if (!form) return;
-
-  const priceSelect = qs("[name=price]", form);
-  const ratingSelect = qs("[name=rating]", form);
-  const subSelect = qs("[name=subcategory]", form);
-  const sortSelect = qs("[name=sort]", form);
-
-  if (priceSelect) priceSelect.value = state.price;
-  if (ratingSelect) ratingSelect.value = state.rating;
-  if (subSelect) subSelect.value = state.subcategory;
-  if (sortSelect) sortSelect.value = state.sort;
-
-  const selectedBadges = new Set(state.badges);
-  qsa("[name=badge]", form).forEach((input) => {
-    input.checked = selectedBadges.has(input.value);
-  });
-};
-
-const syncUrlState = (searchTerm, filters, limit) => {
+const syncUrlState = (state) => {
   const params = new URLSearchParams();
 
-  if (searchTerm) params.set("q", searchTerm);
-  if (filters.price) params.set("price", filters.price);
-  if (filters.rating) params.set("rating", String(filters.rating));
-  if (filters.category) params.set("category", filters.category);
-  if (filters.subcategory) params.set("subcategory", filters.subcategory);
-  if (filters.badges.length) params.set("badges", filters.badges.join(","));
-  if (filters.sort && filters.sort !== DEFAULT_FILTERS.sort)
-    params.set("sort", filters.sort);
-  if (limit > CONFIG.perPage) params.set("limit", String(limit));
+  if (state.searchTerm) params.set("q", state.searchTerm);
+  if (state.price) params.set("price", state.price);
+  if (state.rating) params.set("rating", state.rating);
+  if (state.category) params.set("category", state.category);
+  if (state.subcategory) params.set("subcategory", state.subcategory);
+  if (state.badges.length) params.set("badges", state.badges.join(","));
+  if (state.sort !== DEFAULT_SORT) params.set("sort", state.sort);
+  if (state.limit > CONFIG.perPage) params.set("limit", String(state.limit));
 
   const nextQuery = params.toString();
   const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}`;
@@ -188,8 +121,11 @@ const renderListing = (products, grid, countEl, limit) => {
   }
 };
 
-const applyFilters = (products, filters, searchTerm) => {
-  const term = searchTerm?.toLowerCase() ?? "";
+const applyFilters = (products, state) => {
+  const term = state.searchTerm.toLowerCase();
+  const range = parseRange(state.price);
+  const minRating = Number(state.rating);
+
   return products
     .filter((product) => {
       const badges = Array.isArray(product.badges) ? product.badges : [];
@@ -200,37 +136,17 @@ const applyFilters = (products, filters, searchTerm) => {
         const haystack = `${name} ${shortDescription} ${badges.join(" ")}`.toLowerCase();
         if (!haystack.includes(term)) return false;
       }
-      if (filters.category && product.category !== filters.category) return false;
-      if (filters.subcategory && product.subcategory !== filters.subcategory)
-        return false;
-      if (filters.rating && product.rating < filters.rating) return false;
-      if (filters.range) {
-        if (product.price < filters.range.min || product.price > filters.range.max)
-          return false;
-      }
-      if (filters.badges.length) {
-        const hasBadge = filters.badges.some((badge) => badges.includes(badge));
+      if (state.category && product.category !== state.category) return false;
+      if (state.subcategory && product.subcategory !== state.subcategory) return false;
+      if (minRating && product.rating < minRating) return false;
+      if (range && (product.price < range.min || product.price > range.max)) return false;
+      if (state.badges.length) {
+        const hasBadge = state.badges.some((badge) => badges.includes(badge));
         if (!hasBadge) return false;
       }
       return true;
     })
-    .sort(sorters[filters.sort] || sorters.popularity);
-};
-
-const getFilters = (form) => {
-  const rangeValue = qs("[name=price]", form)?.value;
-  const ratingValue = qs("[name=rating]", form)?.value;
-  const subValue = qs("[name=subcategory]", form)?.value;
-  const sortValue = qs("[name=sort]", form)?.value;
-  const badgeInputs = qsa("[name=badge]:checked", form);
-  return {
-    range: parseRange(rangeValue),
-    price: rangeValue || "",
-    rating: ratingValue ? Number(ratingValue) : 0,
-    subcategory: subValue || "",
-    badges: badgeInputs.map((input) => input.value),
-    sort: sortValue || DEFAULT_FILTERS.sort,
-  };
+    .sort(sorters[state.sort] || sorters.popularity);
 };
 
 const renderCatalogLoadError = (grid, countEl, loadMoreBtn) => {
@@ -302,26 +218,54 @@ export const initCatalog = async () => {
 
   if (!grid) return;
 
-  const initialState = parseStateFromUrl(form);
-  let limit = initialState.limit;
-  let searchTerm = initialState.searchTerm;
+  const filterSelects = {
+    price: form && qs("[name=price]", form),
+    rating: form && qs("[name=rating]", form),
+    subcategory: form && qs("[name=subcategory]", form),
+    sort: form && qs("[name=sort]", form),
+  };
+  const badgeInputs = form ? qsa("[name=badge]", form) : [];
 
-  if (searchInput) {
-    searchInput.value = searchTerm;
-  }
+  const restoreStateFromUrl = () => {
+    const params = new URLSearchParams(window.location.search);
+    const selectedBadges = new Set(
+      (params.get("badges") || "").split(",").map((badge) => badge.trim()),
+    );
+    const limit = Number.parseInt(params.get("limit") || "", 10);
+    const restoredState = {
+      searchTerm: params.get("q")?.trim() || "",
+      price: getOptionValue(filterSelects.price, params.get("price")),
+      rating: getOptionValue(filterSelects.rating, params.get("rating")),
+      category: params.get("category") || "",
+      subcategory: getOptionValue(filterSelects.subcategory, params.get("subcategory")),
+      badges: badgeInputs
+        .filter((input) => selectedBadges.has(input.value))
+        .map((input) => input.value),
+      sort: getOptionValue(filterSelects.sort, params.get("sort"), DEFAULT_SORT),
+      limit: Number.isInteger(limit) && limit >= CONFIG.perPage ? limit : CONFIG.perPage,
+    };
 
-  applyStateToForm(form, initialState);
+    if (searchInput) searchInput.value = restoredState.searchTerm;
+    for (const [name, select] of Object.entries(filterSelects)) {
+      if (select) select.value = restoredState[name];
+    }
+    badgeInputs.forEach((input) => {
+      input.checked = restoredState.badges.includes(input.value);
+    });
+
+    return restoredState;
+  };
+
+  let state = restoreStateFromUrl();
 
   const updateListing = () => {
-    const filters = form ? getFilters(form) : { ...DEFAULT_FILTERS };
-    const stateFromUrl = parseStateFromUrl(form);
-    filters.category = stateFromUrl.category || "";
-    const filtered = applyFilters(products, filters, searchTerm);
-    renderListing(filtered, grid, countEl, limit);
+    const filtered = applyFilters(products, state);
+    renderListing(filtered, grid, countEl, state.limit);
 
     if (loadMoreBtn) {
-      loadMoreBtn.hidden = filtered.length <= limit;
-      loadMoreBtn.setAttribute("aria-hidden", String(filtered.length <= limit));
+      const hideLoadMore = filtered.length <= state.limit;
+      loadMoreBtn.hidden = hideLoadMore;
+      loadMoreBtn.setAttribute("aria-hidden", String(hideLoadMore));
     }
 
     if (filtered.length === 0) {
@@ -338,45 +282,44 @@ export const initCatalog = async () => {
       clearUiState(stateRegion);
     }
 
-    syncUrlState(searchTerm, filters, limit);
+    syncUrlState(state);
   };
 
-  if (form) {
-    on(form, "change", () => {
-      limit = CONFIG.perPage;
-      updateListing();
-    });
-  }
+  on(form, "change", ({ target }) => {
+    const { name, value } = target;
+    if (badgeInputs.includes(target)) {
+      state.badges = badgeInputs
+        .filter((input) => input.checked)
+        .map((input) => input.value);
+    } else if (filterSelects[name] === target) {
+      state[name] = value || (name === "sort" ? DEFAULT_SORT : "");
+    } else {
+      return;
+    }
+    state.limit = CONFIG.perPage;
+    updateListing();
+  });
 
   if (searchInput) {
-    on(
-      searchInput,
-      "input",
-      debounce((event) => {
-        searchTerm = event.target.value.trim();
-        limit = CONFIG.perPage;
-        updateListing();
-      }, CONFIG.debounceMs),
-    );
+    const updateSearch = debounce((scheduledState) => {
+      // Navigation replaces the state, making a queued search obsolete.
+      if (scheduledState !== state) return;
+      state.searchTerm = searchInput.value.trim();
+      state.limit = CONFIG.perPage;
+      updateListing();
+    }, CONFIG.debounceMs);
+    on(searchInput, "input", () => updateSearch(state));
   }
 
   if (loadMoreBtn) {
     on(loadMoreBtn, "click", () => {
-      limit += CONFIG.perPage;
+      state.limit += CONFIG.perPage;
       updateListing();
     });
   }
 
   on(window, "popstate", () => {
-    const stateFromUrl = parseStateFromUrl(form);
-    searchTerm = stateFromUrl.searchTerm;
-    limit = stateFromUrl.limit;
-
-    if (searchInput) {
-      searchInput.value = searchTerm;
-    }
-
-    applyStateToForm(form, stateFromUrl);
+    state = restoreStateFromUrl();
     updateListing();
   });
 

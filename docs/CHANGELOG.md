@@ -36,6 +36,7 @@ For each implementation task, determine `Changelog: yes` or `Changelog: no`. Add
 - Made `scripts/build-dist.mjs` importable for isolated transform testing and deferred toolchain imports without changing generated output.
 - Centralized product and travel-kit route definitions for browser links, SEO, and prerendered pages.
 - Unified catalog state for filtering, sorting, pagination, and URL synchronization.
+- Centralized browser-side detail metadata updates for products and travel kits.
 
 ### Fixed
 

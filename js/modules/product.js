@@ -6,135 +6,28 @@ import { showToast } from "./toast.js";
 import { createFallbackNotice } from "./fallback.js";
 import { findProductBySlug, loadNormalizedProducts } from "./product-data.js";
 import { buildProductUrl, isPrerenderedRoot, resolveProductSlug } from "./routes.js";
+import { SITE_NAME, setDetailMetadata, setJsonLd } from "./detail-metadata.js";
 import { setUiState, clearUiState } from "./ui-state.js";
 
-const SITE_NAME = "Outland Gear";
-const SITE_URL = "https://e-commerce-pr02-outlandgear.netlify.app/";
-const FALLBACK_SOCIAL_IMAGE = "assets/og-img/og-img.png";
-const FALLBACK_SOCIAL_IMAGE_ALT =
-  "Grafika Outland Gear przedstawiająca leśny krajobraz, góry, jezioro i centralne logo marki w zielono-beżowej kolorystyce.";
-const FALLBACK_SOCIAL_IMAGE_TYPE = "image/png";
-const FALLBACK_SOCIAL_IMAGE_WIDTH = "1536";
-const FALLBACK_SOCIAL_IMAGE_HEIGHT = "1024";
-const WEBPAGE_SCHEMA_SELECTOR = 'script[data-schema="webpage"]';
-const PRODUCT_SCHEMA_SELECTOR = 'script[data-schema="product"]';
 const getMainImageAlt = (productName, index = 0) =>
   `Zdjęcie ${index + 1} produktu ${productName}`;
 const getThumbLabel = (productName, index = 0) =>
   `Pokaż zdjęcie ${index + 1} produktu ${productName}`;
 const THUMB_EMPTY_LABEL = "Miniatura produktu niedostępna";
 
-const ensureMetaTag = (selector, attributes) => {
-  let tag = document.querySelector(selector);
-  if (!tag) {
-    tag = document.createElement("meta");
-    Object.entries(attributes || {}).forEach(([key, value]) => {
-      tag.setAttribute(key, value);
-    });
-    document.head.appendChild(tag);
-  }
-  return tag;
-};
-
-const setMetaContent = (selector, attributes, value) => {
-  const tag = ensureMetaTag(selector, attributes);
-  if (tag) {
-    tag.setAttribute("content", value);
-  }
-};
-
-const ensureJsonLdScript = (selector, schemaType) => {
-  let script = document.querySelector(selector);
-  if (!script) {
-    script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.setAttribute("data-schema", schemaType);
-    document.head.appendChild(script);
-  }
-  return script;
-};
-
-const setJsonLd = (selector, schemaType, payload) => {
-  const script = ensureJsonLdScript(selector, schemaType);
-  if (script) {
-    script.textContent = JSON.stringify(payload);
-  }
-};
-
 const setProductMetadata = (product, slug) => {
   if (!product || !slug) return;
 
   const titleParts = [product.name, product.category, SITE_NAME];
   const pageTitle = titleParts.filter(Boolean).join(" | ");
-  document.title = pageTitle;
-
   const description = [product.shortDescription, product.subcategory]
     .filter(Boolean)
     .join(" ");
-  setMetaContent('meta[name="description"]', { name: "description" }, description);
-
-  const canonicalUrl = new URL(buildProductUrl(slug), window.location.origin);
-  const canonicalHref = canonicalUrl.href;
-  const imageUrl = new URL(FALLBACK_SOCIAL_IMAGE, window.location.origin).href;
+  const canonicalHref = new URL(buildProductUrl(slug), window.location.origin).href;
   const formattedPrice = Number.isFinite(product.price) ? product.price.toFixed(2) : "";
 
-  const canonicalLink = document.querySelector('link[rel="canonical"]');
-  if (canonicalLink) {
-    canonicalLink.setAttribute("href", canonicalHref);
-  }
-
-  setMetaContent('meta[property="og:title"]', { property: "og:title" }, pageTitle);
-  setMetaContent(
-    'meta[property="og:description"]',
-    { property: "og:description" },
-    description,
-  );
-  setMetaContent('meta[property="og:url"]', { property: "og:url" }, canonicalHref);
-  setMetaContent('meta[property="og:image"]', { property: "og:image" }, imageUrl);
-  setMetaContent(
-    'meta[property="og:image:alt"]',
-    { property: "og:image:alt" },
-    FALLBACK_SOCIAL_IMAGE_ALT,
-  );
-  setMetaContent(
-    'meta[property="og:image:type"]',
-    { property: "og:image:type" },
-    FALLBACK_SOCIAL_IMAGE_TYPE,
-  );
-  setMetaContent(
-    'meta[property="og:image:width"]',
-    { property: "og:image:width" },
-    FALLBACK_SOCIAL_IMAGE_WIDTH,
-  );
-  setMetaContent(
-    'meta[property="og:image:height"]',
-    { property: "og:image:height" },
-    FALLBACK_SOCIAL_IMAGE_HEIGHT,
-  );
-
-  setMetaContent('meta[name="twitter:title"]', { name: "twitter:title" }, pageTitle);
-  setMetaContent(
-    'meta[name="twitter:description"]',
-    { name: "twitter:description" },
-    description,
-  );
-  setMetaContent('meta[name="twitter:image"]', { name: "twitter:image" }, imageUrl);
-
-  setJsonLd(WEBPAGE_SCHEMA_SELECTOR, "webpage", {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: pageTitle,
-    description,
-    url: canonicalHref,
-    inLanguage: "pl-PL",
-    isPartOf: {
-      "@type": "WebSite",
-      name: SITE_NAME,
-      url: SITE_URL,
-    },
-  });
-
-  setJsonLd(PRODUCT_SCHEMA_SELECTOR, "product", {
+  const imageUrl = setDetailMetadata({ pageTitle, description, canonicalHref });
+  setJsonLd("product", {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,

@@ -29,13 +29,9 @@ Root HTML pages and shared partials define the storefront. Browser modules handl
 
 ### IMP-TECH-03 — Share client-side detail metadata updates
 
-- **Affected area:** Browser updates to the document head on product and travel-kit pages.
-- **Evidence:** `js/modules/product.js:11-19`, `js/modules/product.js:27-137`, `js/modules/product.js:405-413`, `js/modules/travel-kits.js:14-23`, `js/modules/travel-kits.js:28-63`, `js/modules/travel-kits.js:97-164`, `js/modules/travel-kits.js:462-466`.
-- **Current implementation:** Both modules independently update the title, description, canonical link, social tags, and WebPage JSON-LD. They duplicate the tag lookup and creation routines and the social-image defaults. The product module also writes a Product schema.
-- **Proposed improvement:** Introduce one browser-side writer for the shared head fields and fallback social-image metadata. Let each page supply its own title, description, and canonical URL.
-- **Expected engineering value:** Shared selectors, tag creation, and social-image defaults have one owner. Product-specific schema values remain close to the product data that supplies them.
-- **Implementation scope:** Update the two client modules and their shared writer. Keep page-specific URL and schema calculation local and retain the current calls on successful detail loads.
-- **Acceptance criteria:** Both detail types produce their current title, canonical link, social tags, and WebPage JSON-LD after data loads. Existing elements are updated in place and repeated writes create no duplicate tags. The product page keeps its Product JSON-LD, and the build continues to supply metadata for pages served without client rendering.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Centralized browser-side metadata and JSON-LD writes for product and travel-kit detail pages while preserving page-specific values and fallback image settings.
+- **Verification:** All 18 focused Playwright tests passed in Chrome against the production preview, covering both route forms, JSON-LD, DOM identity, element creation, repeated writes, failed and unmatched loads, and prerendering without JavaScript. All 36 build tests and focused syntax, ESLint, Prettier, and diff checks passed.
 - **Impact:** Medium
 - **Effort:** Small
 

@@ -1,4 +1,4 @@
-import { qs, qsa, on } from "./dom.js";
+import { qs, qsa, on, wrapTabFocus } from "./dom.js";
 
 const DESKTOP_NAV_MIN = 1040;
 const FOCUSABLE_SELECTOR = [
@@ -163,27 +163,7 @@ const setupDrawer = () => {
 
     if (event.key !== "Tab") return;
 
-    const focusable = getDrawerFocusable(drawer);
-    if (!focusable.length) {
-      event.preventDefault();
-      if (drawerPanel) drawerPanel.focus();
-      return;
-    }
-
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    const active = document.activeElement;
-
-    if (event.shiftKey && (active === first || !drawer.contains(active))) {
-      event.preventDefault();
-      last.focus();
-      return;
-    }
-
-    if (!event.shiftKey && active === last) {
-      event.preventDefault();
-      first.focus();
-    }
+    wrapTabFocus(event, drawer, getDrawerFocusable(drawer), drawerPanel);
   });
 
   on(

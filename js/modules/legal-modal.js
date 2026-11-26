@@ -1,4 +1,4 @@
-import { qs, qsa, on } from "./dom.js";
+import { qs, qsa, on, wrapTabFocus } from "./dom.js";
 
 const STORAGE_KEY = "outlandGearLegalAcceptedAt";
 const SESSION_STORAGE_KEY = "outlandGearLegalAcceptedSession";
@@ -85,32 +85,6 @@ export const initLegalModal = () => {
     }
   };
 
-  const trapFocus = (event) => {
-    if (event.key !== "Tab") return;
-
-    const focusable = getFocusableElements(panel);
-    if (!focusable.length) {
-      event.preventDefault();
-      panel.focus();
-      return;
-    }
-
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    const active = document.activeElement;
-
-    if (event.shiftKey && (active === first || !panel.contains(active))) {
-      event.preventDefault();
-      last.focus();
-      return;
-    }
-
-    if (!event.shiftKey && active === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  };
-
   openTriggers.forEach((trigger) => {
     on(trigger, "click", (event) => {
       event.preventDefault();
@@ -119,7 +93,11 @@ export const initLegalModal = () => {
   });
 
   on(acceptButton, "click", acceptAndClose);
-  on(modal, "keydown", trapFocus);
+  on(modal, "keydown", (event) => {
+    if (event.key !== "Tab") return;
+
+    wrapTabFocus(event, panel, getFocusableElements(panel), panel);
+  });
 
   const alreadyAccepted =
     readStorageFlag(window.localStorage, STORAGE_KEY) ||

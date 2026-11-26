@@ -37,6 +37,7 @@ For each implementation task, determine `Changelog: yes` or `Changelog: no`. Add
 - Centralized product and travel-kit route definitions for browser links, SEO, and prerendered pages.
 - Unified catalog state for filtering, sorting, pagination, and URL synchronization.
 - Centralized browser-side detail metadata updates for products and travel kits.
+- Centralized Tab focus wrapping for the mobile navigation drawer and legal modal.
 
 ### Fixed
 

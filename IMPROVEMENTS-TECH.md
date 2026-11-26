@@ -37,13 +37,9 @@ Root HTML pages and shared partials define the storefront. Browser modules handl
 
 ### IMP-TECH-04 — Share Tab wrapping between the drawer and modal
 
-- **Affected area:** Keyboard focus handling in the mobile navigation drawer and legal-information modal.
-- **Evidence:** `js/modules/nav.js:42-46`, `js/modules/nav.js:155-187`, `js/modules/legal-modal.js:5-14`, `js/modules/legal-modal.js:88-122`, `js/modules/dom.js:1-15`.
-- **Current implementation:** Both overlays implement the same first and last focus checks, reverse wrapping from outside the scope, and fallback when no focusable element is available. The drawer listens on the document, while the modal listens on its own container.
-- **Proposed improvement:** Move the Tab boundary handling into a shared DOM helper that receives the component's focus scope, candidate elements, and fallback target.
-- **Expected engineering value:** The wrapping rules have one implementation, and each overlay still owns its focus candidates and open and close behavior.
-- **Implementation scope:** Reuse `dom.js` and update the two Tab handlers. Keep listener placement, focus-candidate selection, dismissal, and focus restoration in the respective overlay modules.
-- **Acceptance criteria:** In both overlays, Tab from the last candidate focuses the first, Shift+Tab from the first focuses the last, and the current fallback target receives focus when the candidate list is empty. The drawer still closes on Escape, and the modal still restores focus on acceptance.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Centralized Tab wrapping and fallback focus in a shared DOM helper. The drawer passes its container from a document listener, and the legal modal passes its panel from a modal listener.
+- **Verification:** Five focused Playwright tests passed in Chromium, covering native Tab navigation, wrapping, fallback focus, Escape, focus restoration, scroll unlocking, and acceptance storage. Syntax, ESLint, Prettier, and diff checks passed. The preview server required manual shutdown on Windows.
 - **Impact:** Medium
 - **Effort:** Small
 

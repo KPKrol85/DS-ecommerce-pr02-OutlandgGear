@@ -45,13 +45,9 @@ Root HTML pages and shared partials define the storefront. Browser modules handl
 
 ### IMP-TECH-05 — Centralize client-side form setup
 
-- **Affected area:** Shared setup for the contact, checkout, and newsletter forms.
-- **Evidence:** `js/modules/form-ux.js:69-80`, `js/modules/form-ux.js:99-115`, `js/modules/contact.js:11-22`, `js/modules/checkout.js:10-24`, `js/modules/newsletter.js:12-23`.
-- **Current implementation:** Each form initializer sets `noValidate`, initializes field feedback, and registers a `pageshow` handler that resets the submit button when the page is restored from the back-forward cache.
-- **Proposed improvement:** Put the common initialization sequence in `form-ux.js` and have each form call it after locating its form element.
-- **Expected engineering value:** Client validation setup and cached-page submit reset have one owner across all three forms.
-- **Implementation scope:** Move the setup code and retain each form's submission handler, messages, and success target in its feature module.
-- **Acceptance criteria:** All three forms initialize the existing field feedback and restore the default button label and enabled state on a persisted `pageshow` event. Contact submission still uses its Netlify POST flow, checkout clears the local cart before redirecting, and newsletter submission keeps its demo confirmation flow.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Centralized custom validation setup, field feedback, and BFCache submit-state restoration across the contact, checkout, and newsletter forms.
+- **Verification:** Six focused Playwright tests passed in Chrome for validation, ARIA, focus, intercepted contact POST outcomes, checkout cart clearing, and the newsletter redirect. BFCache coverage used simulated `pageshow` events with both `persisted` values. Syntax, ESLint, Prettier, and diff checks passed.
 - **Impact:** Low
 - **Effort:** Small
 

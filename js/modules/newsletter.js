@@ -1,6 +1,6 @@
 import { qs, on } from "./dom.js";
 import {
-  initFormFieldUX,
+  initFormUX,
   setFormStatus,
   setSubmitState,
   validateFormFields,
@@ -13,12 +13,7 @@ export const initNewsletterForm = () => {
   const form = qs("[data-newsletter-form]");
   if (!form) return;
 
-  window.addEventListener("pageshow", (e) => {
-    if (e.persisted) setSubmitState(form, false);
-  });
-
-  form.noValidate = true;
-  initFormFieldUX(form);
+  initFormUX(form);
 
   on(form, "submit", (event) => {
     event.preventDefault();

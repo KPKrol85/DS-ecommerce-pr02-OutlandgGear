@@ -1,7 +1,7 @@
 import { CONFIG } from "../config.js";
 import { qs, on } from "./dom.js";
 import { clearCart } from "./storage.js";
-import { initFormFieldUX, setSubmitState, validateFormFields } from "./form-ux.js";
+import { initFormUX, setSubmitState, validateFormFields } from "./form-ux.js";
 import { clearUiState, setUiState } from "./ui-state.js";
 
 const getSuccessUrl = (form) =>
@@ -11,15 +11,10 @@ export const initCheckout = () => {
   const form = qs(CONFIG.selectors.checkoutForm);
   if (!form) return;
 
-  window.addEventListener("pageshow", (e) => {
-    if (e.persisted) setSubmitState(form, false);
-  });
+  initFormUX(form);
 
   const status =
     qs(CONFIG.selectors.checkoutStatus) || qs("[data-checkout-status]", form);
-
-  form.noValidate = true;
-  initFormFieldUX(form);
 
   on(form, "submit", (event) => {
     event.preventDefault();

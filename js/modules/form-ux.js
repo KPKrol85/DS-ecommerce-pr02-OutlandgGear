@@ -114,3 +114,12 @@ export const initFormFieldUX = (form) => {
     });
   });
 };
+
+export const initFormUX = (form) => {
+  form.noValidate = true;
+  initFormFieldUX(form);
+
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) setSubmitState(form, false);
+  });
+};

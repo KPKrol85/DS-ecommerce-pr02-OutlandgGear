@@ -38,6 +38,7 @@ For each implementation task, determine `Changelog: yes` or `Changelog: no`. Add
 - Unified catalog state for filtering, sorting, pagination, and URL synchronization.
 - Centralized browser-side detail metadata updates for products and travel kits.
 - Centralized Tab focus wrapping for the mobile navigation drawer and legal modal.
+- Centralized client-side validation setup and BFCache submit-state restoration across contact, checkout, and newsletter forms.
 
 ### Fixed
 
